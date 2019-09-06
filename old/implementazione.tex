@@ -1,0 +1,372 @@
+
+\subsection{Sistema orientato agli oggetti}
+Il raggiungimento dell'obiettivo comune e l'enorme quantità di fondi
+necessari agli esperimenti pongono la ricerca sulla fusione
+termonucleare controllata nel panorama scientifico come uno dei più
+vasti ambiti di cooperazione internazionale.  I recenti esperimenti JET
+e ITER sono infatti frutto dello sforzo congiunto di molti paesi
+consorziati e rappresentano un chiaro esempio di come il lavoro
+combinato possa dare una forte accelerazione verso la concretizzazione
+dei risultati; dal punto di vista economico agevolati dalla divisione
+delle spese e dal punto di vista scientifico arricchiti per la
+possibilità di attingere ad esperienze specilistiche maturate nel tempo
+dagli stati membri. Per questa ragione è auspicabile se non necessario
+orientare lo sforzo di ricerca verso un sistema integrato e standardizzato.
+
+Il modello di studio presentato nel precedente capitolo ha avuto
+precedenti implementazioni in riferimento a diversi studi svolti sugli
+esperimenti EXTRAP T2R \cite{gregoratto} e RFXmod stesso
+\cite{pizzimenti}. Il codice numerico usato nei lavori citati è stato
+quì adattato al funzionamento in un ambiente orientato agli oggetti e
+riformulato per funzionare in una piattaforma a sorgente aperto.
+
+La programmazione orientata agli oggetti (Object Oriented Programming) è
+in generale un paradigma di programmazione, che prevede la definizione
+di oggetti software dotati di attributi (dati), e metodi (procedure);
+interagenti tra loro mediante scambio di messaggi. Tale scelta, vista
+come un supporto alla modellazione software per l'oggetto di studio, è
+volta ad ottenere un effettivo supporto naturale alla modularizzazione e
+al riuso del codice. La modularità del codice garantisce una maggiore
+chiarezza di lettura creando le basi per una piattaforma comune in cui
+risulti uniformato l'approccio alle entità di studio.  Di fondamentale
+importanza per capire il valore della programmazione ad oggetti é il
+concetto di astrazione che storicamente ha visto via via un sempre
+maggior sviluppo nel lessico informatico. Un concetto sviluppatosi
+inizialmente all'interno della così detta programmazione procedurale che
+per prima propose l'idea di interfaccia per nascondere i dettagli
+dell'implementazione e la connessione con il livello hardware da ciò che
+divenne la programmazione applicativa (tipicamente l'interfaccia che
+viene dichiarata viene detta Application Programming
+Interface). L'aspetto definitivo del modello di dato astratto fu
+proposto tramite l'entità denominata classe, questa rappresenta
+effettivamente una struttura dati corredata dal codice per gestirla ma
+aggiunge anche altre idee come eredità e polimorfismo. Un oggetto è
+quindi una istanza di una classe, ossia la realizzazione di un dato
+secondo le specifiche definite nella classe stessa. Matematicamente gli
+oggetti, visti come istanze, sono i membri dell'insieme classe definito
+in modo intensivo, ovvero attraverso le sue caratteristiche invece che
+elencandone gli elementi; tali caratteristiche comprendono la
+definizione dei tipi di dati degli attributi, l'accesso di questi da
+membri esterni alla classe, e vincoli che la tupla degli attributi può
+assumere. In questo senso l'oggetto assume la forma ben nota
+nell'information theory di macchina a stati finiti.
+
+Nel presente lavoro è stato anche analizzato il più recente inserimento
+dell'uso degli oggetti all'interno della IPC (inter process
+comunication), ovvero qulla branca della informatica che studia la
+comunicazione tra diversi processi, nel caso di condivisione locale o
+remota della memoria. La gran parte del processo di produzione del
+software è stata rivolta alla possibilità di interfacciare il modello
+con altre entità, esterne al contesto dell'esperimento stesso. Si è
+voluta dare una prospettiva di un nuovo paradigma di studio dove sia
+possibile e semplice l'integrazione del codice, troppo spesso scritto al
+solo scopo di produrre una singola pubblicazione e fortemente legato ad
+un contesto tanto specifico da renderlo inutilizzabile in un diverso
+ambiente. Gli attributi degli oggetti divengono quindi sede dello
+scambio di informazioni mentre i metodi possono diventare
+implementazioni delle RPC (Remote Procedure Calls, procedure chiamate su
+macchine remote). Recentemente si stà assistendo ad un sempre più
+intensivo uso di questa tecnologie, più o meno raffinate, per accedere a
+dati remoti o lanciare richieste di elaborazione. Basti pensare ad
+esempio ad una richiesta ad un motore di ricerca per il web, dove un
+dato testuale viene usato per istruire una procedura remota che analizza
+un vastissimo database diffuso su migliaia di server per restituire una
+pagina formattata. Il panorama offerto dal crescente accesso alla rete
+globale ha mostrato l'affermarsi di varie tecnologie per l'interscambio
+di oggetti software; inizialmente appannaggio di poche aziende dominanti
+il mercato, e successivamente definite tramite standard aperti.  Nel
+1991 venne rilasciata dal OMG (Object Management Group) la prima
+versione del sistema CORBA (Common Object Request Broker Architecture),
+realizzato con l'intento di unificare in un unica infrastruttura
+client-server tutti i possibili linguaggi di programmazione.  CORBA di
+fatto è in grado mettere in comunicazione frammenti di codice separati,
+scritti tramite linguaggi diversi, e operanti di diversi computer, come
+se funzionassero all'interno di una unica applicazione. Il meccanismo di
+funzionamento è principalmente basato sulla idea di normalizzazione
+della semantica nella definizione degli oggetti. Questo metodo è
+realizzato da un ulteriore linguaggio chiamato IDL (Interface Definition
+Language) per definire le interfacce che gli oggetti presentano
+all'esterno; vi è poi un sistema di ``mappatura'' tra la interfaccia IDL
+dichiarata e il linguaggio specifico. Esistono implementazioni di mappe
+standard per i linguaggi: C, C++, Java , Lisp, Python, Ruby, Tcl e altri
+\cite{url_corba}.  L'utilità di questo approccio e l'importanza che
+riveste attualmente in ambito scientifico giustifica l'attenzione
+rivolta alla scelta sulla metodologia di programmazione per questo
+lavoro e in generale per lo sviluppo di modelli di studio in
+RFX. Accanto alla interoperabilità del livello applicativo vi è anche un
+crescente intaresse per una condivisione a livello di infrastruttura
+
+[uso di grid, cloud computing - glite globus]
+
+Il presente lavoro vuole proporre l'intera analisi numerica
+attraverso codice a sorgente aperto.  Tale filosofia è stata peraltro
+scelta nella distribuzione di MDSplus, il software sviluppato tramite la
+collaborazione del Massachusetts Institute of Technology, il consorzio
+RFX e il Los Alamos National Lab. Attualmente MDSplus si è affermato
+come lo standard de facto per l'acquisizione e il mantenimento dei
+segnali negli esperimenti di fusione e viene utilizzato da più di 30
+installazioni dislocate su 4 continenti.
+
+
+\subsection{L'interfaccia G-MDS}
+
+Il sistema scelto è situato a cavallo tra la programmazione a basso
+livello e i sistemi evoluti di astrazione; si chiama GObject ed è il
+sistema di oggetti che costituiscono la base del noto ambiente desktop
+GNOME (GNU Network Object Model Enviroment) \cite{url_gnome}, fortemente
+orientato alla interoperabilità di rete. GObject è un framework creato
+sulla libreria GLib nel contesto del progetto GTK+, una API per la
+scrittura di programmi con interfaccia grafica. Anche se ancora
+mantenuto all'interno del progetto GNOME la libreria di GObject è ora
+completamente autonoma e se ne è reso possibile l'utilizzo
+indipendentente dal suo iniziale scopo grafico. L'ambiente di base è
+quindi la libreria GLib che grazie alla definizione di strutture dati
+avanzate per la gestione della memoria, e un set di tipi primitivi, può
+essere utilizzata come astrazione per la programmazione
+multipiattaforma. Programmi che utilizzano i tipi derivati di GLib e
+GObject possono, infatti, essere opportunamente compilati in ambienti
+quali Windows, Mac OS e Linux/Unix derivati.
+
+Anche se Gobject è in grado di fornire un sistema completo nella
+programmazione ad oggetti per il C, il linguaggio per il quale è stato
+ideato, esso è visto come una possibile alternativa ai linguaggi evoluti
+C-derivati come C++ e Objective-C. la differenza fondamentale che lo
+separa da questi è di non essere un linguaggio separato: GObject è
+semplicemente una libreria e come tale non introduce una nuova sintassi
+nel compilatore o preprocessore. Quindi, anche se l'insieme ``C e
+GObject'' può essere considerato di fatto un linguaggio a sè stante,
+esso è perfettamente compatibile e utilizzabile all'interno del C
+standard. Librerie a basso livello, a stretto contatto con l'hadrware,
+come sistemi digitali di acquisizione dati o processori di segnale,
+possono così accedere alle strutture complesse senza programmi
+intermedi. Inoltre la grande differenza che contraddistingue il sistema
+GObject è l'enfasi che questo ripone nella gestione dei segnali (spesso
+chiamata anche gestione degli eventi). Tale attenzione deriva
+principalmente dal fatto che la libreria fu costruita sulla base delle
+esigenze di un toolkit grafico; così che, mentre la gestione dei segnali
+risulta generalmente un componente aggiuntivo di un linguaggio, in
+GObject i segnali sono definiti all'interno del sistema. In questo modo
+l'uso dei segnali nelle applicazioni che utilizzano GObject è più
+immediata, aumentando l'utilizzo dell'incapsulamento degli oggetti e
+rendendoli pronti all'uso distribuito, come vedremo in dettaglio di
+seguito.
+
+
+La struttura base di un oggetto GObject è delineata in figura 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!htb]
+ \centering
+% \includegraphics[ width=8cm ] {images/schema-software2.png}
+ \caption{Diagramma della strittura di un oggetto GObject}
+ \label{fig:gobject}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Come esempio esplicativo presentiamo l'implementazione della classe base
+per g-mds. La definizione nel file de header è la seguente:
+
+% \begin{minipage}[c]{11cm}
+  \includecodesample{code/g-mds-object.h}
+% \end{minipage}
+
+Mentre il file sorgente implementa i metodi ereditati dalla classe base:
+
+% \begin{minipage}[c]{11cm}
+  \includecodesample{code/g-mds-object.c}
+% \end{minipage}
+
+[spiegazione del funzionamento e introduziona alle properties]
+
+Per quanto riguarda l'utilizzo nell'ambito dell'esperimento RFX sono
+stati definiti vari oggetti base, da un lato estendendo la libreria GLib
+per la gestione di matrici multidimensionali, dall'altro sviluppando
+oggetti specifici per definire le entità principali.
+
+%  \includecodesample{code/NDarray.c}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[ width=8cm ] {images/albero-parentale.png}
+ \caption{Diagramma parentale degli oggetti utilizzati in G-Mds}
+ \label{fig:albero-g-mds}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+L'oggetto ``GMdsExperiment'' è preposto fondamentalmente alla
+definizione dell'ambiente di lavoro: vi sono definite proprietà
+specifiche quali raggio, rapporto di aspetto, geometria della camera,
+ecc.. Gli oggetti di tipo contenitore servono invece a manipolare i dati
+veri e propri organizzandoli opportunamente negli array precedentemente
+definiti. Per fare, ad esempio, una indagine sulla griglia dei sensori
+sarà sufficiente definire un ogetto GMdsGrid, agganciare alla struttura
+una notazione e definire l'esperimento.
+
+Per otterere il massimo della portabilità del codice, gli oggetti creati
+vengono successivamente ridichiarati attraverso un apposito header che
+li rende utilizzabili in C++. Di seguito è presentata la dichiarazione
+per l'oggetto base.
+
+\includecodesample{code/object.h}
+
+La possibilità di ottenere un livello di comunicazione tra diversi
+software di analisi, come preannunciato nel paragrafo precedente
+parlando di IPC, avviene su due livelli. Anzitutto si vuole creare una
+interfaccia per l'utilizzo del codice su qualsiasi linguaggio; si è
+scelto per questo di utilizzare SWIG, un software molto noto per il
+\emph{wrapping} del codice C, che rende utilizzabili le strutture dati
+in ambiente Octave. Il wrapper agisce mediante una interfaccia creata
+per la dichiarazione della struttura e per la definizione di opportuni
+\emph{marshalers} per il passaggio dei tipi.  Un esempio è rappresentato
+dalla ``typemap'' che è stata realizzata per convertire una matrice
+Octave in un array tridimensionale per GMdsGrid:
+
+\includecodesample{code/types.i}
+
+Secondariamente si è posta l'attenzione alla introspezione diretta degli
+oggetti che GObject recentemente ha introdotto nella
+libreria~\cite{url_gobject_introspection}; questo sistema permette una
+dichiarazione di interfaccia da parte degli oggetti stessi che sono
+quindi in grado di rendersi autonomamente disponibili a diversi
+linguaggi. L'importanza di questo secondo sistema è la possibilità di
+autodichiarare gli oggetti nel sistema di interconnessione chiamato
+D-Bus. Il progetto GNOME attualmente mantiene due sistemi per la
+gestione della IPC: Il sistema Bonobo, sviluppato per gestire
+l'interfacciamento ORBit (CORBA compatibile), e D-Bus che si pone come
+valida alternativa per semplicità di implementazione. Con il proposito
+di generare un codice di semplice utilizzo e per la buona integrazione
+con la libreria Glib è stato scelto l'utilizzo del secondo, in vista poi
+di un annunciato progressivo abbandono dell'uso di ORBit in ambito
+desktop. Anche se D-Bus sembra di fatto una scelta obbligata, visto
+l'ampia compatibilità che propone, rimane la possibilità di sviluppare in
+un secondo momento delle \emph{middleware} che mettano in comunicazione
+oggetti D-Bus con i Brooker delle grosse reti di calcolatori, accedendo
+alle risorse di condivisione e \emph{cloud-computing} offerti da
+sistemi Grid come GLite~\cite{url_glite} e Globus~\cite{url_globus}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[ width=8cm ] {images/schema-software2.png}
+ \caption{Diagramma della organizzazione del software}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{La costruzione del modello B.G.P. }
+
+Riguardando brevemente le possibilità introdotte dal sistema delineato
+dal paragrafo precedente, si descrive ora come queste si applichino in
+pratica al codice del modello. Anzitutto, per aderire alla scelta di
+mantenere per quanto possibile il software su piattaforma a codice
+aperto, si è trasportato il sorgente dalla originaria esecuzione su
+ambiente Matlab verso il linguaggio open-source per il calcolo numerico
+GNU Octave \cite{url_octave}. L'accesso diretto ai dati di MdsPlus,
+fornito a Matlab dalla interfaccia \emph{mdsvalue}, è un codice
+Matlab-eseguibile (mex) presente nel corredo di utilità fornite da
+MdsPlus stesso. L'eseguibile che viene compilato agisce tramite la
+libreria C a basso livello chiamata \emph{Mdslib}, questa sarà, come
+sarà presentato a breve, il medesimo punto di accesso a MdsPlus
+utilizzato dal sistema ad oggetti presentato. La ricompilazione dei
+sorgenti rende possibile l'utilizzo della interfaccia diretta anche in
+ambiente Octave, si utilizza infatti il tool \emph{mkoctfile} che è in
+grado di tradurre il codice per la compilazione di eseguibili di tipo
+\emph{mex}.  Chiaramente la chiamata alla funzione di libreria per
+l'accesso ai dati non è più realizzata da una specifica funzione Matlab
+ma viene resa disponibile attraverso i metodi degli oggetti di G-Mds. In
+questo caso, come precedentemente illustrato, i metodi sono inscatolati
+dentro oggetti Octave mediante wrapper generati da SWIG, codice
+egualmente compilato ricorrendo a \emph{mkoctfile} ma con il link
+dinamico nativo (il sistema di oct-files). Nella stesura del programma
+si potrà quindi fare riferimento a oggetti di tipo segnale,
+instanziandoli mediante una etichetta che ne identifica la richiesta al
+database; vi sarà poi un conseguente metodo get che effettua l'accesso
+vero e proprio in relazione ai periodo temporale di studio e
+all'intervallo di ricampionamento. In questo modo non è più necessario
+definire ogni singolo parametro durante l'accesso ma basterà
+caratterizzare via via il contesto dell'esperimento stesso attraverso
+appositi oggetti.  E' stato costruito quindi un oggetto notazione, esso
+di fatto rappresenta un funzionale che associa una generica tupla di
+numeri interi ad una specifica etichetta. Come è facile intuire, tale
+sequenza di numeri è usata per individuare facilmente una coordinata in
+uno spazio discreto; si definisce infatti l'oggetto griglia come
+sequenza ordinata di segnali eventualmente distribuiti a loro volta
+nello spazio con specifiche coordinate.  In questo modo è possibile
+utilizzare una semplice funzione Matlab o Fortran per istruire il
+funzionale e utilizzare poi la notazione una volta per tutte in qualsiasi
+linguaggio e in qualsiasi elaboratore accedendo all'oggetto istanziato.
+
+Per quanto riguarda il controllo dei modi MHD si sono utilizzate
+principalmente le notazioni che fanno capo ai segnali relativi alle
+\emph{saddle coils}. Motriamo di seguito la definizione delle funzioni
+che ricavano la lettura del campo radiale e la corrente dei generatori
+collegati.
+
+\begin{figure}[!htb]
+ \footnotesize 
+ \centering
+ \begin{minipage}[c]{11cm}
+  \includecodesample{code/notation.m}
+ \end{minipage}
+ \normalsize
+ \label{fig:notation}
+ \caption{Funzioni per la generazione della notazione}
+\end{figure}
+%\verbatiminput{code/notation.m}
+
+Un'altra caratteristica introdotta è la definizione dei parametri
+dell'esperimento attraverso proprietà specifiche degli oggetti. Viene
+istanziato un oggetto esperimento in grado di mantenere i valori dei
+parametri fisici e geometrici caratterizzanti la macchina; appare
+evidente come questo comporti la possibilità di spostare facilmente il
+codice da un esperimento all'altro, o tra diversi modelli, semplicemente
+cambiando l'istanza dell'oggetto. E' semplice immaginare come questo
+assuma grande utilità pratica di gestione del codice, soprattutto in
+vista della applicazione di database ad oggetti in cui siano archiviate
+e condivise le istanze che fanno capo ai modelli di uso comune. Questa
+possibilità suggerisce ancora una volta l'importanza della uniformità di
+linguaggio che l'uso delle interfacce introduce, rendendo più leggibile
+la struttura del codice.
+
+Le proprietà menzionate sono successivamente utilizzate all'interno dei
+blocchi funzionali. Il blocco principale che riassume l'intera catena
+della \emph{matching procedure} è ovviamente la definizione della
+funzione di trasferimento del sistema. E' utile richiamare la
+(\ref{eq:transf_s}) che rappresenta la trasformata nella formulazione
+implementata:
+\begin{equation}
+{P_1}\mn = \sum_{m',n'} \frac{R\mnp}{(s-\gamma\mnp)} \nonumber
+\end{equation}
+Si calcola numeratore e denominatore per ongni armonica $(m',n')$,
+all'interno di un prestabilito intervallo finito di valori, mediante due
+cicli for annidati. La \figurename~\ref{fig:fc1} mostra uno schema
+semplificato del diagramma a blocchi della funzione. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+ \centering
+ \includegraphics[ width=8cm ] {images/flowchart-transf1.png}
+ \caption{Diagramma a blocchi del calcolo della funzione di
+ trasferimento \label{fig:fc1}}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Il calcolo procede definendo anzitutto dei valori limite per il numero
+di armoniche considerate, tale valore dipende principalmente dalla
+conoscenza sulla stabilità tipica dei modi e dalla forma del fattore di
+sagoma, poichè esso determina lo smorzamento delle armoniche più
+elevate. E' poi necessario verificare se si stia lavorando con la
+presenza del plasma nella camera, in questo caso sono inseriti valori
+misurati dei tassi di crescita dei modi instabili; viceversa negli spari
+a vuoto si considera il tasso di crescita della camera con il valore
+definito da C.~G.~Gimblett in \cite{pizz_96}.  Per ogni armonica viene
+aggiuna una coppia polo-residuo ad una lista che sarà infine ordinata
+per valori decrescenti del polo e ridotta nel numero massimo di coppie
+cosiderate nella approssimazione.
+
+Il risultato finale è comunque in forma di coppie polo-residuo per
+formare la matrice di stato. Viene comunque utilizzato il pacchetto
+della teoria del controllo per Octave che prevede la definizione diretta
+del sistema, una volta calcolato numeratore e denominatore mediante la
+funzione \emph{residue}. La procedura genera un sistema caratterizzato
+dalle matrici in forma canonica di controllo, come indicato a
+conclusione del precedente capitolo.

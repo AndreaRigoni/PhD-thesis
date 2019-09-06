@@ -1,0 +1,117 @@
+\documentclass{report}
+\usepackage{suthesis-2e}
+\dept{Computer Science}
+
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+\usepackage{graphics,graphicx,amssymb,amsmath,amsfonts,verbatim}
+\usepackage{epsfig}
+\usepackage{subfigure}
+\usepackage[subnum]{cases}
+\usepackage{color}
+\usepackage{lineno}
+\usepackage{url}
+\usepackage{epstopdf}
+\epstopdfsetup{update}
+
+\usepackage[utf8]{inputenc}
+
+
+\usepackage{makeidx}
+\makeindex
+ 
+
+%% CHEMICAL ELEMENTS
+\usepackage{chemmacros} 
+\chemsetup{modules=all}
+\usepackage{chemgreek}
+
+%%  QUOTES
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{acronym}
+
+
+\graphicspath{ {img/} }
+
+\title{Tools for heterogeneous diagnostic data integration: application to real-time control of fusion relevant plasmas}
+\author{Andrea Rigoni Garola}
+\date{July 2019}
+
+
+%% SUBSTITUTIONS %%
+\newcommand{\RFXmod}{RFX-mod}
+
+%% MATH %%
+\newcommand{\transpose}[1]{\ensuremath{#1^{\scriptscriptstyle T}}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\listoffigures
+\listoftables
+
+\include{1_introduction}
+
+\include{2_equilibrium}
+% \chapter{RFP Equilibrium}
+% \section{MHD}
+% \section{Newcomb SH}
+% \section{The complete “SCHEMA” from sensors to plasma parameters}
+
+\include{3_machine_learning}
+% \chapter{Machine Learning and Latent Space Equilibrium}
+% \section{Unsupervised learning: SVM and Autoencoders}
+% \section{Variational autoencoders and ELBO minimization}
+% \section{Latent space topology in a simulated world}
+% \section{Latent space regularization}
+% \section{Constraining regularizer with semi-supervised training}
+
+\include{4_embedded_ML}
+% \chapter{Embedded ML Infrastructure for Plasma Characterization}
+% \section{A new “smart” DAQ chain proposal for features extraction ( lavoro con Marco Gottardo )}
+% \section{Easing the curse of dimensionality by means of latent space compression}
+% \section{Quantized neural networks for embedded implementation and the Xilinx FINN package}
+
+\include{5_Mildstone}
+% \chapter{Mildstone implementation details}
+% \section{Anacleto - Mildstone component for embedded FPGA development}
+% \section{Kinds of communication channel}
+% \section{Tensorflow with external proxy}
+% \section{Mim - Mildstone approach for interface modelling}
+
+\include{6_T_Hunch}
+% \chapter{T-Hunch: a closed example based on electron temperature}
+% \section{What involved ( basing on “SCHEMA” )}
+% \section{Passing from simulated data to actual data  “missing points”  }
+% \section{( show using of dropout, rebalancing and beta )}
+% \section{Adding information through models ( Zanca-Terranova )}
+
+\chapter{Results}
+\section{If any}
+
+\chapter{Conclusions}
+
+\chapter{Appendix}
+\section{Projects that are already there built upon Anacleto:}
+\subsection{W7X - trigger }
+\subsection{NIO fast daq}
+\subsection{Spider Redpitaya}
+\section{Projects that are already there built upon Tensorflow:}
+\subsection{Jasper and Horace }
+
+\printindex
+
+%% ACRONYMS %%
+\newpage
+\chapter*{List of acronyms}
+\input{acronyms}
+
+
+%% BIBLIOGRAPHY %%
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{bib/ML,bib/plasma,bib/rfx,bib/spider}
+\end{document}

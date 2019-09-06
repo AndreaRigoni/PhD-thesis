@@ -1,0 +1,62 @@
+
+\documentclass[italian,a4paper,10pt]{article}
+
+\usepackage[italian]{babel}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{underscore}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{verbatim} 
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{listings}
+%\usepackage{natbib}
+\usepackage[hang,bf,footnotesize,it]{caption}
+\usepackage{mdwlist}
+\usepackage{boxedminipage}
+\usepackage{multirow}
+
+
+\author{Andrea Rigoni}
+\title{Studio del controllo di RFX}
+\date{2010-00-00}         
+
+\input{macro}
+
+\begin{document}
+\maketitle
+
+\newpage
+%capitolo 1
+\section{Introduzione}
+\input{introduzione}
+\input{confinamento}
+\newpage
+%capitolo 2
+\section{Un modello lineare per il controllo dei modi RWM in RFX}
+\input{BGPtheory}
+\newpage
+%capitolo 3
+\section{Implementazione del modello}
+\input{implementazione}
+\newpage
+%capitolo 5
+\section{Conclusioni}
+\newpage
+%appendici
+\section{Appendici}
+\appendix
+\input{appendici}
+\newpage
+%bibliografia
+\bibliography{bibliografia}
+\bibliographystyle{plain}
+
+\end{document}
+
+

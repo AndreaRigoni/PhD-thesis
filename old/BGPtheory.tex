@@ -1,0 +1,546 @@
+
+Per collegare l'azione del controllo esterno agli effetti sulla
+superficie di plasma mediante metodo magnetoidrodinamico è necessario
+conoscere il valore puntuale di campo e del suo differenziale; per
+semplificare la trattazione analitica è stato proposto in \cite{pizz81}
+un modello di RFP cilindrico lineare\footnote{in appendice è riportata
+le formulazione per gli operatori differenziali in coordinate
+cilindriche utilizzati nel modello lineare.}. Lo schema considerato
+prevede una zona di quasi vuoto che separa la colonna di plasma dalla
+parete.  I sensori, coassiali alle bobine di controllo, possono ricavare
+misure di campo radiale, poloidale e toroidale, interne ed esterne (in
+seguito rispettivamente $b^r,b^{p\pm},b^{t\pm}$).  Sono considerate
+evoluzioni temporali esponenziali per le grandezze perturbate, ovvero
+caratterizzate da un andamento temporale del tipo $e^{\gamma t}$. Il
+modello sfrutta la posizione detta di \emph{thin shell} che considera la
+parete della camera a vuoto come un conduttore omogeneo sottile per
+ottenere una semplificazione della analisi teoretica.  Lo schema
+generale del controllo prevede una composizione in componenti di Fourier
+della perturbazione rilevata, di seguito un amplificatore a controllo
+digitale genera un segnale di guadagno per riequilibrare i modi
+instabili, infine il valore del segnale di controllo e antitrasformato e
+applicato direttamente agli amplificatori.  Si vuole quindi trovare un
+legame tra l'azione del controllo e l'effetto prodotto in termini di
+campo, rivelato dai sensori posti sulla parete della camera,
+interponendo un modello fisico che agisca da cuscinetto.  La reazione
+del modello fisico prevede una dipendenza spaziale, che comporta un
+ampliamento in frequenza dello spettro nella analisi modale, e la
+dipendenza temporale, che si esplica nel comportamento della parete alla
+penetrazione del campo.
+
+\subsection{Estensione Armonica}
+
+L'applicazione del campo di controllo discretizzato alle posizioni delle
+bobine attive, lungo la direzione poloidale e toroidale della camera,
+introduce una inevitabile dispersione in frequenza.
+Si cerca di trovare un'espressione spettrale completa dell'effetto di
+una generica componente armonica nella corrente di controllo $I\mn$.
+
+L'espressione cercata non può prescindere dalla geometria delle bobine
+oltre che dalla loro dislocazione.  E' importante ricordare che il
+modello dipende da una approssimazione cilindrica di raggio $a$ e
+periodicità lungo l'asse $f(r,\vartheta,z) = f(r,\vartheta,z+2\pi
+R_0)$. Nel modello sono considerati due strati di bobine: la griglia dei
+sensori, capaci di misurare componenti di campo in prossimità della
+superficie interna della parete, e la griglia degli attuatori alla
+distanza $r_f > r_w$. Le griglie sono formate da serie di $M_c \times
+N_c$ solenoidi rispettivamente lungo la direzione poloidale e toroidale.
+E' inoltre possibile senza commettere un errore aprezzabile, assumere
+che tali solenoidi siano distribuiti ad angolo regolare e presentino
+tutti la stessa dimensione.
+
+Come analizzato in \cite{pizz_81} si considera valida la posizione di
+\emph{thin shell} che sarà discussa nel prossimo paragrafo, è quindi
+possibile esprimere la densità di corrente attraverso una funzione di
+flusso.  La corrente negli avvolgimenti di feedback è rappresentata
+attraverso una funzione potenziale $J^f$ così che la densità risulti
+$\nabla J^f \times \hat{r}$. Si introduce inoltre per il generico
+attuatore la funzione di sagoma $f(\vartheta,\varphi)$ che risulta
+unitaria allinterno del profilo della bobina e nulla altrove.  La somma
+dei contributi presenta evidentemente una dislocazione discreta del
+potenziale:
+\begin{equation}
+ \label{eq:potenziale}
+ J^f(\vartheta,\varphi) = I\mn \sum_{j=0}^{M-1} \sum_{k=0}^{N-1}
+  e^{ i (m\vartheta_j+n\varphi_k)} f(\vartheta - \vartheta_j,\varphi-\varphi_k)
+\end{equation}
+
+dove $\vartheta_j = j2\pi/M$ e $\varphi_k = k2\pi/N$
+
+la trasformata diventa:
+
+
+
+
+\begin{align}
+ FT(J^f) &= J^f\mnp = \frac{1}{(2\pi)^2} \iint_{-\infty}^{+\infty} J^f(\vartheta,\varphi)
+  e^{-im'\vartheta} e^{-in'\varphi} d\vartheta d\varphi \nonumber \\
+ &=\frac{I\mn}{(2\pi)^2}\sum_{j=0}^{M-1} \sum_{k=0}^{N-1}
+ \iint_{-\infty}^{+\infty} f(\vartheta - \vartheta_j,\varphi-\varphi_k)
+ e^{i(m\vartheta_j+n\varphi_k)} e^{-i(m'\vartheta + n'\varphi)}
+ d\vartheta d\varphi  \nonumber
+\end{align}
+aggiungendo e sottraendo un termine si ottiene:
+\begin{align}
+ m\vartheta_j - m'\vartheta + m'\vartheta_j - m'\vartheta_j &=
+ (m-m')\vartheta_j - m'(\vartheta - \vartheta_j) \nonumber \\
+ n\varphi_k - n'\varphi + n'\varphi_k - n'\varphi_k &=
+ (n-n')\varphi_k - n'(\varphi - \varphi_k) \nonumber
+\end{align}
+la funzione diviene:
+\begin{align}
+ \label{eq:dimostrazione_sideb}
+= \frac{I\mn}{(2\pi)^2} \sum_{j=0}^{M-1}\sum_{k=0}^{N-1}
+ \iint_{-\infty}^{+\infty} f(\vartheta - \vartheta_j,\varphi-\varphi_k)
+ e^{-im'(\vartheta-\vartheta_j)}e^{-in'(\varphi-\varphi_k)}  d\vartheta
+ d\varphi \nonumber \\
+ \times \quad e^{i(m-m')\vartheta_j}e^{i(n-n')\varphi_k} \nonumber \\
+ = I\mn F_{m',n'} \frac1{M} \sum_{j=0}^{M-1} \exp\left(2\pi i
+ \frac{m-m'}{M}j \right) \cdot 
+ \frac1{N} \sum_{k=0}^{N-1} \exp\left(2\pi i \frac{n-n'}{N}k \right)
+\end{align}
+
+dove si sono sostituiti i valori $\vartheta_j = j2\pi/M$ e
+$\varphi_k=k2\pi/N$. La funzione di forma trasformata è riassunta in:
+
+\begin{equation}
+ F\mn = \frac{MN}{(2\pi)^2}\iint_{-\infty}^{+\infty}
+  f(\vartheta,\varphi)e^{-i(m\vartheta+n\varphi)} d\vartheta d\varphi
+\end{equation}
+In generale per un solenoide di forma rettangolare si assume il valore \cite{pizz81}
+\begin{equation}
+ \label{eq:shape_coils}
+ F\mn = \frac{MN}{\pi^2}\frac{sin(m\Delta\vartheta_f/2)sin(n\Delta\varphi_f/2)}{mn}
+\end{equation}
+
+Per concludere, si è precedentemente posto la funzione di forma come
+nulla fuori dall'area del solenoide e di valore unitario all'interno,
+questo comporta che le somme in (\ref{eq:dimostrazione_sideb}) sono non
+nulle per tutti i valori interi di $(m-m')/M$ e $(n-n')/N$; da cui
+l'espressione per la generica componente armonica del potenziale:
+\begin{equation}
+ J\mn^f = F\mn \sum_{l=-\infty}^{+\infty}\sum_{p=-\infty}^{+\infty} I_{m+lM,n+pN}
+\end{equation}
+Si conclude che ogni modo $(m,n)$ esternamente applicato genera un
+numero infinito di armoniche in $J^f$, ognuna delle quali separata da
+multipli del numero di bobine del corrispondente asse.
+
+Allo stesso modo anche il sistema di bobine che registrano il campo alla
+parete introducono degli artefatti nello spettro, dovuti alla loro
+dislocazione discreta. Come già delineato parlando della struttura
+geometrica della macchina RFX, sensori e attuatori sono in numero uguale
+e coassiali, cosicchè é semplice intuire come le bande laterali che
+generano siano per costruzione uguali. Si assume quindi di introdurre
+l'effetto di estensione armonica dei sensori con $S\mn$ \cite{pizz_81}
+\begin{equation}
+ \label{eq:shape_sensori}
+ S\mn = \frac{sin(m\Delta\vartheta_s/2)}{m\Delta\vartheta_s/2}
+\frac{sin(n\Delta\varphi_s/2)}{n\Delta\varphi_s/2}
+\end{equation}
+Tale effetto sagoma le componenti del campo che investe i sensori
+producendo il profilo del campo rivelato:
+\begin{equation}
+ B\mn = \sum_l \sum_p S_{m+lM,n+pN} b_{m+lM,n+pN}
+\end{equation}
+
+Un metodo alternativo ma ugualmente efficace, per analizzare l'estensione
+armonica dei modi introdotti dal controllo, consiste nel considerare la
+teoria dei segnali imponendo la disposizione spaziale delle bobine come
+la successione dei campioni di un segnale bidimensionale. Una soluzione
+tipicamente adottata nell'elaborazione delle immagini.
+
+L'analisi dei segnali è convenientemente studiata attraverso una
+\emph{teoria unificata} \cite{cariolaro} dove la generica trasformata
+di Fourier presenta sempre nucleo esponenziale ma utilizza la
+formulazione di Haar per l'integrazione:
+\begin{equation}
+ F({\bf v}) = \int_I d{\bf u} f({\bf u})e^{i2\pi{\bf u}^T{\bf v}} \quad \quad
+  \begin{array}{r}
+   {\bf u} \in I \\
+   {\bf v} \in \hat I
+  \end{array}
+\end{equation}
+Il dominio di definizione $I$ e il corrispondente dominio duale $\hat I$
+sono costituiti da gruppi regolari genericamente espressi in forma
+quoziente: $$ I = \frac{I_0}{S} \longleftrightarrow \hat{I} =
+\frac{S^\star}{I_0^\star} $$ dove il gruppo denominatore indica la
+periodicità, il numeratore la discretizzazione, e l'opratore $\star$
+indica il gruppo reciproco come: $$J^\star = \{{\bf v}| {\bf
+u^Tv}\in\mathbb{Z} ,\quad {\bf u}\in J \}$$ Questa digressione puramente
+teorica è utile, poichè si può pensare alla distribuzione delle
+\emph{saddle coils} come ad un reticolo bidimensionale ortogonale
+$\mathbb{Z}(d_1,d_2)$, dove $d_1 = 2\pi/M$ e $d_2 = 2\pi/N$. In questo
+modo il segnale di controllo diventa bidimensionale discreto e periodico
+di $M\times N$ campioni mentre la trasformata, come integrale di Haar,
+diviene la usuale trasformata discreta (DFT) e porge quindi un segnale
+definito nel dominio duale con la stessa periodicità e
+discretizzazione. Successivamente, si applica una interpolazione del
+dominio tramite convoluzione del segnale con la funzione di sagoma
+$f(\vartheta,\varphi)$; il dominio di definizione presenta comunque la
+stessa periodicità ma diviene una funzione continua. Nel dominio duale
+il prodotto di convoluzione è invece un semplice filtraggio che modula
+in ampiezza le infinite armoniche eliminandone la periodicità.
+
+
+
+
+\subsection{Matching Procedure}
+L' andamento completo del campo, tipico problema di valori al contorno
+  \cite{jackson}, è formalmente risolubile mediante equazioni di Green,
+  ma tale metodo non sempre risulta agevole
+  analiticamente. L'alternativa spesso utilizzata è un approccio che
+  parte direttamente dalla formulazione differenziale e usa uno sviluppo
+  in funzioni ortogonali.  Nella regione di vuoto tra il plasma e la
+  parete ($r<r_w$) e tra la parete e le bobine di controllo
+  ($r_w<r<r_f$) vale l'equazione di Poisson, e il campo è quindi
+  misurabile attraverso un gradiente di potenziale magnetico:
+\begin{align}
+ \label{eq:Poisson}
+ \nabla^2\Phi = 0 \\
+ \label{eq:grad_phi}
+ \vettore{b} = \nabla\Phi
+\end{align}
+Lo sviluppo della (\ref{eq:Poisson}), proposto in appendice, è
+realizzato mediante separazione ortogonale delle variabili e nel caso
+cilindrico comporta un andamento del potenziale caratterizzato dalla
+equazione differenziale di Bessel e di seguito descritto tramite
+Funzioni di Bessel modificate (MBF):
+\begin{equation}
+ \Phi_r = A \cdot I_m(|n|\epsilon_r) + B \cdot K_m(|n|\epsilon_r)
+\end{equation}
+in cui $\epsilon_r = r/R_0$.
+
+Il campo radiale risultante è ovunque dato come combinazione delle
+derivate parziali prime rispetto al raggio $I'_m(|n|\epsilon_r)$ e
+$K'_m(|n|\epsilon_r)$. Uno schema del profilo del campo generato dalle
+bobine a vuoto è disegnato in figura~\ref{fig:matchb}; si nota
+immediatamente un massimo nelle vicinanze del punto di applicazione
+della corrente di controllo e via via una attenuazione lungo la sezione
+nelle due direzioni opposte.  Si dovranno quindi ricavare i valori dei
+coefficienti A e B che realizzino tale profilo. Osservando l'andamento
+asintotico delle MBF, graficate per alcuni valori del parametro m in
+figura~\ref{fig:bessel}, è immediato rilevare che per l'annullarsi del campo
+nelle due direzioni si dovranno eliminare le componenti non
+asintoticamente nulle; ovvero porre $B = 0$ per $r<r_w$, successivamente
+$A\neq0 ,B\neq0$ nell'intervallo $r\in[r_w,r_f]$, e infine $A=0$ per
+$r>r_f$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+ \centering
+ \includegraphics[ width=8cm ] {images/matchb.png}
+ \caption{Schema del profilo di campo radiale}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+ \centering
+ \includegraphics[ width=8cm ] {images/BesselI.png}
+ \caption{Schema della funzione MBF I per valori di m=0,m=1,m=2,m=3}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+ \centering
+ \includegraphics[ width=8cm ] {images/BesselK.png}
+ \caption{Schema della funzione MBF K per valori di m=0,m=1,m=2,m=3}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\begin{align}
+ b_r &= A_1 \cdot I'_m(|n|\epsilon_r) && r < r_w \\
+ b_r &= A_2 \cdot I'_m(|n|\epsilon_r) +  B_2 \cdot K'_m(|n|\epsilon_r) &&
+ r_w < r < r_f \\
+ b_r &= B_3 \cdot K'_m(|n|\epsilon_r) && r > r_f
+\end{align}
+
+Per quanto riguarda le condizioni al contorno sulla parete della camera
+gli effetti dei modi RWM devono essere posti in relazione alla dinamica
+temporale dell'impulso. La parete, infatti, può essere genericamente
+associata ad una impedenza resistiva e induttiva con costante di tempo $L/R$.
+
+Per confrontare i fattori di crescita con la risposta della parete si è
+scelta la approssimazione \emph{''complete thin shell''}\footnote{
+L'accezione ``completa'' si riferisce alla continuità del guscio;
+eventuali tagli o buchi nella forma della parete, impedendo il recircolo
+delle correnti indotte, modificano la differenza di campo nel salto di
+parete riducendo l'attendibilità dell'aprossimazione.} che sottende alla
+relazione:
+\begin{equation}
+ \frac{\delta_w}{r_w} \ll |\gamma|\tau_w \ll \frac{r_w}{\delta_w}
+\end{equation} 
+Il tempo caratteristico della parete in termini di $L/R$ equivalenti è
+invece ricavabile tramite:
+\begin{equation}
+ \tau_w = \mu_0\sigma_w r_w \delta_w
+\end{equation}
+con $\delta_w$ spessore e $\sigma_w$ conducibilità del guscio.
+
+In questo modo si assume irrilevante la densità di corrente radiale che
+attraversa il sottile spessore $\delta_w$, così che le altre componenti
+(e quindi il campo radiale) siano costanti e proporzionali alla
+differenza tra campo trasversale interno ed esterno($b^{p\pm},b^{t\pm}$).
+
+Con queste ipotesi possono essere dimostrate \cite{pizz70} le seguenti
+relazioni che descrivono il profilo di campo radiale nell'attravesamento
+di parete in $r_w$:
+
+\begin{align}
+ \label{eq:jump1}
+ \jump{b_r}{r_w} &= 0  \\
+ \label{eq:jump2}
+ \jump{ \diffr{}(rb_r) }{r_w} &= \tau_w \gamma_{m,n}b_r
+\end{align}
+
+Nella regione di spazio dove è situato il solenoide attuatore del campo
+di controllo si ipotizza un secondo guscio ideale che per il teorema di
+equivalenza simula il campo generato attraverso una distribuzione di
+correnti impresse sulla superficie. Considerando questo strato
+immaginario di spessore $\delta_c$ e interessato dalla corrente
+superficiale $\vettore{j} = (\rad{j},\pol{j},\tor{j})$ si identifica un
+salto di campo radiale in $\epsilon_c = r_f/R_0$ proporzionale alla corrente
+applicata:
+
+\begin{equation}
+ \jump{ \diffr{}(\rad{b}) }{r_c} = i \mu_0 \delta_c
+  \left( \frac{m^2 + n^2 \epsilon_c^2}{m} \right) j_\varphi
+\end{equation}
+
+La densità superficiale $j_\varphi$ è direttamente dipendente dalla
+corrente circolante nel solenoide attraverso un parametro geometrico
+$\Sigma$:
+
+\begin{equation}
+ I_c = 2 \pi r_c \delta_c \Sigma j_\varphi
+\end{equation}
+Da cui la formula di interesse nel presente lavoro per $m=1$
+\begin{equation}
+ \label{eq:jump_coil}
+ \jump{ \diffr{}(\rad{b}) }{r_f} = i \frac{\mu_0}{2\pi r_f^2 \Sigma}
+  \left( {1 + n^2 \epsilon_c^2} \right) I_c
+\end{equation}
+
+L'andamento radiale atteso è schematizzato completamente in figura
+[figura]: le relazioni al contorno (\ref{eq:jump1}), (\ref{eq:jump2}) e
+(\ref{eq:jump_coil}) caratterizzano la continuità della funzione e la
+derivata nei punti di giunzione dei tre intervalli. La procedura di
+matching consiste allora nel determinare i paramentri $A_1,A_2,B_2,B_3$ per
+ottenere un valore di campo $b_r$ lungo il profilo a fronte della
+applicazione di una corrente $I_c$; questo valore sarà calcolato nel
+campo a vuoto e utilizzato per dimensionare l'effetto del controllo
+attivo sul campo disperso dalla parete.
+
+%%%%%%%%%%%%%%%%%%%[figura]%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+\caption{profilo del valore di potenziale per valori crescenti della
+ coordinata radiale}
+\end{figure}
+
+Il campo generato dalla corrente nelle coils e dato da:
+
+\begin{equation}
+ \label{eq:bf_coils}
+ b^f\mn = -\frac{\mu_0}{R} n^2 \epsilon_f \besKKne{f} \besIIne{f} J^f\mn
+  \equiv \frac{\mu_0}{\pi a}c\mn J^f\mn
+\end{equation}
+[spiegare il termine $\mu_0/\pi a$]
+Con $J^f\mn$ si è precedentemente definito il potenziale della
+distribuzione delle correnti di modo $m,n$ localizzate sulla superficie
+immaginaria in $r_f$ dove:
+\begin{equation}
+ c\mn = -\pi n^2 \epsilon_a \epsilon_f \besKKne{f} \besIIne{f}
+\end{equation}
+
+A questo punto, determinato il campo impresso dalle sorgenti, si ottiene
+il valore nel punto di matching attraverso la seguente relazione che
+riassume tutta la procedura.
+
+\begin{equation}
+ \label{eq:bw_coils}
+ \{b^r\mn,b^{p\pm}\mn, b^{t\pm}\mn \}_{sens} =
+  \{1,a^{p\pm}\mn,a^{t\pm}\mn\} M\mn b^f\mn
+\end{equation}
+
+Il valore $M\mn$ è un coefficiente di mutua induttanza per la relativa
+frequenza spettrale, esso è ricavato risolvendo il problema
+elettrostatico tramite le sopraindicarte condizioni al contorno. Una
+dimostrazione rigorosa per la soluzione seguente è proposta in
+appendice:
+
+\begin{equation}
+ \label{eq:emme}
+  M\mn = - \frac{1}{2\tau_w(s-\gamma\mn)} \frac{1+m^2/n^2\epsilon_w^2}{\besKKne{w}\besIIne{f}}
+\end{equation}
+
+con uniformità di simboli si è espressa con $\gamma\mn$ il tasso di
+crescita del modo $(m,n)$ analizzato. Si nota immediatamente che la
+funzione $M\mn(s)$ presenta un polo corrispondente al tasso di
+crescita del RWM corrispondente $s=\gamma\mn$.
+
+I simboli $a^{p\pm},a^{t\pm}$ rendono il rapporto interno ed esterno di
+campo poloidale e toroidale rispetto al valore radiale calcolato, ed
+equivalgono a:
+
+\begin{align}
+ a^{\{p^-,t^-\}}\mn &= s_0\{m,n\epsilon_w\}\frac{d\mn - 1 +
+ 2\tau_w\gamma\mn}{m^2+n^2\epsilon^2_w} \\
+ a^{\{p^+,t^+\}}\mn &= s_0\{m,n\epsilon_w\}\frac{d\mn - 1 +
+  2\tau_w(\gamma\mn -s)}{m^2+n^2\epsilon^2_w} 
+\end{align}
+dove $s_0 = \pm1$ è un termine di segno introdotto per eliminare il
+termine immaginario nel campo poloidale, si esegue infatti uno shift di
+fase di 90° nel segnale. E' sufficiente porre tale valore a $sign(m)$
+oppure $sign(n)$ rispettivamente per i sensori poloidali e toroidali.
+
+Il termine
+\begin{equation}
+ d\mn = 1 - \left( 1+\frac{m^2}{n^2\epsilon^2_w} \right) \frac{|n|\epsilon_w\besKne{w}}{\besKKne{w}}
+\end{equation}
+equivale a $rb'_r/b_r$ per il campo magnetico esterno $(r > r_w)$ in
+assenza della corrente di feedback applicata.
+
+
+
+
+
+\subsection{Controllo}
+
+
+Si può quindi ricostruire una relazione conclusiva che tenga conto di
+tutti i passaggi fino ad ora analizzati. Caratterizzando la relazione
+iniziale (\ref{eq:bf_coils}) con il termine $J^f\mn$, che tiene conto della
+generazione delle \emph{sidebands} e del fattore di forma $F\mn$ di
+(\ref{eq:shape_coils}), si ottiene il valore del campo generato dalle
+\emph{saddle coils}. Valutando opportunamente il problema elettrostatico
+in geometria cilindrica e imponendo le condizioni al contorno della
+approssimazione di \emph{thin shell} si ottiene il valore dello stesso
+campo (\ref{eq:bw_coils}) attraverso un termine di mutua induttanza
+$M\mn$. Infine si aggiunge il contributo spettrale $S\mn$ di
+(\ref{eq:shape_sensori}), il termine dovuto ai sensori.  Componendo
+tutti i termini si perviene ad una relazione di ingresso/uscita tra la
+corrente di controllo e il segnale di campo ricostruito dai sensori per
+il feedback. Per ogni modo $(m,n)$ eccitato dal controllo, con $|m|<M/2$
+e $|n|<N/2$, si ottiene:
+
+\begin{equation}
+ B\mn = \sum_{m'=m+lM}\sum_{n'=n+pN} F\mnp S\mnp M\mnp
+  \{1,a^{p\pm}\mnp,a^{t\pm}\mnp\} \frac{\mu_0}{\pi a} I\mnp
+\end{equation}
+e si considera quindi la funzione di trasferimento del sistema per la
+singola componente $(m,n)$
+\begin{equation}
+ {P_1}\mn = \sum_{\mnp}\frac{\pi a B\mnp}{\mu_0 I\mnp}
+\end{equation}
+Ciò che si vuole ottenere è un valore di guadagno applicato alle bobine
+che annulli il campo rilevato; questo si traduce un un regolatore a zero
+caratterizzato dalla seguente funzione caratteristica nella trasformata
+di Laplace dove si è indicato con $G\mn(s)$ lo spettro di una generica
+funzione guadagno.
+\begin{equation}
+ 1+G\mn(s){P_1}\mn(s) = 0
+\end{equation}
+[figura]
+
+Ci limitiamo in questo caso a non analizzare sistemi di controllo ottimo
+e valutare il solo caso di controllo proporzionale con G indipendente
+dal tempo.
+Il sistema di figura può essere facilmente rappresentato da un sistema
+di stato.
+\begin{equation}
+ \left\{
+  \begin{array}{l}
+   \dot{x}(t) = Ax(t) + Bu(t) \\
+   y(t) = Cx(t)
+  \end{array}
+ \right.
+\end{equation}
+Considerando la reazione statica dall'uscita, si dimostra facilmente che
+il sistema può essere ricondotto ad una tipica retroazione dallo stato;
+infatti dalla legge di controllo del tipo:
+\begin{equation}
+ v(t) = Gy(t) + u(t)
+\end{equation}
+si ricava facilmente 
+\begin{equation}
+v(t) = GCx(t) + u(t)
+\end{equation} ovvero un caso particolare di retroazione dallo stato.
+
+%Si può ulteriormente caratterizzare il polinomio $P1$ per il caso di
+%specie. Volendo analizzare modi $m=1$ lo studio può essere eseguito con
+%l'ausilio del solo campo radiale. I valori di campo e corrente si
+%riducono al caso $(m=1,n)$.
+
+ E' possibile inoltre semplificare la trattazione, condensando i termini
+di forma $F\mn$ e $S\mn$ all'interno della mutua induttanza, e definendo
+convenientemente un nuovo paramentro che riassume l'intero termine
+residuo $R\mn$ \cite{gregoratto} della funzione di trasferimento:
+\begin{equation}
+ {P_1}\mn = \sum_{m',n'} \frac{R\mnp}{(s-\gamma\mnp)}
+\end{equation}
+Tutti i poli con tassi di crescita negativi sono instabili e devono
+essere controllati.  La somma in $m' = m+lM, n'= n+pN$ ha evidentemente
+infiniti termini ma fortunatamente il fattore di forma, come si è
+precedentemente mostrato, agisce come un attenuatore per le armoniche
+elevate.  Nel contempo sappiamo che anche il plasma si mostra via via
+più stabile per modi elevati; é quindi logico pensare di limitare il
+numero di addendi alle prime armoniche identificando quali siano i poli
+instabili.  Nel procedimento qui adottato, dopo aver ordinato le coppie
+zero-polo rispetto alla stabilità del polo, si applica un ulteriore
+troncamento del numero di poli per ottenere una utile riduzione della
+dimensione del sistema a cui applicare il guadagno.
+\begin{align}
+ \label{eq:trasferimento}
+ {P_1}\mn &= \sum_{j,k} \frac{R\mnp}{s-\gamma\mnp} =
+ \frac{b_0+b_1s+\hdots+b_{n-1}s^{n-1}}{a_0+a_1s+\hdots+s^n}
+\end{align}
+La teoria della realizzazione asserisce che una funzione matriciale
+strettamente propria ha sempre soluzione in un sistema in forma canonica
+di controllo e una in forma canonica di osservazione.  Volendo indagare
+una sigola coppia di modi $(m,n)$ è altresì facilmente dimostrabile che
+il sistema in forma canonica di controllo, con le matrici
+\newcommand{\canonicalcontrolA}{ 
+\left[
+\begin{matrix}
+ 0 & 1 && \\
+ &&\ddots \\ \\
+ &&&1 \\
+ -a_0 & -a_1 & \hdots & -a_{n-1}
+\end{matrix}
+\right]
+}
+\newcommand{\canonicalcontrolB}{ 
+\left[
+\begin{matrix}
+0\\ 0\\ \vdots \\ \\ 1
+\end{matrix}
+\right]
+}
+\newcommand{\canonicalcontrolC}{ 
+\left[
+\begin{matrix}
+B_0& b_1& \hdots & & b_{n-1}
+\end{matrix}
+\right]
+}
+\begin{align}
+ A &= \canonicalcontrolA,\quad B = \canonicalcontrolB \\ \nonumber
+ \\ C &= \canonicalcontrolC \nonumber
+\end{align}
+realizza la (\ref{eq:trasferimento}). Infatti si ottiene immediatamente
+la funzione di trasferimento con $y(t)/u(t) = C(sI-A)^{-1}B$. Avendo
+scelto la realizzazione di una singola coppia $(m,n)$ è anche possibile
+dire che essendo i poli tutti separati tra loro numeratore e
+denominatore della (\ref{eq:trasferimento}) sono primi tra loro e la
+realizzazione è minima. In questo caso gli autovalori della matrice di
+stato coincidono con i poli della funzione di trasferimento e sono tutti
+allocabili.
+
+%Si considera il tasso di crescita della camera a vuoto con il valore
+%definito da C.~G.~Gimblett in \cite{pizz_96} utilizzato nei precedenti
+%articoli di R.~Fitzpatrick \cite{pizz_70} e R.~Paccagnella e P.~Zanca
+%\cite{pizz_97}.

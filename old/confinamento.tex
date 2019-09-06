@@ -1,0 +1,388 @@
+%\section{Il confinamento magnetico di RFX}
+
+\subsection{Le instabilità magnetoidrodinamiche in RFP}
+- descrizione magnetoidrodinamica di singolo fluido
+- modello magnetostatico
+- tipi di instabilità
+\newline
+
+Sulla riuscita dei sistemi di contenimento elettromagnetico incidono i
+fenomeni di cosidetta instabilità del plasma.
+
+In esperimenti di tipo Tokamak e RFP, le instabilità prodittive di
+effetti macroscopici sono descritte, nella loro forma più semplice, dal
+modello fluido di plasma MHD (magnetohydrodynamic model). Dato il loro
+carattere periodico, queste instabilità sono ben rappresentate da
+componenti modali della forma $\exp i(m\theta + n\phi)$, soprattutto in
+presenza di un elevato rapporto d'aspetto ed una sezione della camera a
+vuoto circolare.
+
+Una volta considerata ogni perturbazione nello spettro delle frequenze spaziali
+lungo la colonna di plasma, è con la variazione o la curvatura del campo
+che si cerca di riportare il sistema all'equilibrio.
+Si noti fin d'ora, tuttavia, che il tentativo di stabilizzazione è vano
+se eseguito lungo le superfici magnetiche per le quali i modi
+perturbanti risuonano con il passo del fattore di sicurezza pari a
+$q=m/n$\cite{wesson}.
+
+\subsubsection{Il modello magnetoidrodinamico}
+Tipicamente l'analisi di plasma fluido coinvolge i movimenti
+generalizzati di ogni specie ionica, tuttavia è possibile introdurre una
+semplificazione condensando in un unico parametro ogni coppia di valori
+relativa a ioni ed elettroni, ottenendo un andamento di singolo fluido.
+Le grandezze in gioco sono:
+
+
+\begin{align}
+ & \rho_m = n_e m_e + n_i m_i + n_0 m_0 
+ && \rho = n_e q_e + n_i q_i
+ \\ 
+ & \media{J}_m = n_e m_e \media{v}_e + n_i m_i \media{v}_i + n_0 m_0
+ \media{v}_0 
+ && \media{J} = n_e q_e \media{v}_e + n_i q_i \media{v}_i
+ \\
+ & \media{v} = \frac{\media{J}_m}{\rho_m} 
+ && p \approx n_ekT_e + n_ikT_i
+\end{align}
+
+Con queste variabili si possono definire per il fluido le equazioni di
+continuità di massa e momento:
+
+
+
+\begin{align}
+\label{eq:mhd_mass_continuity}
+\difft{\rho} + \nabla \cdot (\rho \vettore{v}) &= 0 \\ 
+\label{eq:mhd_moment_continuity}
+\rho \left(\difft{\vettore{v}} + \vettore{v} \cdot \nabla \vettore{v} \right) &=
+\sigma \vettore{E} + \vettore{j} \times \vettore{B} - \nabla p \\
+\label{eq:mhd_ohm}
+\vettore{E} + \vettore{v} \times \vettore{B} &= \eta \vettore{j} 
+%-\frac{ \vettore{j} \times \vettore{B} - \nabla p_e }{ne}
+\end{align}
+
+a cui si aggiungono i vincoli di interazione elettromagnetica posti
+dalle leggi di Maxwell.
+\begin{align}
+\nabla \times \vettore{E} &= -\difft{\vettore{B}} \\
+\label{eq:ampere}
+\nabla \times \vettore{B} &= \mu_0 \vettore{J} \\
+\nabla \cdot \vettore{B} &= 0
+\end{align}
+
+Il sistema così composto, detto modello \emph{MHD resistivo} del plasma,
+risulta non chiuso; sono quindi necessarie ulteriori posizioni
+semplificative:
+
+\begin{itemize}
+\item si considera la neutralità della carica $\sigma_i \simeq \sigma_e$
+      che comporta l'annullamento del termine di resistività $\rho = 0$
+      (il plasma è infatti studiato ad una distanza molto superiore alla
+      lunghezza di Debye, così da apparire elettricamente neutro);
+\item
+     si aggiunge un vincolo di stato per il gas ideale, considerando solo
+     trasformazioni isoterme o adiabatiche:
+     \begin{equation}
+     \difft{} \left( \frac{p}{\rho_m^\gamma} \right) = 0
+     \end{equation}
+     \begin{align}
+      & \gamma = 1 && isoterme \\
+      & \gamma = 5/3 && adiabatiche
+     \end{align}
+\end{itemize}
+
+Fatto questo, un primo modo di ottenere una soluzione chiusa del sistema
+è inserire l'equazione di Ampere (\ref{eq:ampere}) in quella di
+Navier-Stokes della continuità del momento (\ref{eq:ampere}), riducendo
+il sistema ad una equazione che descrive il comportamento della
+pressione e tensione magnetica del plasma
+\begin{equation}
+ \label{eq:mhd_sol1}
+ -\nabla \left( p+\frac{B^2}{2\mu_0} \right) + \frac{
+  (\vettore{B}\cdot\nabla)B}{\mu_0} = 0
+\end{equation}
+Una seconda soluzione prevede invece l'inserimento dell'equazione di
+Ampere in quella di Ohm (\ref{eq:mhd_ohm}), ottenendo la variazione del
+campo di induzione che risulta come composizione di un termine di flusso
+e un termine di diffusione
+\begin{equation}
+\label{eq:mhd_sol2}
+ \difft{\vettore{B}} = \nabla \times (\vettore{v} \times \vettore{B}) +
+  \frac{\eta}{\mu_0} \nabla^2\vettore{B}
+\end{equation}
+
+Se consideriamo un esempio semplice di pinch lineare, in cui la
+componente di tensione magnetica sia nulla\footnote{la tensione
+magnetica è infatti espressione della curvatura delle linee di campo},
+si può notare come l'effetto di strizione della (\ref{eq:mhd_sol1})
+dipenda dal gradiente di campo della colonna di plasma. Un'importante
+figura di merito del confinamento magnetico è, infatti, espressa da
+$\beta$, un parametro adimensionale che esprime la pressione cinetica
+$p$ rispetto alla pressione magnetica $p_{mag} = B^2/2\mu_0$ e che per
+il pinch lineare viene a dipendere proprio dal rapporto tra campo
+esterno e campo penetrato:
+\begin{equation}
+\beta = \frac{p}{p_{mag}} = 1-\frac{B_{int}}{B_{ext}}
+\end{equation}
+
+Dal rapporto dei termini di (\ref{eq:mhd_sol2}), considerando come
+termine di viscosità $\nu_m=\eta/\mu_0$, si ottiene il \emph{Numero di
+Raynolds magnetico} $\mathcal{R}_m$, parametro caratteristico del moto
+del fluido:
+\begin{equation}
+ \frac{\vert \nabla\times\vettore{v}\times\vettore{B}\vert}
+  {\vert \nu_m\nabla^2\vettore{B}\vert} \simeq
+  \frac{ \frac{v \cdot B}{L} }{ \nu_m \frac{B}{L^2}} = 
+  \frac{vL}{\nu_m} \equiv \mathcal{R}_m
+\end{equation}
+
+Per ottenere alte pressioni cinetiche è desiderabile avere un plasma con
+una ridotta penetrazione e quindi un'esigua viscosità magnetica
+($\mathcal{R}_m\gg1$), ma nel contempo, però, si ottiene un moto
+turbolento in cui la variazione di campo dipende in misura sempre
+maggiore da fenomeni di trasporto.  E' per questo motivo che il modello
+di studio per le proprietà di stabilità e per gli effetti della
+geometria magnetica sullo stato di equilibio del plasma è ricavato
+nell'ipotesi di perfetta conduttività $\eta = 0$ ed è chiamato
+\emph{modello MHD ideale}\footnote{Per un'analisi dettagliata delle
+condizioni del modello MHD ideale di veda\cite{fridberg}\cite{pizz27}}.
+
+\subsubsection{Equilibrio Statico}
+Lo studio dell'instabilità MHD del plasma riguarda principalmente le
+perturbazioni del sistema ideale a partire da un punto di equilibrio
+magnetostatico. In questo stato le relazioni che presentano una
+variazione temporale sono evidentemente nulle, così il sistema,
+imponendo $\eta = 0$ e $\difft{}=0$, divene:
+
+\begin{equation}
+ \label{mhd_ideal}
+ \left\{
+  \begin{array}{l}
+   \nabla \cdot \vettore{B} = 0 \\
+   \nabla \times \vettore{B} = \mu_0 \vettore{J} \\
+   -\nabla p + \vettore{J} \times \vettore{B} = 0
+  \end{array}
+ \right.
+\end{equation}
+Dalla terza relazione il gradiente di pressione rimane ortogonale alle
+linee di campo e corrente, costruendo un insieme di superfici isobare
+toroidali\footnote{Si noti che i campi magnetico e di corrente della
+prima e seconda relazione sono solenoidali e conducono a superfici
+necessariamente chiuse. Se si considera un modulo di pressione costante
+lungo detta superficie, con angolo di intersezione tra i vettori di
+campo perpendicolare ovunque, si ottiene come soluzione reale possibile
+il toro.}, una interna all'altra, chiamate \emph{superfici
+magnetiche}\cite{boydsand}.
+%\begin{figure}[th]
+% \centering
+ % \subfigure[gaussiana incorrelata]{images/sup_isabare.jpg}
+% \includegraphics[width=5cm , bb= 20 20 575 575]{images/supisobare.jpg} 
+%\end{figure}
+Queste sono dette \emph{superfici razionali} quando le linee di campo
+che le percorrono si ricombinano su se stesse dopo alcuni giri
+toroidali, oppure \emph{ergodiche} quando, non ricombinandosi, coprono
+l'intera superficie.
+
+Nonostante la struttura fisica toroidale della macchina reale, è
+possibile considerare un'approssimazione cilindrica (detta
+assialsimmetrica) per semplificare la trattazione delle forze in gioco e
+rendere il problema più accessibile, imponendo idealmente di considerare
+periodiche anche le grandezze lungo l'asse longitudinale del
+cilindro. In questa particolare geometria, che sarà usata anche nel
+presente modello di studio, si possono individuare due configurazioni di
+corrente che realizzano l'effetto \emph{''pinch''} del plasma
+\cite{fridberg}\cite{ortolani} rispettivamente chiamate
+$\theta$-\emph{pinch} e $z$-\emph{pinch}, a seconda della direzione
+della corrente stessa\footnote{Ovvero lungo la direzione angolare e
+assiale del cilindro come rispettive trasformazioni delle coordinate
+poloidale e toroidale.}. Ogni configurazione possiede vantaggi e
+svantaggi e le soluzioni proposte tendono a trovare il giusto
+compromesso nel miscelare le due azioni senza sacrificare la stabilità
+che garantisce il tempo di confinamento\cite{boydsand}.  Utilizzando
+questo tipo di approssimazione l'equilibrio toroidale è ben descritto
+dal modello di Grad-Shafranov tramite un'equazione differenziale
+parziale ellittica (GSE) che analizza la stabilità del sistema
+(\ref{eq:mhd_ideal}) in termini di funzioni di flusso\cite{boidsand}; la
+maggior parte delle configurazioni magnetiche oggi in uso, come i
+Tokamak e gli stessi RFP sfruttano questo importante modello di studio.
+Introducendo $m$ e $n$ come coordinate poloidale e toroidale del modo
+($m,n$) nella trasformazione spaziale in serie di Fourer, possiamo
+esprimere l'evoluzione della perturbazione $\tilde{\psi}$ della generica
+funzione di flusso analizzata in GSE
+\begin{equation}
+ \tilde{\psi}(\vettore{r},t) =
+  \sum_k{ \tilde{\psi}_k(r) e^{ i(\vettore{k} \cdot \vettore{r} - \omega
+  t) } } =
+  \sum_k{ \tilde{\psi}_k e^{ i(m\theta + n\varphi - \omega t) } }
+\end{equation}
+dove $\vettore{r} = (r,\theta,\varphi)$ è il vettore di posizione in
+coordinate toroidali e $\vettore{k}$ è il vettore dei relativi numeri
+d'onda. La frequenza è invece l'espressione della trasformata nel tempo
+ed è in generale un valore complesso $\omega = \omega_R + i\omega_I$,
+in cui la parte reale esprime la velocità di propagazione dell'onda e la
+parte immaginaria rappresenta la crescita, smorzata $(\omega_I <0)$ o
+esponenziale ($\omega_I >0$), dell'ampiezza della perturbazione.  Il passo
+di tale perturbazione si ottiene quindi per $(m\theta + n\varphi) =
+cost$, ovvero: $$ md\theta -nd\varphi = 0$$ $$ p_p =
+\int_0^{\Delta\varphi}d\varphi = \int_0^{2\pi}\frac{m}{n}d\theta =
+\frac{m}{n}2\pi$$ Allo stesso modo il passo delle linee di campo
+equivale a: $$\frac{Rd\varphi}{rd\theta} = \frac{B_\varphi}{B_\theta}$$
+$$p_b(r) = R\Delta\varphi =
+\int_0^{2\pi}\frac{1}{R}\frac{B_\varphi(r)}{B_\theta(r)}rd\theta = 2\pi
+r\frac{B_\varphi(r)}{B_\theta(r)}$$ La perturbazione $\tilde{\psi}(m,n)$
+instabile è, secondo il modello, quella i cui passi sono accoppiati con
+le linee di campo; a questo scopo è utile definire il \emph{''fattore di
+sicurezza''} $q(r)$ come un unico parametro che rappresenta il valore
+dei campi a cui i modi sono accoppiati
+\begin{align}
+ \label{sec_fact}
+  p_b(r) = p_p && \Leftrightarrow &&
+ \frac{m}{n} = \frac{r}{R}\frac{B_\varphi(r)}{B_\theta(r)} \equiv q(r) 
+\end{align}
+
+A loro volta più superfici adiacenti che presentano uguali fattori di
+sicurezza si accoppiano tra loro dando origine a fenomeni di risonanza
+secondo il criterio di Suidam (1958) e sono esse stesse fonte di
+instabilità; per questo motivo si introduce il parametro detto
+\emph{''shear''}
+\begin{equation}
+ s(r) \equiv \frac{r}{q(r)}\frac{dq(r)}{dr}
+\end{equation}
+Nella figura [xxx] sono graficati i profili radiali del fattore di
+sicurezza per esperimenti Tokamak e RFP; si noti come la configurazione
+sia scelta in modo tale da non cadere mai nel valore unitario, e gli
+andamenti rappresentino funzioni strettamente monotone.
+
+\subsubsection{classificazione delle instabilità MHD}
+Le instabilità sono generalmente classificate in relazione al contesto
+fisico considerato; per formulare in modo corretto il problema
+magnetoidrodinamico si è visto come sia necessario specificare un insieme
+di \emph{condizioni al contorno} che accoppiano il plasma con il campo
+magnetico esternamente applicato. Le classi di perturbazioni che si
+vogliono analizzare devono quindi rientrare nei vincoli imposti al
+sistema per mantenere un significato fisico nell'esperimento reale.
+
+Chiamiamo anzitutto $\tilde{\zeta}(a)=0 $ lo spostamento della colonna
+di plasma $\tilde{\zeta}$ e la normale alla superficie non perturbata
+$\vettore{n_0}$. Nel caso di \emph{modi interni} (o
+\emph{fixed-boundary}) $\vettore{n_0}\cdot\tilde{\zeta}(a) = 0$ non è
+necessario uno spostamento del plasma $(\delta W_s = \delta W_v =
+0)$. Queste microinstabilità, infatti, non hanno effetti macroscopici
+sulla superficie della colonna di plasma, lo degradano soltanto
+alterando i coefficienti di trasporto.  I \emph{modi esterni} (o
+\emph{free-boundary}) $\vettore{n_0}\cdot\tilde{\zeta}(a)\neq 0$
+comportano, invece, lo spostamento dell'interfaccia vuoto-plasma.
+
+Tra questi ultimi, i modi instabili \emph{``pressure driven''},
+caratterizzati da numero poloidale $m=0$, sono dovuti a scambi di
+flusso, quindi essenzialmente di tipo idrodinamico, e danno luogo ad
+instabilità in genere denominate \emph{``interchanges
+instabilities''}. Questo tipo di instabilità è facilmente descrivibile
+considerando un esperimento z-\emph{pinch} puro in geometria cilindrica;
+come visibile in figura [xxx] restringimenti assiali della colonna di
+plasma comportano diversi valori di $B_\theta \sim 1/r$; la pressione
+cinetica è ovunque la stessa mentre quella magnetica tende ad essere più
+forte in corrispondenza della sella, originando rigonfiamenti che
+vengono sempre più amplificati.
+
+Una diversa configurazione detta \emph{kink}, illustrata in figura
+[xxx], è invece formata da modi $m=1$ cd \emph{''current driven''}. In
+questo caso la curvatura della colonna di plasma comporta l'addensarsi
+del campo in corrispondenza del raggio di curvatura minore e, quindi, si
+assiste anche in questo caso ad un aumento della pressione magnetica che
+tende via via ad autoamplificarsi. Rispetto alle instabilità
+\emph{pressure driven} le \emph{kink} sono molto pericolose in quanto
+rapide e difficilmente controllabili, con tempi di crescita dell'ordine
+di $1/\tau_A$\footnote{$\tau_A = a/v_A$, con $v_A$ velocità di Alfvén e
+$a$ raggio minore del toro, è riferito a variazioni di campo congelato
+al plasma\cite{fridberg} }; esse si formano per la presenza di superfici
+risonanti e sono generalmente stabilizzate da un forte campo
+toroidale. La condizione di \emph{Kruskal-Safranov}, infatti, impone
+$q(a)>1$ come minimo limite per la stabilità delle \emph{kink}, anche se
+generalmente per un tokamak si mantiene un rapporto tra campo toroidale
+e poloidale tale da avere valori di $q(a)\geq3$. Diverso ovviamente è il
+caso di RFP dove la stabilizzazione è un problema più complesso e
+coinvolge la presenza di correnti indotte nella scocca della camera
+toroidale e, come si dirà a breve, l'uso di controllo attivo.
+
+\subsection{Le instabilità di parete (RWM)}
+
+E' facile notare come in RFP, per mantenere monotono l'andamento del
+\emph{fattore di sicurezza}, ovvero \emph{shear} diverso da zero, sia di
+fatto necessario il rovesciamento del campo che quindi presenta valore
+negativo (e non nullo) in prossimità della parete della scocca. Questa
+deve permettere il recircolo della corrente indotta per fungere da
+conservatore di flusso; a questo scopo è rivestita da un mantello in
+rame che ne aumenta la conduttività.  I \emph{''resistive wall modes''}
+(RWM) sono instabilità di tipo \emph{kink} che si formano per la (seppur
+esigua) resistenza della parete della camera a vuoto; sono relativamente
+lenti poichè dipendono dal tempo di penetrazione del campo nel materiale
+del mantello $\gamma_{RWM} \propto 1/\tau_w$.  Questo valore è definito
+come:
+\begin{equation}
+ \tau_w = \mu_0 \sigma r_w \delta_w
+\end{equation}
+in cui $\sigma$ la conduttività della parete, $r_w$ il suo raggio e
+$\delta_w \ll r_w$ il suo spessore. Le RWM sono inoltre caratterizzate
+dalla presenza di campo radiale $b_r|_{r=r_s} \neq 0$ (dove $r_s$ è il
+raggio relativo alla superficie risonante che genera il modo instabile),
+aspetto che rende possibile la ricombinazione delle linee di campo.
+
+La crescita spontanea di instabilità RWM è stata sperimentalmente
+osservata in RFP con modi non risonanti $m=1$
+\cite{pizz46}\cite{pizz47}\cite{pizz48} e modi
+\emph{''pressure-driven''} con $n\neq 1$.  La loro stabilizzazione è
+un'importante sfida, poichè esse sono tra i principali fattori che
+limitano il raggiungimento di configurazioni ad alto $\beta$ per le
+moderne macchine tokamak.
+
+[forse inserire motivo instab TM con effetto RFA]
+
+
+%\subsection{Il modello di Newcomb - damping rates}
+%-
+
+
+\subsection{L'uso delle saddle coils in RFXmod}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[ width=8cm ] {images/elemento-shell.jpg}
+ \caption{sezione della camera toroidale}
+\end{figure}
+
+L'esperimento RFX-mod di Padova, come anticipato, consiste in una
+macchina a rovesiamento di campo caratterizzata dai seguenti parametri
+costruttivi: raggio interno della camera $a=0.459m$, raggio del asse
+circolare del toro $R_0 = 1.995m$, corrente massima si scarica
+$I\leq2MA$, e durata di aquisizione dell'impulso di $350ms$.  Le
+modifiche principali apportate alla precedente versione, operativa nel
+periodo 1992-1999, sono state finalizzate al miglioramento del profilo
+``sharp-boudary'' del plasma e all'introduzione del controllo attivo dei
+modi MHD.  La struttura meccanica della camera a vuoto è costuita in
+Iconel 625, mentre all'interno una prima parete di 72x28 piastrelle di
+graffite limitano la $Z_{eff}$ delle impurità libere nel plasma e una
+seconda parete formata da un guscio (\emph{''shell''}) di rame di 3mm di
+spessore ospita le correnti indotte dal campo interno. Il valore di
+tempo di penetrazione per un campo verticale si assesta in $t_w = 50
+\div 60 ms$ \cite{pizz75}
+
+RFX-mod è equipaggiato con un sofisticato sistema di controllo attivo
+composto da 192 bobine a sella (``\emph{saddle coils}'') organizzate in
+4x12 array di 4 bobine ciascuno separatamente alimentati e localizzati
+sulla superficie esterna della shell alla distanza (media) di $r_c =
+0.513m$. I corrispondenti sensori magnetici in grado di rilevare il
+campo radiale e toroidale sono posizionati all'interno della parete
+conduttiva alla distanza di $r_s = 0.508m$.  Il sistema di amplificatori
+è in grado di generare modi non assialsimmetrici m=0 e n < 6 e può
+funzionare configurato in diverse modalità: ed esempio lo schema
+chiamato \emph{''Virtual Shell''} (VS) è un sistema di retroazione
+locale che, pur non tenendo conto degli effetti globali sul plasma, è
+già in grado di ridurre fortemente la componente radiale di campo
+$b_r$\cite{pizz78}\cite{pizz79}
+
+Il metodo qui presentato aggiunge al precedente la ricostruzione
+completa dell'andamento di detta componente, misurata dai 192 sensori,
+introducendo un modello per l'attraversamento della parete e l'analisi
+delle componenti di aliasing nelle armoniche più elevate.
+

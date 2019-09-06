@@ -1,0 +1,80 @@
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\newcommand{\vettore}{\overrightarrow}
+
+\newcommand{\deuterio}{D^2_1}
+\newcommand{\trizio}{T^3_1}
+\newcommand{\elio}[1]{He^#1_2}
+\newcommand{\elettrone}{e^+}
+\newcommand{\protone}{p^1_1}
+\newcommand{\neutrone}{n^1_0}
+
+\newcommand{\Btor}{B_\varphi}
+\newcommand{\Bpol}{B_\vartheta}
+
+\newcommand{\tor}[1]{#1_\varphi}
+\newcommand{\pol}[1]{#1_\vartheta}
+\newcommand{\rad}[1]{#1_r}
+
+
+\newcommand{\difft}[1]{\frac{\partial #1}{\partial t}}
+\newcommand{\diffr}[1]{\frac{\partial #1}{\partial r}}
+\newcommand{\diff}[2]{\frac{\partial #2}{\partial #1}}
+
+%\newcommand{\frac1}[1]{\frac{1}{#1}}
+\newcommand{\media}{\overline}
+\newcommand{\jump}[2]{\left[ #1 \right]_{#2^-}^{#2^+}}
+
+\newcommand{\besKne}[1]{K_m(|n|\epsilon_#1)}
+\newcommand{\besKKne}[1]{K'_m(|n|\epsilon_#1)}
+\newcommand{\besIne}[1]{I_m(|n|\epsilon_#1)}
+\newcommand{\besIIne}[1]{I'_m(|n|\epsilon_#1)}
+
+
+\newcommand{\mn}{_{m,n}}
+\newcommand{\mnp}{_{m',n'}}
+\newcommand{\inftyint}{\int_{-\infty}^{+\infty}}
+\renewcommand{\imath}{\ensuremath{\dot{\imath}}}
+
+
+
+
+%for CODE listing
+\newcommand{\includecodesnip}[1]{\lstinputlisting[stepnumber=0,frame=]{#1}}{}
+\newcommand{\includestruct}[1]{\lstinputlisting[stepnumber=0]{#1}}{}
+\newcommand{\includecodesample}[1]{\lstinputlisting{#1}}{}
+
+\lstset{
+language=Octave,                % choose the language of the code
+basicstyle=\footnotesize,       % the size of the fonts that are used
+				% for the code
+%numbers=left,                   % where to put the line-numbers
+%numberstyle=\footnotesize,      % the size of the fonts that are used
+				% for the line-numbers
+%stepnumber=2,                   % the step between two line-numbers. If
+				% it's 1 each line 
+                                % will be numbered
+%numbersep=5pt,                  % how far the line-numbers are from the
+				% code
+%backgroundcolor=\color{white},  % choose the background color. You must
+				% add \usepackage{color}
+%showspaces=false,               % show spaces adding particular
+				% underscores
+%showstringspaces=false,         % underline spaces within strings
+%showtabs=false,                 % show tabs within strings adding
+				% particular underscores
+				frame=single,                % adds a
+				% frame around the code
+				tabsize=2,                % sets default
+				% tabsize to 2 spaces
+%captionpos=b,                   % sets the caption-position to bottom
+breaklines=true,                % sets automatic line breaking
+breakatwhitespace=false,        % sets if automatic breaks should only
+				% happen at whitespace
+%title=\lstname,                 % show the filename of files included
+				% with \lstinputlisting;
+                                % also try caption instead of title
+escapeinside={\%*}{*)},         % if you want to add a comment within
+				% your code
+morekeywords={*,...}            % if you want to add more keywords to
+				% the set
+}

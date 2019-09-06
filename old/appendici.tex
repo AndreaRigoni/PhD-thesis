@@ -1,0 +1,32 @@
+ \section{Operatori differenziali nel sistema cilindrico}
+
+Nelle coordinate curvilinee del sistema di riferimento cilindrico gli
+operatori di gradiente, divergenza e rotore assumono la seguente forma:
+
+\begin{equation}
+ \nabla f = \diffr{f} ; \frac1{r} \diff{\theta}{f} ; \diff{z}{f}
+\end{equation}
+
+\begin{align}
+ \nabla \cdot \vettore{v} &= \frac1{r}\left( \diffr{(v_rr)} +
+				      \diff{\theta}{v_\theta} +
+ \diff{z}{rv_z} \right) \nonumber \\
+&= \frac1{r}\left(\diffr{(rv_r)}\right) +
+ \frac1{r}\diff{\theta}{v_\theta} + \diff{z}{v_z}
+\end{align}
+
+\begin{align}
+ \nabla \times \vettore{v} &= \frac1{r} \left| 
+ \begin{matrix}
+  \hat u_r & \hat u_\theta & \hat u_z \\
+  \diffr{} & \diff{\theta}{} & \diff{z}{} \\
+  v_r & rv_\theta & v_z
+ \end{matrix} \nonumber
+\right| \\ &= \frac1{r}\left( \diff{\theta}{v_z} - \diff{z}{rv_\theta}
+ \right) ; \left( \diff{z}{v_r} - \diffr{v_z}\right) ; \frac1{r}\left(
+ \diff{\theta}{v_r} - \diffr{rv_\theta} \right)
+\end{align}
+
+considerando il sistema cilindrico come la linearizzazione della
+geometria toroidale, con raggio del toro $R_0$, si introduce la
+sostituzione $dz = R_0d\varphi$.

@@ -1,0 +1,339 @@
+
+
+\chapter{Introduction}
+
+\epigraph{Everyone in a complex system has a slightly different interpretation. The more interpretations we gather, the easier it becomes to gain a sense of the whole.}{Margaret J. Wheatley}
+
+
+%% - Emerging of Information technology 
+How is it possible for the nail size chip in our phone to understand us speaking or to recognise our face among thousands of people? 
+It seems like a kind of magic that used to come form science fiction and in less than a decade has became a contingent reality: every picture of all phones is automatically tagged, any face recognised and all conversations dictated. 
+It's not a very surprising fact though that, as a result, many people are actually rising concerns about this growth of technology and even governments are tightening regulations to guarantee the privacy rights against the economic use of people personal information.
+~
+%% - We can profit of IT for scientific experiment
+Nonetheless, aside this new information business, those novel solutions that are mainly pushed by private interests are also very commonly released with open-source licences, thus being available to the scientific community. The idea is that vendors take advantage from a good code quality and the proliferation of new ideas within the wide pool of open-source developers, and at the same time the community get access to a cheaper hardware and very powerful software tools that can be adapted to any specific need.
+~
+%% - Data over algorithm -> ML over AI
+This new era, led by information theory, is revealing not emerging from complicate mathematical models but from the data itself,0 joined with lower cost per computational operation in terms of energy consumption and components price. %TODO: sistemare %
+The predominant role of data is on one side promoting the big infrastructures where huge amount of signals must be collated though efficient databases and promptly passed through analysis algorithms, on the other side it stresses the need of an efficient design of hardware that must be able to adapt to changes of algorithm and data dimensionality. This transition from algorithms to big-data analysis matches the shifting interest from the general \ac{AI} approach to the \ac{ML}\footnote{Machine learning is a subset of \acs{AI}. As from the definition by Tom Mitchell, author of the book "Machine Learning": A computer program is said to learn from \textit{experience} $E$ with respect to some class of \textit{tasks} $T$ and \textit{performance} measure $P$ if its performance at \textit{tasks} in $T$, as measured by $P$, improves with experience $E$.}, while from the algorithmic perspective it established the preeminent role of \ac{ANN}.
+
+%% - Experiments may use hard correlated signals
+The classical scientific approach is to make hypotheses on an evidence insulating repeatable experimental values and to provide a model that is able to reproduce those values. But it is not uncommon that within a complex experiment many different systems coexist, each with its own representation model, exposing a non trivial connection each others. There is also the intuitive perception that gathering more and more information about a phenomenon gives a more accurate representation, but this requires to manage all the possible non-linear correlations coming from the different nature of signals.
+~
+%% - NN universal approximation
+On the other hand it can be proved that any continuous convex function of n-dimensional input variables can be effectively approximated with a n+1 width neural network~\cite{csaji2001approximation}\cite{hanin2017universal}.
+%TODO: ESPANDERE %
+~
+%% - deep learning
+The actual turning point in ML was the NIPS'12 publishing of AlexNet~\cite{NIPS2012_4824}, a massive GPU trained network that won the ImageNet Large Scale Visual Recognition Challenge\footnote{The ILSVRC (\url{http://www.image-net.org/challenges/LSVRC/}) evaluates algorithms for object detection and image classification at large scale. One high level motivation is to allow researchers to compare progress in detection across a wider variety of objects, taking advantage of the quite expensive labeling effort.} achieving a top-5 error 10.8\% lower than the runner up. 
+The original paper's primary result was that the depth of the model was essential for its high performance opening the era of Deep Learning~\cite{Goodfellow-et-al-2016}.
+
+%% - this thesis data integration using deep learning
+A complex and heterogeneous experimental system could then benefit of this methodology in many ways: the possibility to integrate of many different kinds of signals, the robustness to react on missing or corrupted data in case a portion of the sensory system fails, and the flexibility to adapt to changes on both the parameters or the environment variables of the experiment.
+~
+This thesis dissertation will present a set of tools that exploit such data integration, using the deep learning techniques from both the hardware and software perspective, applied to a possible scenario of controlling the magnetic confinement of a nuclear fusion plasma. 
+% TODO: add.. in addition we will present the hardware implementation suitable to achieve the task
+%
+%% this is indeed a complex experimental setup applied to RFX-mod
+This is, indeed, a very complex task other than one of the main challenges of this century; and in this context the \textit{RFX~consortium} is hosting RFX-mod, one of the most controllable fusion experiments currently active in fusion research~\cite{SONATO2003161}\cite{doi:10.1063/1.4806765}.
+Recently a further update begun that will bring to RFX-mod2, improving even more the machine responsiveness together with the renew of the sensory system; in this environment fits this research application with a specific design proposal that integrates a \ac{ML} based control loop to the overall chain of data acquisition and control.
+
+%TODO: REVIEW DOPO AVER SCRITTO INTRO%
+In the next section a brief introduction to the problem of magnetic confinement will be presented followed by a description of the intuitive principles that justify the application of this kind of control.
+
+
+\section{magnetic confined nuclear fusion \\ \small{why it is such an hard task}}
+% FUSION %
+The referred nuclear process is the exothermic reaction that happens between two light atom nuclei that fuse together. A fusion process that produces a transmutation to a new nucleus lighter than iron-56 or nickel-62 generally yields a release of energy. These elements have the smallest mass per nucleon and the largest binding energy; so the fusion of light nuclei toward, as well as fission of elements beyond, these elements releases the energy retained, resulting in a exothermic reaction.  This means that, with the purpose of extracting energy, the lighter elements (hydrogen and helium) are in general more likely to be the fusible fuel, while the heavier elements (uranium, thorium and plutonium) are more fissionable fuel. 
+Figure~\ref{fig:binding} shows the binding energy per nucleon as a function of the atomic mass number. The exceptional situation of 4 He is shown. Fusion processes ending in He show the largest exothermal response; the burning of 1 H to 4 He releases most of the energy available to fusion. The maximum of the binding energy is with 56 Fe.
+
+\begin{figure}[ht!]
+\includegraphics[height=0.25\textwidth]{img/binding_energy.jpg} \centering
+\includegraphics[height=0.25\textwidth]{img/abundance.png} \centering
+\caption{binding energy per nucleon for each element atomic number. }
+\label{binding}
+\end{figure}
+
+% FUELS and abundancy of elements %
+The universe as forged by the big-bang was initially mainly formed by leptons along with simple elements: protons, deuterons, and a little quantity of helium and lithium. All the remaining set of the 92 known elements, from carbon up to uranium are afterwards the expression of the self-organisation of the universe - the formation of galaxies where the stars burns hydrogen as breeder material for new elements - enforced by gravity\footnote{ Lithium, Beryllium and Boron are relatively rare in cosmos since they had little time to form in the first expansion and are not directly synthesized by stars; their nuclei are actually destroyed within the star's core, however a small quantity can be produced by break-up of heavier elements in interstellar dust, as a result of impact by cosmic rays\cite{LiBeB_syntesis}}.
+
+% Fusion and Fission in cosmos %
+The production of heavy fission fuels by nucleosynthesis is generally ascribed to extreme astrophysical events like supernovas that are able to reach enough energy to fuse nuclei into elements heavier than iron; when we use nuclear power coming from fission process we are actually recovering that amount energy that are relatively rare to find in cosmic matter. 
+% 
+On the other hand, as stated, the most common spread process in the universe is the burning of Hydrogen in the so called \textit{pp} chain reaction, firstly described by H.Bethe in 1939. 
+In the core of a star, gravity produces high density and high temperature. The density of gas in the core of our sun is 160 g/cm3, much higher than the densest metal, and the temperature is about $15\times10^6K$ ( $\simeq 1.5 KeV$ ). Under these extreme conditions the kinetic energy of particles and the continuous collisions disentangle all electrons from nucleons and the matter is in form of the plasma; protons (H-1) react with other protons to make deuterium nuclei (H-2) and positrons. The deuterium nuclei can merge to form a helium nuclei (He-4), or they can interact with other protons to make another isotope of helium (He-3). Two He-3 nuclei can fuse to make a nucleus of an unstable beryllium nucleus (Be-6) that breaks apart to give He-4 and two protons. Energy is released at each step.
+
+In this sense the Hydrogen fusion is the most common way to obtain energy in the cosmos, and indeed the majority of the earth available energy resources are actually coming from the sun.
+
+% Fusion in earth %
+Starting form the Oliphant, Harteck and Rutherford experiments, that in 1934 provided for the first time the proof of transmutation accelerating Hydrogen~\cite{1934RSPSA.144..692O}, the attention quickly moved toward the plasma physics research by means of thermal excitation with the proposal of the \textit{tokamak} as a magnetic confinement device in 1950 by the soviet physicists Igor Tamm and Andrei Sakharnov~\cite{}. 
+%
+% Cross section
+% RR 
+The fusion process between positively charged nuclei has to overcome the Coulomb repulsion. The potential energy at a distance of the proton diameter is about 0.6 MeV. But nature eases fusion because the particle, the proton, adopts in this interaction the characteristics of a wave, which allows it to leak into the energetically prohibited zone and to finally tunnel through the Coulomb barrier into the deep bound states of the newly formed nucleus. The potential energy at the distance of the de~Broglie wave length is about two orders of magnitude lower than the one within the range of the nuclear forces. The fusion yield depends on the density of the particles, their relative velocity and the nuclear interaction in the form of the fusion cross-section. 
+% Fusion is only one form of interaction in a plasma, even the one with the smallest cross-section. 
+The fusion yield depends on the density of the particles, their relative velocity and the nuclear interaction in the form of the fusion cross-section. The competing interaction processes are Coulomb collisions between charged particles. As the Coulomb collision rate is large compared to the fusion rate the proton assembly (as well as the one of the electrons) can be described by a Maxwellian distribution. The governing kinetic parameter is the temperature rather than the individual particle energy in the assembly interactions — scattering and fusion. This is the reason why we are speaking of controlled thermo-nuclear fusion.
+
+% Lawson and why tokamak
+The idea follows the simple principle that we need to produce fusion events at a rate that the system can, at least, virtually self sustain the reaction. 
+\cite{Wagner.Friedrich:magnetic.confinement.intro}
+The rate of fusion power normalized by the amount of external power needed is typically defined as the \textbf{Q} factor; 
+% cross section rates and selection of thermal reaction
+The selection of the proper reaction is guided, however, by searching for the highest reaction rate providing the highest fusion yield. This condition is fulfilled by fusing deuterium $D=\isotope{2,H}^+$, the heavy isotope of hydrogen, with tritium $T=\isotope{3,H}^+$, the super-heavy one.
+% give temperature profiles for breakeaven and ignition
+
+
+%
+% magnetic confinement and MHD
+The magnetic confinement relates to the fact that in those working conditions of temperature and pressure the reactants are completely ionized and all the particles subjected to Lorenz's force. The needed temperature is provided by an induced current 
+%
+% RR
+In the post-war era, a number of researchers began considering different ways to confine a plasma. George Paget Thomson of Imperial College London proposed a system now known as z-pinch, which runs a current through the plasma. Due to the Lorentz force, this current creates a magnetic field that pulls the plasma in on itself, keeping it away from the walls of the reactor. This eliminates the need for magnets on the outside, avoiding the problem Fermi noted. Various teams in the UK had built a number of small experimental devices using this technique by the late 1940s.
+
+%% LINEAR (CYL) CONFIGURATION
+
+% - theta pinch can not be bent in a torus.
+% Theta pinch equilibrium is easy to find ... see MHD
+
+% - solution is the z-pinch 
+% the MHD equilibrium can be solved by the Bennet relation
+% In contrast to the Θ-pinch, for a Z-pinch it is the tension force and not the magnetic pressure gradient that provides radial confinement of the plasma
+% it is not stable but can be bent in a torus
+
+% screw pinch - general combination
+% Though the momentum equation is non-linear, the Θ-pinch and Z-pinch forces add as a linear superposition, a consequence of the high degree of symmetry.
+% the stability is granted by theta component and zeta brings the possibility to realize a toroidal shape.
+
+
+
+%
+Nowadays several families of magnetic configurations characterize different kind of devices; the best topological configuration seems to be the torus\footnote{the main reason of this choice is due to the fact that the wanted pinch effect of the magnetic field is created by a current that flows thorough the plasma and can be closed in a loop by the toroidal configuration; in this case we also avoid any loss of particles that a linear configuration will suffer.} where the magnetic field lines are usually winded around the the shape with helical paths. 
+%
+
+In a magnetic field charged particles move in a helix  F = q · v × B.  q is the charge, v the individual particle velocity, B the magnetic field. In the direction perpendicular to the field, the excursion of the particle is limited to the Larmor radius $\rho_L$ . Because of the specific form of the Lorentz force as vector product of velocity and field, the particle momentum parallel to the field is not changed. Therefore, in a homogeneous field, magnetic confinement is insufficient because it applies to the perpendicular velocity component only. One has to involve and to accept systems with field inhomogeneity to improve confinement. Magnetic confinement systems differ in the way they cope with the confinement parallel to the field thus defining classes of confinement systems.
+
+% In linear devices — the first confinement class — parallel confinement is improved utilizing the mirror effect. The basis of the mirror effect is the magnetic moment μ = 12 mv ⊥ /B of a magnetised charged particle, which is a constant of motion.
+% An electron or ion, which is thermally agitated with velocity v = (v ⊥ , v  ) and which moves
+% from a zone of low field B min into one with higher field increases its perpendicular
+% velocity v ⊥ as a consequence of μ = const. On the other hand, the kinetic energy of the
+% plasma species is also a constant of motion with the corollary that the parallel velocity
+% v  decreases. If the field is sufficiently large v  → 0. At this field, the mirror field B max ,
+% the particle comes to a full stop. Thereafter, it is accelerated back to the low-field
+% zone by the force −μ · grad  B. If the field system is built in a symmetric way, the
+% game repeats itself at the other side with the outcome that the mirror effect causes the
+% particles to bounce between two mirror points and to stay in the neighbourhood of the
+% field minimum thus improving confinement. In an actual mirror machine, characterized
+% by B min and B max , two classes of particles, discriminated by v  /v, have to be considered.
+% If this velocity ratio is small, a particle is reflected by the magnetic mirrors as described
+% above and represents a trapped one. Otherwise, it is slowed down along its trajectory
+% toward higher field but does not reach the point with v  /v = 0. These particles escape
+% the mirror. The boundary is given by v ⊥
+% /v 2 = B min /B max specifying a loss-cone in
+% phase space spanned by v ⊥ and v  as coordinates.
+
+% The confinement of simple mirror machines is insufficient because the transparency
+% of the mirror is too large. Still, we continue describing the confinement situation of the
+% mirror because the concepts help us to understand the physics of more relevant confine-
+% ment systems. Up to now, we have ignored collisions between the plasma species. Of
+% relevance are the collisions in phase space of the trapped particles occupying the low-field
+% zone scattered into the empty loss cone. Because of their higher velocity, electrons are
+% scattered more frequently into the loss cone than the ions. As a consequence, the plasma
+% is polarised and charges up positively. The formation of an electric field keeps back
+% the escaping electrons by electrostatic means and accelerates the ions. For a transport
+% equilibrium, the so-called ambipolar electric field enforces flux equality Γ e = Γ i between
+% the differently charged plasma species of different masses and different kinetic properties.
+% A confinement concept avoiding mirror losses is toroidal confinement realised in a
+% plasma ring as shown in fig. 4. In this case, the magnetic coils are arranged in a closed
+% ring thus avoiding end-losses. This geometry defines the class of toroidal confinement
+% systems. An unavoidable feature is the inhomogeneity of the toroidal field with a higher
+% field closer to the vertical symmetry axis. The field gradient points to the symmetry axis.
+% This field inhomogeneity leads to rather unpleasant consequences: The Larmor orbits of
+% the charged particles are not closed causing drifts. Ions and electrons drift parallel to the
+% symmetry axis and leave their magnetic field line. The drift of electrons and ions is in
+% opposite direction leading to an additional vertical electric field. A second parasitic drift
+% appears now in the crossed-field arrangement of vertical electric and toroidal magnetic
+% field. Like in the Hall effect an E × B drift appears perpendicular to both E and B tor
+% directions, which causes the plasma torus to expand radially. No force equilibrium is
+% established.
+
+% The saving idea was to introduce rotational transform. A second field component
+% B pol is introduced with a perpendicular (poloidal) component. A field line with the
+% components (B tor , B pol ) winds around the torus in a helix (see fig. 4) and does no longer
+% stay in a plane rather maps out a toroidal surface. The vertical charge separation is
+% avoided because the up-down sides of the torus are short-circuited by the helical field
+% lines connecting these regions. Macroscopic radial equilibrium can be provided.
+% The essence of magnetic confinement is the development of a nested system of toroids
+% with field lines, which encircle the tori toroidally and poloidally and with a field line
+% density, which is higher at the inside than the outside (torus effect). The nested toroids,
+% called flux surfaces (see fig. 4), are magnetically isolated and not connected by a field
+% line with a net radial component.
+% The way the poloidal field component is produced defines confinement classes within
+% toroidal systems. The simplest one is using the potential of a plasma to carry a current. A
+% ring current flowing inside the plasma, the plasma current I p , produces the poloidal field
+% component B pol . As the temperature of the electrons, defining the electrical conductivity
+% of a plasma, is highest in the plasma core, the current density profile j(r) peaks there.
+% Such systems are called tokamaks [7] and are a Russian invention of the ’50s of last
+% century( 8 ). Figure 5 shows the principal set-up of a tokamak. The major attraction of
+% the tokamak is that I p can be produced by a pulsed transformer whereas the plasma
+% ring surrounding a central primary coil acts as secondary winding. In tokamaks, the
+% ratio of B tor /B pol > 1. Another concept with plasma currents is the reversed field pinch
+% (RFP) with B tor /B pol ∼ 1 [8]. Tokamaks and RFPs belong to the category of internal
+% confinement systems because part of the confining magnetic field is produced by currents
+% flowing inside the plasma. 
+
+%An alternative way is to produce the poloidal field like the toroidal one — by external
+% coils. In this case, the coils have to wind helically around the torus. The field composition
+% reminds of a multipole arrangement with coils being first helically twisted and then bent
+% into a torus. Depending on the current direction inside the helical coils — unipolar or
+% bi-polar — we speak of heliotrons/torsatrons or of stellarators. Both belong to the class
+% of helical systems. Stellarators are a US invention of the ’50s. Figure 6 shows a sketch
+% of a classical l = 2 stellarator with helical coils. Helical systems belong to the category
+% of external confinement.
+% Toroidal systems share common descriptors. In the simplest case with circular poloidal
+% cross-section the torus geometry is defined by major radius R and minor radius a (see
+% fig. 4). The ratio A = R/a is called aspect ratio. The rotational transform ι of a flux
+% surface is defined by the winding law of the field lines given by ι/2π = AB pol /B tor . RFPs
+% have a larger ι than tokamaks. In case of helical systems, B pol is determined in a complex
+% form by the external helical coils system, which is described by the number of coils e.g.
+% 3 heliotron coils with unidirectional current yielding an l = 3 heliotron. In this case the
+% poloidal cross-section has the shape of a triangle. In case of a stellarator with 4 helical
+% coils and bi-polar currents, we have 2 pairs of coils and an l = 2 stellarator (see fig. 6).
+% Its poloidal cross-section is elliptical. Another important stellarator descriptor is the coil
+% pitch. The coil winding laws are such that the coils ultimately close. The field pattern
+% of helical systems is periodic in toroidal direction. The toroidal periods can be m = 5
+% (Wendelstein 7-A, Germany [3]) or in case of tight windings e.g. m = 10 (Large Helical
+% Device, LHD, Japan [3]).
+% Simple tokamaks have a circular cross-section. Equilibria at higher plasma currents
+% are possible when the cross-section is elongated or even has triangular shape. Modern
+% tokamaks benefit from the higher current:
+
+
+
+% 
+In the Tokamak configuration and the Reversed Field Pinches (RFPs), because the magnetic field is generated by both external coils and the plasma current  belongs to pinch family. 
+%
+The toroidal field in tokamaks is generated by external coils and the poloidal component is generated by the plasma current, which is induced by the primary transform. In advanced tokamak scenario, however, most of the poloidal field component is generated by the so-called ’bootstrap’ current which is induced by the density gradient. Nevertheless, the disadvantage for tokamak configuration is that it suffers a limitation of plasma current due to plasma instability. Consequently, extra heating method besides Ohmic heating is needed for plasma fusion in tokamaks. 
+%
+\begin{figure}[ht!]
+\includegraphics[width=0.5\textwidth]{img/safety-fact.jpg} \centering
+\caption{Generic safety factor profiles for the tree main devices configurations (Tokamak, RFP, Stellarator).}
+\label{rfx}
+\end{figure}
+%
+
+% RW
+The RFP is a toroidal configuration for the magnetic confinement of thermonuclear plasmas. The RFP shares with the tokamak similar features, for example the presence of two components of the confining magnetic field: a toroidal component $B_t$ and a poloidal one, $B_p$ , and the pinch effect. The latter means that a toroidal electric current is driven in a plasma, which is embedded in a toroidal magnetic field. Different from the tokamak, the applied toroidal magnetic field is extremely small. The plasma toroidal magnetic field, which is of the same order of magnitude as the poloidal field another significant difference with respect to the tokamak where the toroidal magnetic field is one order of magnitude larger than the poloidal is mainly produced by electrical currents flowing in the plasma through a self-organization process and changes sign at the plasma edge with respect to the core. Given its magnetic topology, the RFP exploits the advantage of an easier technology involved in the electromagnetic system. This might be the case even for a reactor, where there might be no need for large superconducting magnetic coils; there is freedom in the choice of the aspect ratio and in principle ignition should be achievable with ohmic heating only. 
+% RW
+A price to be paid for exploiting these advantages concerns magneto-hydrodynamic (MHD) stability. The safety factor q is in fact lower than 1 across the whole plasma, and negative at the edge. Figure 2(a) shows the q profiles of an RFP compared with those of tokamaks and stellarators. In the RFP q profile there are multiple resonant surfaces in the plasma, in particular for modes with poloidal mode numbers m = 0 and 1. This is shown in figure 2(b), which reports a typical RFP q profile. Two main kinds of global, current-driven MHD instabilities may be present in a RFP with resistive wall: (i) resistive kink/TMs, which are resonant in the plasma and are intrinsically linked to the sustainment of the configuration through the aforementioned self-organization process. (ii) RWMs, which are non-resonant ideal modes, slowed down by the resistive wall. RWMs in RFP are current driven and are present also at low plasma beta.
+
+
+RFPs, however, can sustain very high plasma current and this makes it to be considered a potential fusion device with only Ohmic heating. On the other hand, the generation of plasma current needs a time variation of magnetic field which is sustained by the primary transform. This time variation makes the devices, on some level, not in steady state. To overcome this problem, a toroidal configuration which all the field components are generated by external coils is introduced. This device is the so-called stellarators. Figure 1.3 shows a sketch of these two families. In the left graph, the red coils aligned toroidally are the toroidal field coils and the green helical ones are helical field coils. In the right graph, the red cylinder in the device center is the primary transformer. The red coils aligned toroidally are the toroidal field coils and the two green ones in the top and bottom of the device is the vertical stabilization coils. The stabilization coils are introduced because due to the existence of Shafranov shift in toroidal devices, the plasma position needs to be optimized in order to avoid touches between magnetic field and the first wall. 
+The stellarator shows a much more complicated magnetic coil design than one in pinch family. Consequently, the manufacture process for magnetic coils are more complex for stellarators than for pinches. On the other hand, due to lack of plasma current in stellarators, it is almost free of disruptions.
+
+
+%% STELLARATOR HEATING ~ CURRENT
+Unlike the z-pinch designs being explored in the UK and other US labs, the stellarator has no induced electrical current within the plasma - at a macroscopic level, the plasma is neutral and unmoving, in spite of the individual particles within it rapidly circulating. In pinch machines, and the later tokamaks, the current itself is one of the primary methods of heating the plasma. In the stellarator, no such natural heating source is present.
+
+Early stellarator designs used a system similar to those in the pinch devices to provide the initial heating to bring the gas to plasma temperatures. This consisted of a single set of windings from a transformer, with the plasma itself forming the secondary set. When energized with a pulse of current, the particles in the region are rapidly energized and begin to move. This brings additional gas into the region, quickly ionizing the entire mass of gas. This concept was referred to as ohmic heating because it relied on the resistance of the gas to create heat, in a fashion not unlike a conventional resistance heater. As the temperature of the gas increases, the conductivity of the plasma improves. This makes the ohmic heating process less and less effective, and this system is limited to temperatures of about 1 million kelvins.[36]
+
+%% RFP
+% - Taylor relaxed state (need of reversal) -> magnetic shear
+% - reversal can not be produced by coils ... plasma is needed
+% - no need for superconducting coils and no current limit  -we don't satisfy Kruskal-Shafranov (safety factor)-
+%   (10MA target to have a good condition in terms of neutrons production) -> ohmic heating is possible.
+% - In RFX-mod the ohmic heating power can scale up to 60MW of coupled power (that is a huge amount of power)
+%   in a stellarator to reach the same power deposition using external heating you need very high power.
+% - High current possibility means -> High particle density limit ... Greenwald limit
+
+% - why High plasma current? because 
+
+\section{MHD, Fourier analysis, equilibrium and Modes control}
+% There are several techniques to represent magnetic confinement (orbits - MHD) (brief)
+% MHD is the best description to macroscopically describe the plasma as a fluid
+% MHD - ideal (single double fluid)
+% MHD - resistive (brief)
+% Instabilities
+
+\section{RFX-mod2 \\ \small{the opportunity of the best controllable machine}}
+\cite{SONATO2003161}
+\cite{doi:10.1063/1.4806765}
+\cite{martin_RFX_overview}
+
+% CHALLENGES AND SOLUTIONS IN THE DESIGN OF RFX-MOD2, A MULTI CONFIGURATION MAGNETIC CONFINEMENT EXPERIMENTAL DEVICE
+
+
+% RWR
+RFX-mod is a flexible \ac{RFP} toroidal device (major radius $R=2 m$ and minor radius $a=0.46 m$) with plasma current up to 2 MA \cite{2MA_RFX_Current} and volume $10 m^3$ \cite{SONATO200597}. As in all RFPs, plasma heating is purely ohmic; \acl{RFP} could in principle obtain fusion power with ohmic heating only, and with magnetic field much smaller than in a tokamak—avoiding superconducting coils. RFX-mod is equipped with a very powerful system of active coils for feedback control of plasma MHD stability: 192 coils, independently driven, cover the whole plasma surface.
+% RWR
+The major challenges of RFP research, and of RFX-mod in particular, are (a) rapidly advancing its performance, to assess the viability of the RFP approach to fusion; (b) providing a state-of-the-art contribution to the global task of feedback control of MHD stability, with experiments done both in RFP and in tokamak configuration; (c) focusing on the key topic of 3D magnetic shaping in a growing collaboration with the stellarator community; (d) training a new generation of fusion scientists.
+
+
+
+\begin{figure}[ht!]
+\includegraphics[width=0.5\textwidth]{img/rfx2}
+\centering
+\caption{RFX-mod sketch}
+\label{rfx}
+\end{figure}
+
+\section{RFX diagnostics}
+% kind of RFX diagnostics
+
+%
+\begin{figure}[ht!]
+\includegraphics[width=1\textwidth]{img/rfx/Layout_Diagnosiche_AA10005.eps} \centering
+% TODO: add figures
+\caption{RFX map of diagnostics with related toroidal position.}
+\label{rfx}
+\end{figure}
+%
+
+\subsection{Thonmson Scattering}
+The Thomson scattering  has been a key-factor diagnostic at RFX since the initial operations for the study of RFP plasma configuration, yielding a fundamental correlation between the electron temperature diffusivity and the magnetic fluctuations that link the plasma confinement to the dynamo related modes~\cite{}. This also evolved in the possibility to identify a hot asymmetric island when the temperature gradient extends to the plasma core in the \ac{QSH} state.
+During the first operation of RFX the diagnostic was composed by a single pulse of laser from ruby diode ( $\lambda = 694 nm$ ) passing through the plasma in the equatorial plane, and two grating photomultipliers spectrometers.
+This apparatus presented some limitations: frpm the precision point of view it suffered of a poor quantum efficiency of the multialkali photocathode of the photomultiplier (MCP-PMT) resulting in a general lack of sensitivity and noisy profile at low electron temperatures. On the other hand the 20 chords acquisition that characterized the acquired plrofile with a 24 mm spatial resolution was unable to effectively investigate the details of the QSH magnetic islands.
+
+Since the 2005 with the experiment upgrade to RFX-mod the diagnostic was completely renewed. In particular the replacement of the grating spectrometers with a set of four filter polycromators with avalance photodiodes (APD) provided a 30 times higher sensitivity and 84 points profile with a new narrow grained 7mm resolution ( $r/a$ from -0.96 to 0.84 ).
+The new Nd:YLF laser diode ($\lambda=1053 nm$) located 15 m away from the center of the vacuum vessel, can produce an up to 7 J burst of 10 pulses per experiment shot. with a single light emission duration of 20ns $\ac{FWHM}$.
+
+The light passing through plasma on the equatorial plane scatter in all directions and is collected by photomultipliers at three different windows at the end of short vertical ports. The 84 pairs of quarz fibers look all the plasma poloidal angles seen by magnifying optics located at the ports. All fibers can be also moved by a special mechanical support that can self orient during the experiment setup state; at the same time all optics can also automatically adjust focus to the desired radial position of interest.
+A further side by side light path decomposes the acquired spectrum in 4 channels using a series of relay lenses.
+
+The small amount of the solid angle covered by the acquisition, together with all this set of filters applied both at the input beam - aiming at reducing the stray light and maintaining the focus -, and at the output - for the selection of the plasma region of interest and for the decomposition of the energy spectrum - are the main reason for the required high power input.
+
+This leads to a scattered set of acquisition pulses that are not continuously reconstructing the overall shape of plasma temperature but reduce ti a small set of usually 10 time events.
+
+The recording systems is also quite complex: for RFX-mod the detected signal has been acquired by a modular 4-channels cPCI board dedicated for each of the spectrometers, acquiring data at 500 Msps each.
+
+\subsection{Soft X Ray}
+
+% We chose the most reliable and fast response diagnostics ... (SXR and Magnetic coils MHD)
+% Other possible diagnostics can be added ( cope with time dim )
+% Possibility to trigger in realtime other diagnostics ( i.e. Thomson Scattering )
+
+\section{A new approach based on machine learning \\ \small{ how do we do with ourselves }}
+\cite{Goodfellow-et-al-2016}
+% supervised and unsupervised learning.
+% changing the perspective from algorithm to data representation.
+
+% it is not the lose of the model
+% - model can be applied to add information ( fourier for example )
+% - model can be added to confront the dimensionality of the latent space
+
+% no free launch theorem
+% course of dimensionality
+
+
+% introduction to the bicycle example 
+\section{How to ride the bicycle \\ \small{ equilibrium through latent space shaping }}
+\cite{rideabike_nature_2016}
+
+
+\section{Mildstone \\ \small{ a framework for learning within the machine }}
+% explain why it is needed ( of worth ) the complete redesign for a new acquisition chain.
+% explain why we need a framework for that.
+% tensorflow
+% MDSplus, MARTe
+% ...
+
+\section{Structure of the document}

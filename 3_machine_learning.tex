@@ -116,14 +116,19 @@ The GLM probability is composed as follows:
     \exp{\left[ \frac{y_i\theta - A(\theta}{\sigma^2} + c(y_i,\sigma^2) \right] }
 \end{equation}
 
+
+%  _____ ___ _     _       _   _ _____ ____  _____ 
+% |  ___|_ _| |   | |     | | | | ____|  _ \| ____|
+% | |_   | || |   | |     | |_| |  _| | |_) |  _|  
+% |  _|  | || |___| |___  |  _  | |___|  _ <| |___ 
+% |_|   |___|_____|_____| |_| |_|_____|_| \_\_____|
+%
+
 %% GLM
 
 %% GAUSSIAN MODEL EXAMPLE
 
 %% CLOSED FORM FOR GAUSSIAN MODEL
-
-
-%% FINIRE
 
 \subsection{Directed Graphical Models}
 In the previous chapter we saw a possible general approach to obtain a regression of a single target variable given its conditional probability with an input process. Suppose now that we are observing a set of multiple correlated variables where the correlation extends from one variable to another in a chain of dependencies. This becomes a stochastic model describing a sequence of possible values for the variables in which the probability of each event depends on the state of the others.
@@ -186,6 +191,12 @@ Training this type of model has been a long-standing problem in the machine lear
 
 % RR
 An autoencoder is a neural network that is trained to attempt to copy its input to its output. Internally, it has a hidden layer $h$ that describes a code used to represent the input. The network may be viewed as consisting of two parts: an encoder function $h=f(x)$ and a decoder that produces a reconstruction $r=g(h)$. If an autoencoder succeeds in simply learning to set $g(f(x))=x$ everywhere, then it is not especially useful. Instead, autoencoders are designed to be unable to learn to copy perfectly. Usually they are restricted in ways that allow them to copy only approximately, and to copy only input that resembles the training data. Because the model is forced to prioritize which aspects of the input should be copied, it often learns useful properties of the data.
+%  _____ ___ _     _       _   _ _____ ____  _____ 
+% |  ___|_ _| |   | |     | | | | ____|  _ \| ____|
+% | |_   | || |   | |     | |_| |  _| | |_) |  _|  
+% |  _|  | || |___| |___  |  _  | |___|  _ <| |___ 
+% |_|   |___|_____|_____| |_| |_|_____|_| \_\_____|
+%
 
 
 
@@ -205,9 +216,17 @@ Copying the input to the output may sound useless, but we are typically not inte
 
 
 
+%  _____ ___ _     _       _   _ _____ ____  _____ 
+% |  ___|_ _| |   | |     | | | | ____|  _ \| ____|
+% | |_   | || |   | |     | |_| |  _| | |_) |  _|  
+% |  _|  | || |___| |___  |  _  | |___|  _ <| |___ 
+% |_|   |___|_____|_____| |_| |_|_____|_| \_\_____|
+%
 
 
 \section{Latent space topology in a simulated world}
+
+
 
 \section{Latent space regularization}
 

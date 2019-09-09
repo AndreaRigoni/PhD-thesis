@@ -138,7 +138,10 @@ If we constrain the variable correlation to be strictly ordered the probability 
     p(x_1, x_2, ... x_V | \bm{\theta}) = p(x_1|\bm{\theta})p(x_2|x_1,\bm{\theta})p(x_3|x_2,x_1,\bm{\theta}) ... p(x_V|x_1, ... x_{V-1},\bm{\theta})
 \end{equation}
 Looking at all the possible $p(x_i|\bm{\theta})$ the conditional links among variable appears as a linked directed graph.
-However even if the pictorial result is quite intuitive, this joint relation can easily grow exponentially; for instance if we imagine all distributions having the same finite discrete support composed by $K$ states the representation of all $p(x_i|x_j)$ is $O(K^2)$, the representation of $p(x_i|x_j,x_k)$ is $O(K^3)$ and so forth, so the overall model of V cardinality would become $O(K^V)$. This description of joint discrete possible states, known as the \textbf{conditional probability table}, is sometimes used to describe a fully observed covariates vector in the complete statistical description of the complex systems of variable. Actually this solution, beside requiring a first restriction in the number of possible states that represents each stochastic process, it is also presenting a critical convergence requiring a awful amount of data to reach a meaningful state for such amount of parameters.
+%
+This is called “Graphical model” as it combines graph theory and probability theory to provide a general framework to represent variables interaction. Graphical models trace their origins to many different fields and have been applied in wide variety of settings: for example, to develop probabilistic expert systems, and to understand neural networks. Remarkably, the very same formalism and algorithms can be applied to a wide range of problems.
+%
+However even if the pictorial result is quite intuitive, the joint relation among stochastic variables can easily grow exponentially; for instance if we imagine all distributions having the same finite discrete support composed by $K$ states the representation of all $p(x_i|x_j)$ is $O(K^2)$, the representation of $p(x_i|x_j,x_k)$ is $O(K^3)$ and so forth, so the overall model of V cardinality would become $O(K^V)$. This description of joint discrete possible states, known as the \textbf{conditional probability table}, is sometimes used to describe a fully observed covariates vector in the complete statistical description of the complex systems of variable. Actually this solution, beside requiring a first restriction in the number of possible states that represents each stochastic process, it is also presenting a critical convergence requiring a awful amount of data to reach a meaningful state for such amount of parameters.
 One possible solution, in the same discrete approximation, is to make use a more compact conditional distribution function, such as the multinomial logistic i.e. $p(x_i | \bm{x_j})_{i \neq j} = S_k(\bm{W}_i \bm{x_{j}}$). Although this model has been successfully applied in literature for some generative classifiers~\cite{Bengio:1999:MHD:3009657.3009714}, it appears to remain an overkill in conditioning the system.
 
 Another practical end very common solution is to assume a conditional Independence among variables that are k-hops distant from the others, exploiting the \textbf{Markov assumption} of independence among the link graph.
@@ -150,7 +153,10 @@ equivalently the second order independence can be imposed, generating a graph li
 \begin{equation}
     p(x_1, x_2, ... x_V) = p(x_1) \prod_{j=1}^V p(x_j|x_{j-1},x_{j-2})
 \end{equation}
-In the same way higher-order Markov models can be created, however even the second-order Markov assumption may be inadequate if there are long-range correlations throughout the available observations since the number of parameters will again blow up. The actual very powerful alternative approach is to assume that there is an underlying hidden process, that can be modeled by a first-order Markov chain, but for which available measures is a noisy observation of this process. The result is known as \acl{HMM}, shown in \Figure{\ref{fig:hidden_markov}}. 
+In the same way higher-order Markov models can be created, however even the second-order Markov assumption may be inadequate if there are long-range correlations throughout the available observations since the number of parameters will again blow up. 
+
+
+
 
 
 \begin{figure}
@@ -168,18 +174,69 @@ In the same way higher-order Markov models can be created, however even the seco
 \begin{figure}
     \centering
     \subfigure[]{\includegraphics[height=2cm]{img/3_ML/naive_bayes_1.pdf}
-    \label{fig:hidden_markov}}
+    \label{fignaive_bayes}}
     \subfigure[]{\includegraphics[height=2cm]{img/3_ML/DGM_o1_hmm.png}
-    \label{fig:naive_bayes}}
+    \label{fig:hidden_markov}}
     \caption{Caption}
 \end{figure}
 
+A further possible reduction in the number of joint relations between observed variables can be also given by the formalism itself,  by the assumption that some covariates are correlated because they all arise from a hidden common “cause”. Those common causes are variables themselves that can't be directly measured.  Model with hidden variables are also known as latent variable models or LVMs. 
+
+The actual very powerful alternative approach is to assume that there is an underlying hidden process, that can be modeled by a first-order Markov chain, but for which available measures is a noisy observation of this process. The result is known as \acl{HMM}, shown in \Figure{\ref{fig:hidden_markov}}. 
 
 
 
+
+
+
+
+
+
+
+%  _____ _____ ____  _   _      _                      _    
+% |  ___|  ___|  _ \| \ | | ___| |___      _____  _ __| | __
+% | |_  | |_  | | | |  \| |/ _ \ __\ \ /\ / / _ \| '__| |/ /
+% |  _| |  _| | |_| | |\  |  __/ |_ \ V  V / (_) | |  |   < 
+% |_|   |_|   |____/|_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\
 
 \subsection{Feed forward dense network}
-A feed forward NN, aka \ac{MLP} is a chain of logistic regression models stacked on top of each other, where the final layer can be either a logistic model or a linear regression depending weather we are looking for a general classification output or a regression output. 
+%
+A feed forward NN, aka \ac{MLP} is again using the linear regression, actually it can be seen as a chain of logistic regression models that are stacked one on top of each other, where the final layer being either a logistic or a linear regression depending weather we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
+For instance, looking at the simple two layers example, and considering a regression output problem, the model would be written like:
+\begin{equation}
+    p(y|\bm{x},\bm{\theta}) = \mathcal{N}\left(y|\transpose{\bm{w}}\bm{z(\bm{x}}), \sigma^2 \right)
+\end{equation}
+where the basis function expansion here is a non-linear response of further linear combination of the inputs:
+\begin{equation}
+    \bm{z}(\bm{x}) = \left[ g(\transpose{\bm{v}_1}\bm{x}), g(\transpose{\bm{v}_2}\bm{x}), ..., g(\transpose{\bm{v}_H}\bm{x}) \right]
+\end{equation}
+the transformation $z(\bm{x})$ represents here the non-linear transformation on regression in which the deterministic function $g(\bm{x},\bm{v})$, also called the \textbf{activation function}, is the kernel of the basis function expansion. In this way we could think of the MLP as a kernel machine where the kernel functions are opportunely shaped to match the input data, this is indeed referred as an \textbf{adaptive basis function model} where the entire parameter set that embrace the kernel parameters is: $\bm{\theta} = (\bm{w}, \bm{v})$ with $\bm{w} = [w_0, w_1, ..., w_D]$ and $\bm{v} = [v_1, v_2, ..., v_H]$
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=4cm]{img/3_ML/MLP.png}}
+    \subfigure[]{\includegraphics[height=4cm]{img/3_ML/FDN_plate_model.png}}
+    \caption{One hidden layer Feed Forward Neural Network (or equivalently the minimal Multi Layer Perceptron, seen as an Adaptive Basis Function Model (a), and the equivalent model in plate notation (b). }
+    \label{fig:mlp}
+\end{figure}
+
+The overall GLM applied can be constructed as usual in many different shapes, depending on the target type of inference we are interested in. If we look for a binary classification it appears as a logistic regression, i.e. the fit on the Bernoulli distribution of the sigmoid outputs:
+\begin{equation}
+    p(y|\bm{x}, \bm{\theta}) = \text{Ber}\left( y|\text{sigm}(\transpose{\bm{w}}\bm{z}(\bm{x}) \right)
+\end{equation}
+If we are looking for categorical classifier the correct GLM has to be distributed as:
+\begin{equation}
+    p(y|\bm{x}, \bm{\theta}) = \text{Cat}\left( y|\mathcal{S}(\transpose{\bm{w}}\bm{z}(\bm{x})) \right)
+\end{equation}
+where the \textit{Cat} distribution is the Multinulli and $\mathcal{S}$ stands for the support function of the input.
+Finally as stated in the first example if we are fitting a generic output function it will appear for example as a Gaussian regression model:
+\begin{equation}
+    p(\bm{y}|\bm{x}, \bm{\theta}) = \mathcal{N}\left( \bm{y}|\bm{W} \phi \right)
+\end{equation}
+where here the probability is shaped with the weights matrix $\bm{W}$ taking into account the possible multiple outputs of the perceprton.
+It is finally a key factor for the activation function $g(\bm{x},\bm{v})$ to be a non-linear operator because the overall network would collapse into a large linear regression otherwise. Usually the activation is the logistic function $g(u) = \text{sigm}(u)$ or the recently much common flavors of the \textbf{rectified linear units} (ReLU) that provide a non linear activation with a minimal computational effort.
+% 
+All this kind of complication that have been added to the simple GLM are actually needed to find the best functional fit for a set of input-output examples. So we are tuning the weights to chase for an optimal configuration; but two complementary motivations determine what \textit{optimal} means in this context. On the one hand we want the network to represent the target as exactly as possible. But on the other hand the network must be capable of generalize, that is, unknown inputs must be compared to the known ones and the output produced is a kind of interpolation of learned values. However, good generalization and minimal reproduction error of the learned input-output pairs can become contradictory objectives.
 
 
 
@@ -187,10 +244,33 @@ A feed forward NN, aka \ac{MLP} is a chain of logistic regression models stacked
 
 \section{Unsupervised learning: Generative modeling}
 % RR
-“Generative modeling” is a broad area of machine learning which deals with models of distributions P(X), defined over datapoints X in some potentially high-dimensional space X. For instance, images are a popular kind of data for which we might create generative models. Each “datapoint” (image) has thousands or millions of dimensions (pixels), and the generative model’s job is to somehow capture the dependencies between pixels, e.g., that nearby
+“Generative modeling” is a broad area of machine learning which deals with models of distributions $p(\bm{x})$, defined over datapoints X in some potentially high-dimensional space X. For instance, images are a popular kind of data for which we might create generative models. Each “datapoint” (image) has thousands or millions of dimensions (pixels), and the generative model’s job is to somehow capture the dependencies between pixels, e.g., that nearby
 pixels have similar color, and are organized into objects. Exactly what it means to “capture” these dependencies depends on exactly what we want to do with the model. One straightforward kind of generative model simply allows us to compute P(X) numerically. In the case of images, X values  which look like real images should get high probability, whereas images that look like random noise should get low probability. However, models like this are not necessarily useful: knowing that one image is unlikely does not help us synthesize one that is likely. Instead, one often cares about producing more examples that are like those already in a database, but not exactly the same. We could start with a database of raw images and synthesize new, unseen images. We might take in a database of 3D models of something like plants and produce more of them to fill a forest in a video game. We could take handwritten text and try to produce more handwritten text. Tools like this might actually be useful for graphic designers. We can formalize this setup by saying that we get examples X distributed according to some unknown distribution Pgt(X), and our goal is to learn a model P which we can sample from, such that P is as similar as possible to Pgt.
 
-% RR
+\subsubsection{Mixture models}
+
+
+
+\subsubsection{linear factor analysis}
+
+One problem with mixture models is that they only use a single latent variable to generate the
+observations. In particular, each observation can only come from one of K prototypes. One can
+think of a mixture model as using K hidden binary variables, representing a one-hot encoding
+of the cluster identity. But because these variables are mutually exclusive, the model is still
+limited in its representational power.
+An alternative is to use a vector of real-valued latent variables, $z_i \in R_L$ . The simplest prior
+to use is a Gaussian (we will consider other choices later):
+
+% p(zi ) = N (zi |μ0 , Σ0 )
+
+If the observations are also continuous, so $x_i \in R_D$ , we may use a Gaussian for the likelihood.
+Just as in linear regression, we will assume the mean is a linear function of the (hidden) inputs,
+thus yielding
+
+
+
+
+% RR  VAE
 Training this type of model has been a long-standing problem in the machine learning community, and classically, most approaches have had one of three serious drawbacks. First, they might require strong assumptions about the structure in the data. Second, they might make severe approximations, leading to sub optimal models. Or third, they might rely on computationally expensive inference procedures like Markov Chain Monte Carlo. More recently, some works have made tremendous progress in training neural networks as powerful function approximators through backpropagation \cite{NIPS2012_4824}. These advances have given rise to promising frameworks which can use backpropagation-based function approximators to build generative models. One of the most popular such frameworks is the Variational Autoencoder \cite{}, the subject of this tutorial. The assumptions of this model are weak, and training is fast via backpropagation. VAEs do make an approximation, but the error introduced by this approximation is arguably small given high-capacity models. These characteristics have contributed to a quick rise in their popularity
 
 % RR
@@ -202,8 +282,7 @@ An autoencoder is a neural network that is trained to attempt to copy its input 
 % |_|   |___|_____|_____| |_| |_|_____|_| \_\_____|
 %
 
-
-
+%% ALL DIMENSIONALITY REDUCTION
 
 % RR
 Modern autoencoders have generalized the idea of an encoder and a decoder beyond deterministic functions to stochastic mappings $p_{encoder}(h | x)$ and $p_{decoder}(x | h)$.
@@ -220,6 +299,10 @@ Copying the input to the output may sound useless, but we are typically not inte
 
 
 
+
+
+
+
 %  _____ ___ _     _       _   _ _____ ____  _____ 
 % |  ___|_ _| |   | |     | | | | ____|  _ \| ____|
 % | |_   | || |   | |     | |_| |  _| | |_) |  _|  
@@ -230,6 +313,19 @@ Copying the input to the output may sound useless, but we are typically not inte
 
 \section{Latent space topology in a simulated world}
 
+\subsection{STEP1}
+
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/ls1.png} \label{step1_1}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/ls2.png} \label{step1_2}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/ls3.png} \label{step1_3}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn1.png} \label{step1_4}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn2.png} \label{step1_5}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn3.png} \label{step1_6}}
+    \caption{ STEP1 ls/gn }
+    \label{fig:step_1}
+\end{figure}
 
 
 \section{Latent space regularization}

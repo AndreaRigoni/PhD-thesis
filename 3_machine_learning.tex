@@ -88,8 +88,8 @@ The univariate Gaussian can be written in exponential family in this form:
 \end{equation}
 once the parameters have been set to:
 \begin{align*}
-    & \bm{\theta}  = \left[ \frac{\mu}{\sigma^2}, -\frac{1}{2\sigma^2} \right] \\
     & \bm{\phi}(x) = \left[ x, x^2 \right] \\
+    & \bm{\theta}  = \left[ \frac{\mu}{\sigma^2}, -\frac{1}{2\sigma^2} \right] \\
     & Z(\mu,\sigma^2) = \sqrt{{2\pi\sigma^2}} \exp{\left[ \frac{\mu^2}{2\sigma^2} \right]}
 \end{align*}
 
@@ -117,6 +117,7 @@ The GLM probability is composed as follows:
 \end{equation}
 
 
+%
 %  _____ ___ _     _       _   _ _____ ____  _____ 
 % |  ___|_ _| |   | |     | | | | ____|  _ \| ____|
 % | |_   | || |   | |     | |_| |  _| | |_) |  _|  
@@ -174,8 +175,11 @@ In the same way higher-order Markov models can be created, however even the seco
 \end{figure}
 
 
+
+
+
 \subsection{Feed forward dense network}
-A feed forward NN, aka \ac{MLP} is a chain of logistic regression models stacked on top of each other, where the final layer can be either a logistic model or a linear regression model depending weather we are looking for a general classification output or a non linear regression output. 
+A feed forward NN, aka \ac{MLP} is a chain of logistic regression models stacked on top of each other, where the final layer can be either a logistic model or a linear regression depending weather we are looking for a general classification output or a regression output. 
 
 
 

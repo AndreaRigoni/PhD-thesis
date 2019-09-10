@@ -214,7 +214,7 @@ the transformation $z(\bm{x})$ represents here the non-linear transformation on 
 
 \begin{figure}
     \centering
-    \subfigure[]{\includegraphics[height=4cm]{img/3_ML/MLP.png}}
+    \subfigure[]{\includegraphics[height=4cm]{img/3_ML/MLP.png} \label{fig:mlp_a}}
     \subfigure[]{\includegraphics[height=4cm]{img/3_ML/FDN_plate_model.png}}
     \caption{One hidden layer Feed Forward Neural Network (or equivalently the minimal Multi Layer Perceptron, seen as an Adaptive Basis Function Model (a), and the equivalent model in plate notation (b). }
     \label{fig:mlp}
@@ -233,11 +233,23 @@ Finally as stated in the first example if we are fitting a generic output functi
 \begin{equation}
     p(\bm{y}|\bm{x}, \bm{\theta}) = \mathcal{N}\left( \bm{y}|\bm{W} \phi \right)
 \end{equation}
-where here the probability is shaped with the weights matrix $\bm{W}$ taking into account the possible multiple outputs of the perceprton.
+where in this last version of the formula the probability has been shaped with the weights matrix $\bm{W}$ taking into account the possible MIMO configuration of the perceprton as shown in \Figure{\ref{fig:mlp_a}}.
 It is finally a key factor for the activation function $g(\bm{x},\bm{v})$ to be a non-linear operator because the overall network would collapse into a large linear regression otherwise. Usually the activation is the logistic function $g(u) = \text{sigm}(u)$ or the recently much common flavors of the \textbf{rectified linear units} (ReLU) that provide a non linear activation with a minimal computational effort.
 % 
-All this kind of complication that have been added to the simple GLM are actually needed to find the best functional fit for a set of input-output examples. So we are tuning the weights to chase for an optimal configuration; but two complementary motivations determine what \textit{optimal} means in this context. On the one hand we want the network to represent the target as exactly as possible. But on the other hand the network must be capable of generalize, that is, unknown inputs must be compared to the known ones and the output produced is a kind of interpolation of learned values. However, good generalization and minimal reproduction error of the learned input-output pairs can become contradictory objectives.
+All this kind of complication that have been added to the simple GLM are actually building a problem of optimization, to find the best functional fit for a set of input-output examples. So we are tuning the weights to chase for an optimal configuration; but two complementary motivations determine what \textit{optimal} means in this context. On the one hand we want the network to represent the target as exactly as possible. But on the other hand the network must be capable of generalize, that is, unknown inputs must be compared to the known ones and the output produced is a kind of interpolation of learned values. However, good generalization and minimal reproduction error of the learned input-output pairs can become contradictory objectives.
 
+\subsection{Convolutional Neural Networks}
+
+The previous section explained how a ABFM
+
+The purpose of the hidden units is to learn non-linear combinations of the original inputs; this
+is called feature extraction or feature construction. These hidden features are then passed as
+input to the final GLM. This approach is particularly useful for problems where the original input
+features are not very individually informative. For example, each pixel in an image is not very
+informative; it is the combination of pixels that tells us what objects are present. Conversely, for
+a task such as document classification using a bag of words representation, each feature (word
+count) is informative on its own, so extracting “higher order” features is less important. Not
+suprisingly, then, much of the work in neural networks has been motivated by visual pattern
 
 
 

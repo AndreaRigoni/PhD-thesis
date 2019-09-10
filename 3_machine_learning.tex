@@ -201,16 +201,24 @@ The actual very powerful alternative approach is to assume that there is an unde
 
 \subsection{Feed forward dense network}
 %
-A feed forward NN, aka \ac{MLP} is again using the linear regression, actually it can be seen as a chain of logistic regression models that are stacked one on top of each other, where the final layer being either a logistic or a linear regression depending weather we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
+A feed forward NN, aka \ac{MLP} is again using the linear regression, actually it can be seen as a chain of logistic regression models that are stacked one on top of each other, where the final layer being a \ac{GLM}, either a logistic or a linear regression depending weather we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
 For instance, looking at the simple two layers example, and considering a regression output problem, the model would be written like:
 \begin{equation}
     p(y|\bm{x},\bm{\theta}) = \mathcal{N}\left(y|\transpose{\bm{w}}\bm{z(\bm{x}}), \sigma^2 \right)
+    \label{eq:mlp_a}
 \end{equation}
 where the basis function expansion here is a non-linear response of further linear combination of the inputs:
 \begin{equation}
-    \bm{z}(\bm{x}) = \left[ g(\transpose{\bm{v}_1}\bm{x}), g(\transpose{\bm{v}_2}\bm{x}), ..., g(\transpose{\bm{v}_H}\bm{x}) \right]
+    \bm{z}(\bm{x}) = \left[ g(\transpose{\bm{v}_1}\bm{x}), g(\transpose{\bm{v}_2}\bm{x}), ..., g(\transpose{\bm{v}_H}\bm{x})
+    \right]
+    \label{eq:mlp_b}
 \end{equation}
-the transformation $z(\bm{x})$ represents here the non-linear transformation on regression in which the deterministic function $g(\bm{x},\bm{v})$, also called the \textbf{activation function}, is the kernel of the basis function expansion. In this way we could think of the MLP as a kernel machine where the kernel functions are opportunely shaped to match the input data, this is indeed referred as an \textbf{adaptive basis function model} where the entire parameter set that embrace the kernel parameters is: $\bm{\theta} = (\bm{w}, \bm{v})$ with $\bm{w} = [w_0, w_1, ..., w_D]$ and $\bm{v} = [v_1, v_2, ..., v_H]$
+the transformation $z(\bm{x})$ represents here the non-linear transformation on regression in which the deterministic function $g(\bm{x},\bm{v})$, also called the \textbf{activation function}, is the kernel of the basis function expansion. In this way we could think of the \acl{MLP} as a kernel machine where the kernel functions have been opportunely shaped to match the input data. This parametrization on the kernel function makes the \acl{MLP} an \ac{ABM}:
+\begin{equation}
+    f(\bm{x}) = \transpose{\bm{w}}\bm{\phi}(\{1,\bm{x}\}, \bm{V})
+\end{equation}
+The generic basis function $\phi(\bm{x},\bm{V})$ must be trained on the dataset to make it "adapt" at the input statistics; while
+the entire parameter set that embrace the kernel is now: $\bm{\theta} = (\bm{w}, \bm{v})$ with $\bm{w} = [w_0, w_1, ..., w_M]$ and $\bm{v}_m = [v_{m1}, v_{m2}, ..., v_{mH}]$. The first set of parameters are the linear combination coefficients of the \ac{GLM}, and the second are the parametrization of the kernel. The unit appended to the input feature has been used to add the bias coefficient $w_0$.
 
 \begin{figure}
     \centering
@@ -220,7 +228,7 @@ the transformation $z(\bm{x})$ represents here the non-linear transformation on 
     \label{fig:mlp}
 \end{figure}
 
-The overall GLM applied can be constructed as usual in many different shapes, depending on the target type of inference we are interested in. If we look for a binary classification it appears as a logistic regression, i.e. the fit on the Bernoulli distribution of the sigmoid outputs:
+The final \acl{GLM} applied can be constructed as usual in many different shapes, depending on the target type of inference we are interested in. If we look for a binary classification it appears as a logistic regression, i.e. the fit on the Bernoulli distribution of the sigmoid outputs:
 \begin{equation}
     p(y|\bm{x}, \bm{\theta}) = \text{Ber}\left( y|\text{sigm}(\transpose{\bm{w}}\bm{z}(\bm{x}) \right)
 \end{equation}
@@ -235,17 +243,87 @@ Finally as stated in the first example if we are fitting a generic output functi
 \end{equation}
 where in this last version of the formula the probability has been shaped with the weights matrix $\bm{W}$ taking into account the possible MIMO configuration of the perceprton as shown in \Figure{\ref{fig:mlp_a}}.
 It is finally a key factor for the activation function $g(\bm{x},\bm{v})$ to be a non-linear operator because the overall network would collapse into a large linear regression otherwise. Usually the activation is the logistic function $g(u) = \text{sigm}(u)$ or the recently much common flavors of the \textbf{rectified linear units} (ReLU) that provide a non linear activation with a minimal computational effort.
+%
+% SHOW A FIGURE OF THE POSSIBLE ACTIVATION FUNCTIONS
 % 
 All this kind of complication that have been added to the simple GLM are actually building a problem of optimization, to find the best functional fit for a set of input-output examples. So we are tuning the weights to chase for an optimal configuration; but two complementary motivations determine what \textit{optimal} means in this context. On the one hand we want the network to represent the target as exactly as possible. But on the other hand the network must be capable of generalize, that is, unknown inputs must be compared to the known ones and the output produced is a kind of interpolation of learned values. However, good generalization and minimal reproduction error of the learned input-output pairs can become contradictory objectives.
 
-\subsection{Convolutional Neural Networks}
+%% tell something about the cost function
 
-The previous section explained how a ABFM
 
-The purpose of the hidden units is to learn non-linear combinations of the original inputs; this
-is called feature extraction or feature construction. These hidden features are then passed as
-input to the final GLM. This approach is particularly useful for problems where the original input
-features are not very individually informative. For example, each pixel in an image is not very
+
+%  _                _                          
+% | |__   __ _  ___| | ___ __  _ __ ___  _ __  
+% | '_ \ / _` |/ __| |/ / '_ \| '__/ _ \| '_ \ 
+% | |_) | (_| | (__|   <| |_) | | | (_) | |_) |
+% |_.__/ \__,_|\___|_|\_\ .__/|_|  \___/| .__/ 
+%                       |_|             |_|    
+
+\subsection{Optimization of parameters and the backpropagation algorithm}
+
+In the previous section the the basic structure of a \acl{MLP} has been presented as a particular adaptive kernel version of the \acl{GLM}, however unlike this one the negative log-likelihood of a \acl{MLP} is a non-convex function of the parameters. It is nevertheless always possible to obtain a local maximum of the posterior probability locating the minimum of a cost function in a gradient-based optimization procedure. 
+To proceed toward a descent path on a gradient vector of the negative log-likelihood is needed. This can be obtained in several ways, but it is a very common approach for NN to exploit the fact that the internal hidden units of a \acl{MLP} form a chain rule of calculus. The resulting algorithm is known as the \textbf{backpropagation} an it will be presented n the following as it has been the method used in all the results presented in this document. The backpropagation is a method to compute the variation of the cost function with respect to a variation on the single neuron unit, so one could think that all hidden units as statistically described by internal states variables providing a stochastic version of the descent algorithm~\cite{rezende2014stochastic}; however in this brief description we will consider the hidden units as a part of the adaptive kernel of the \acl{MLP} as described, so that the optimum has only to be found among the gradients of all units function (i.e. the linear combination of coefficients and the activation function). 
+
+To obtain a simple notation we will assume in the next the model as it was presented in \Figure{\ref{fig:mlp_a}}: with just a single hidden layer. This will be indeed helpful to separate the \textit{pre-synaptic} and \textit{post-synaptic} entities of neurons, that are, values of the signal passing through, before and after we apply the non-linearity of the activation function. Let $\bm{x}_n$ be the n\'th input, $\bm{a}_n = \bm{V}\bm{x}_n$ the \textit{pre-synaptic} hidden layer, and $\bm{z}_n = g(\bm{a}_n)$ be the \textit{post-synaptic} hidden layer, where $g$ is some transfer function. 
+For the activation function, as already discussed, several non linear function is commonly used: the classical literature presents $g(a) = sigm(a)$, or equivalently $g(a) = tanh(a)$, but we also stated that a common modern solution is to expoit the ReLU or LeakyReLU functions. 
+We will now consider the model as presented in \Equation{\ref{eq:mlp_a}}; the pre and post synaptic outputs can be divided as: $\bm{b}_n = \bm{W}\bm{z}_n$ pre-synaptic output, and $\hat{\bm{y}}_n = h(\bm{b}_n)$ the post-synaptic output. In the second term we also represented the non linear effect of the \acl{GLM} canonical link function as $h$.
+In the regression case of \acl{GLM} the negative log-likelihood appears as the \textbf{mean squared error} of the signal that passed through the network with the ground truth:
+\begin{equation}
+    J(\bm{\theta}) = -\sum_n\sum_k \left(\hat{y}_{nk}(\bm{\theta}) - y_{nk}\right)^2
+\end{equation}
+Otherwise in the classification case the negative log-likelihood assumes the typical form of the \textbf{cross entropy} between the reconstruction output and the actual real class of each sample:
+\begin{equation}
+    J(\bm{\theta}) = -\sum_n\sum_k y_{nk} \log \hat{y}_{nk}(\bm{\theta})
+\end{equation}
+%
+Let us start by considering the output layer weights from the \acl{GLM}:
+\begin{equation}
+    \nabla_{\bm{w}_k} J_n = \pdv{J_n}{b_{nk}} b_{nk} = \pdv{J_n}{b_{nk}} \bm{z}_n
+\end{equation}
+where $b_{nk} = \transpose{\bm{w}_k}\bm{z}_n$ and, considering all the chained relations, it can be shown ( see GLM ML ) that the the derivative can be set to:
+\begin{equation}
+    \pdv{J_n}{b_{nk}} = ( \hat{y}_{nk} - y_{nk} ) \triangleq \delta_{nk}^w
+\end{equation}
+and the overall gradient with respect to the output signal is:
+\begin{equation}
+    \nabla_{\bm{w}_k} J_n = \delta_{nk}^w \bm{z}_n
+\end{equation}
+A similar procedure can be also applied to the input layer:
+\begin{equation}
+    \pdv{J_n}{a_{nj}} = \sum_{k=1}^K \pdv{J_n}{b_{nk}}\pdv{b_{nk}}{a_{nj}} 
+    \triangleq \sum_{k=1}^K \delta_{nk}^w \pdv{b_{nk}}{a_{nj}}
+\end{equation}
+Now we introduce the actication function at the input of the link function, so from the defined $b_{nk}$ as:
+\begin{equation}
+    b_{nk} = \sum_j w_{kj} g( a_{nj} )
+\end{equation}
+the derivative becomes:
+\begin{equation}
+    \pdv{b_{nk}}{a_{jk}} = w_{kj} g^\prime(a_{nj})
+\end{equation}
+The derivative of the activation function varies for the specific case; for example:
+\begin{align*}
+    & \pdv{}{a} \tanh(a) = 1-\tanh^2(a) \\
+    & \pdv{}{a} \text{sigm}(a) = \text{sigm}(a)(1-\text{sigm}(a))
+\end{align*}
+Hence:
+\begin{equation}
+    \delta_{nj}^v = \sum_{k=1}^K \delta_{nk}^w w_{kj} g^{\prime}(a_{nj})
+    \label{eq:backprop_error}
+\end{equation}
+Putting it all together, we can compute all the gradients as follows: we first perform a forward pass to compute $a_n$ , $z_n$ , $b_n$ and $\hat{y}_n$. We then compute the error for the output layer, $\delta_n^{(2)} = \hat{y}_n - y_n$, which we pass backwards through $\bm{W}$ using \eqref{eq:backprop_error} to compute the error for the hidden layer $\delta_n^{(1)}$. We then compute the overall gradient as follows:
+\begin{equation}
+    \nabla_{\bm{\theta}} J(\bm{\theta}) = \sum_n \left[ \bm{\delta}_n^v \bm{x}_n, \bm{\delta}_n^w \bm{z}_n \right]
+\end{equation}
+
+It is also quite straightforward to see that the parameters are not uniquely identifiable. For example, we can change the sign of the weights going into one of the hidden units, while changing the sign of all the weights out of it; these composed effect cancels. Similarly, we can change the identity of the hidden units without affecting the likelihood. 
+In addition, there may be local minima due to the general non-convexity of the log-likelihood. This can be a more serious problem, although with enough data, these local optima are often quite “shallow”, and simple stochastic optimization methods can reach the optimal value of the parameters.
+
+\subsection{Hidden layer extensions}
+
+The previous sections explained how the \ac{ABM} hidden units are able to learn non-linear combinations of the original inputs; this is called \textbf{feature extraction}. These processed signals are then passed as the input of the final \ac{GLM}. This approach is particularly useful for problems where the original input features are not very individually informative. 
+In addition it will be shown in this document how this joint relations that are very deep 
+For example, each pixel in an image is not very
 informative; it is the combination of pixels that tells us what objects are present. Conversely, for
 a task such as document classification using a bag of words representation, each feature (word
 count) is informative on its own, so extracting “higher order” features is less important. Not
@@ -258,6 +336,11 @@ suprisingly, then, much of the work in neural networks has been motivated by vis
 % RR
 “Generative modeling” is a broad area of machine learning which deals with models of distributions $p(\bm{x})$, defined over datapoints X in some potentially high-dimensional space X. For instance, images are a popular kind of data for which we might create generative models. Each “datapoint” (image) has thousands or millions of dimensions (pixels), and the generative model’s job is to somehow capture the dependencies between pixels, e.g., that nearby
 pixels have similar color, and are organized into objects. Exactly what it means to “capture” these dependencies depends on exactly what we want to do with the model. One straightforward kind of generative model simply allows us to compute P(X) numerically. In the case of images, X values  which look like real images should get high probability, whereas images that look like random noise should get low probability. However, models like this are not necessarily useful: knowing that one image is unlikely does not help us synthesize one that is likely. Instead, one often cares about producing more examples that are like those already in a database, but not exactly the same. We could start with a database of raw images and synthesize new, unseen images. We might take in a database of 3D models of something like plants and produce more of them to fill a forest in a video game. We could take handwritten text and try to produce more handwritten text. Tools like this might actually be useful for graphic designers. We can formalize this setup by saying that we get examples X distributed according to some unknown distribution Pgt(X), and our goal is to learn a model P which we can sample from, such that P is as similar as possible to Pgt.
+
+
+It is widely believed that the real-world data is generated by a few explanatory factors which are distributed, invariant and disentangled (Bengio et al., 2013).
+
+
 
 \subsubsection{Mixture models}
 

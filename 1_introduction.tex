@@ -313,6 +313,59 @@ The recording systems is also quite complex: for RFX-mod the detected signal has
 
 \section{A new approach based on machine learning \\ \small{ how do we do with ourselves }}
 \cite{Goodfellow-et-al-2016}
+
+% From the statistical perspective, supervised neural networks are nothing more
+% than nonlinear curve-fitting devices. Curve fitting is not a trivial task however.
+% The effective complexity of an interpolating model is of crucial importance,
+% as illustrated in figure 44.5. Consider a control parameter that influences the
+% complexity of a model, for example a regularization constant α (weight decay
+% parameter). As the control parameter is varied to increase the complexity of
+% the model (descending from figure 44.5a–c and going from left to right across
+% figure 44.5d), the best fit to the training data that the model can achieve
+% becomes increasingly good. However, the empirical performance of the model,
+% the test error, first decreases then increases again. An over-complex model
+% overfits the data and generalizes poorly. This problem may also complicate
+% the choice of architecture in a multilayer perceptron, the radius of the basis
+% functions in a radial basis function network, and the choice of the input vari-
+% ables themselves in any multidimensional regression problem. Finding values
+% for model control parameters that are appropriate for the data is therefore an
+% important and non-trivial problem.
+
+% The overfitting problem can be solved by using a Bayesian approach to
+% control model complexity.
+% If we give a probabilistic interpretation to the model, then we can evaluate
+% the evidence for alternative values of the control parameters. As was explained
+% in Chapter 28, over-complex models turn out to be less probable, and the
+% evidence P (Data | Control Parameters) can be used as an objective function
+% for optimization of model control parameters (figure 44.5e). The setting of α
+% that maximizes the evidence is displayed in figure 44.5b.
+% Bayesian optimization of model control parameters has four important ad-
+% vantages. (1) No ‘test set’ or ‘validation set’ is involved, so all available training
+% data can be devoted to both model fitting and model comparison. (2) Reg-
+% ularization constants can be optimized on-line, i.e., simultaneously with the
+% optimization of ordinary model parameters. (3) The Bayesian objective func-
+% tion is not noisy, in contrast to a cross-validation measure. (4) The gradient of
+% the evidence with respect to the control parameters can be evaluated, making
+% it possible to simultaneously optimize a large number of control parameters.
+% Probabilistic modelling also handles uncertainty in a natural manner. It
+% offers a unique prescription, marginalization, for incorporating uncertainty
+% about parameters into predictions; this procedure yields better predictions, as
+% we saw in Chapter 41. Figure 44.6 shows error bars on the predictions of a
+% trained neural network.
+
+% As was mentioned in Chapter 41, Bayesian inference for multilayer networks
+% may be implemented by Monte Carlo sampling, or by deterministic methods
+% employing Gaussian approximations (Neal, 1996; MacKay, 1992c).
+% Within the Bayesian framework for data modelling, it is easy to improve
+% our probabilistic models. For example, if we believe that some input variables
+% in a problem may be irrelevant to the predicted quantity, but we don’t know
+% which, we can define a new model with multiple hyperparameters that captures
+% the idea of uncertain input variable relevance (MacKay, 1994b; Neal, 1996;
+% MacKay, 1995b); these models then infer automatically from the data which
+% are the relevant input variables for a problem.
+
+
+
 % supervised and unsupervised learning.
 % changing the perspective from algorithm to data representation.
 

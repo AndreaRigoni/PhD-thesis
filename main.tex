@@ -30,7 +30,37 @@
 \usepackage{epigraph}
 \usepackage{xcolor}
 \usepackage{acronym}
-\usepackage{physics} %% differential notation
+\usepackage{physics}  %% differential notation
+\usepackage{cleveref} %% section reference notation
+\usepackage{listings} %% syntax highlight
+\usepackage{xcolor}
+ 
+%% CODE LISTING STYLE %% 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ \lstset{style=mystyle}
+
 
 \graphicspath{ {img/} }
 
@@ -38,11 +68,16 @@
 \author{Andrea Rigoni Garola}
 \date{July 2019}
 
+% see manual of cleveref, section 8.2.1
+\crefformat{section}{\S#2#1#3} 
+\crefformat{subsection}{\S#2#1#3}
+\crefformat{subsubsection}{\S#2#1#3}
 
 %% SUBSTITUTIONS %%
 \newcommand{\RFXmod}{RFX-mod}
 \newcommand{\Figure}[1]{\textit{Figure}~#1}
 \newcommand{\Equation}[1]{\textit{Equation}~(#1)}
+\newcommand{\Section}[1]{\textit{Section~#1}}
 
 %% MATH %%
 \newcommand{\transpose}[1]{\ensuremath{#1^{\scriptscriptstyle T}}}

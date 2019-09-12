@@ -43,9 +43,16 @@ At this point the conditional probability of the target given the features can b
 \end{equation}
 this happens because we forced to consider the features with normal distribution and because being an exponential distribution it is also a conjugate prior for the likelihood, as it will described in the following.
 
+
+%   ____ _     __  __ 
+%  / ___| |   |  \/  |
+% | |  _| |   | |\/| |
+% | |_| | |___| |  | |
+%  \____|_____|_|  |_|
+%
 \subsection{Generalized Linear Models}
 The use of exponential distribution turns to be a very clever solution. Indeed, among all families of distributions, where the definition domain does not vary with the parameter being estimated, this family is the only one with a sufficient statistic whose dimension remains bounded if the sample size increases. This means that we can have a compressed representation of the dataset into a fixed size summary without loss of information.
-Exponential families are also important in Bayesian reconstruction where a prior distribution is multiplied by a likelihood function and normalised to produce the posterior. In the case of a likelihood which belongs to an exponential family there always exists a conjugate prior, which is usually also exponentially distributed. 
+Exponential families are also important in Bayesian reconstruction where a prior distribution is multiplied by a likelihood function and normalized to produce the posterior. In the case of a likelihood which belongs to an exponential family there always exists a conjugate prior, which is usually also exponentially distributed. 
 %
 %A conjugate prior for the parameter $\eta$ of an exponential family
 The formal definition of a generic exponentially distributed p.d.f. is the following:
@@ -135,6 +142,14 @@ The GLM probability is composed as follows:
 
 %% CLOSED FORM FOR GAUSSIAN MODEL
 
+
+%   ____                 _     _           _ __  __           _      _     
+%  / ___|_ __ __ _ _ __ | |__ (_) ___ __ _| |  \/  | ___   __| | ___| |___ 
+% | |  _| '__/ _` | '_ \| '_ \| |/ __/ _` | | |\/| |/ _ \ / _` |/ _ \ / __|
+% | |_| | | | (_| | |_) | | | | | (_| (_| | | |  | | (_) | (_| |  __/ \__ \
+%  \____|_|  \__,_| .__/|_| |_|_|\___\__,_|_|_|  |_|\___/ \__,_|\___|_|___/
+%                 |_|       
+%
 \subsection{Directed Graphical Models}
 In the previous chapter we saw a possible general approach to obtain a regression of a single target variable given its conditional probability with an input process. Suppose now that we are observing a set of multiple correlated variables where the correlation extends from one variable to another in a chain of dependencies. This becomes a stochastic model describing a sequence of possible values for the variables in which the probability of each event depends on the state of the others.
 If we constrain the variable correlation to be strictly ordered the probability of a target variable after all the correlation hops can be written as:
@@ -178,19 +193,31 @@ In the same way higher-order Markov models can be created, however even the seco
 \begin{figure}
     \centering
     \subfigure[]{\includegraphics[height=2cm]{img/3_ML/naive_bayes_1.pdf}
-    \label{fignaive_bayes}}
+    \label{fig:naive_bayes}}
     \subfigure[]{\includegraphics[height=2cm]{img/3_ML/DGM_o1_hmm.png}
     \label{fig:hidden_markov}}
     \caption{Caption}
 \end{figure}
 
-A further possible reduction in the number of joint relations between observed variables can be also given by the formalism itself,  by the assumption that some covariates are correlated because they all arise from a hidden common “cause”. Those common causes are variables themselves that can't be directly measured.  Model with hidden variables are also known as latent variable models or LVMs. 
+A further possible reduction in the number of joint relations between observed variables can be also given by the formalism itself,  by the assumption that some covariates are correlated because they all arise from a hidden common “cause”. Those common causes can be described as variables themselves but that can't be directly accessed.  Model with hidden variables are also known as latent variable models or LVMs. 
+The very basic example i the \textbf{naive Bayes classifier}, where features are assumed to be conditionally independent given a class label a common target. This is illustrated in \Figure{\ref{fig:naive_bayes}}. The joint probability can be then written as:
+\begin{equation}
+    p(y,\bm{x}) = p(y) \prod_{j=1}^V p(x_j| y)
+\end{equation}
+%
+Another very powerful alternative approach is to assume that there is an underlying hidden process, that can be modeled by a first-order Markov chain, but for which available measures is a noisy observation of this process. The result is known as \acl{HMM}, shown in \Figure{\ref{fig:hidden_markov}}. 
 
-The actual very powerful alternative approach is to assume that there is an underlying hidden process, that can be modeled by a first-order Markov chain, but for which available measures is a noisy observation of this process. The result is known as \acl{HMM}, shown in \Figure{\ref{fig:hidden_markov}}. 
 
 
 
-
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=2.5cm]{img/3_ML/naive_bayes_2.pdf} \label{fig:plate_naive_bayes}}
+    \subfigure{\includegraphics[height=2.5cm]{img/3_ML/plate_ntz_1.pdf} \label{fig:plate_ntz_1}}
+    \subfigure{\includegraphics[height=2.5cm]{img/3_ML/plate_ntz_2.pdf} \label{fig:plate_ntz_2}}
+    \caption{ Plate notation for DGM }
+    \label{fig:plate_notation}
+\end{figure}
 
 
 
@@ -202,28 +229,10 @@ The actual very powerful alternative approach is to assume that there is an unde
 % | |_  | |_  | | | |  \| |/ _ \ __\ \ /\ / / _ \| '__| |/ /
 % |  _| |  _| | |_| | |\  |  __/ |_ \ V  V / (_) | |  |   < 
 % |_|   |_|   |____/|_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\
-
-\subsection{Feed forward dense network}
 %
-
-Feedforward neural networks such as multilayer perceptrons are popular tools
-for nonlinear regression and classification problems. From a Bayesian per-
-spective, a choice of a neural network model can be viewed as defining a prior
-probability distribution over nonlinear functions, and the neural network’s
-learning process can be interpreted in terms of the posterior probability dis-
-tribution over the unknown function. (Some learning algorithms search for the
-function with maximum posterior probability and other Monte Carlo methods
-draw samples from this posterior probability.)
-In the limit of large but otherwise standard networks, Neal (1996) has
-shown that the prior distribution over nonlinear functions implied by the
-Bayesian neural network falls in a class of probability distributions known
-as Gaussian processes. The hyperparameters of the neural network model
-determine the characteristic lengthscales of the Gaussian process. Neal’s ob-
-servation motivates the idea of discarding parameterized networks and working
-directly with Gaussian processes. Computations in which the parameters of
-the network are optimized are then replaced by simple matrix operations using
-the covariance matrix of the Gaussian process.
-
+\subsection{Feed forward dense network}
+\label{section:feedforward dense networks}
+%
 A feed forward NN, aka \ac{MLP} is again using the linear regression, actually it can be seen as a chain of logistic regression models that are stacked one on top of each other, where the final layer being a \ac{GLM}, either a logistic or a linear regression depending weather we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
 For instance, looking at the simple two layers example, and considering a regression output problem, the model would be written like:
 \begin{equation}
@@ -272,6 +281,20 @@ It is finally a key factor for the activation function $g(\bm{x},\bm{v})$ to be 
 All this kind of complication that have been added to the simple GLM are eventually building an optimization problem, finding the best functional fit for a set of input-output examples. So what we are doing at a very general level is tuning the weights to chase for an optimal configuration; but two complementary motivations determine what \textit{optimal} means in this context. On the one side we want the network to represent the target as exactly as possible. But on the other hand the network must be also \textbf{capable of generalize}, that is, when unknown inputs must be compared to the known producing an output that is a kind of interpolation of learned values. However, good generalization and minimal reproduction error of the learned input-output pairs can become contradictory objectives as already briefly discussed about the fitting of the network to the data (i.e. over-fitting and under-fitting training).
 A more detailed discussion is postponed to \cref{section:training_regularization}
 %
+Feedforward neural networks early became a popular tool for nonlinear regression and classification problems thanks to their simple matematical expression and at the same time the their capability of easily adapting to any non linear relation hidden within data. Although, this comes with the price that the network is trained to match the given inputs, thus it is actually keen on learning to represent those very set of data.
+%
+For this reason from a Bayesian perspective, the choice of neural network models can be viewed as the definition of a \textbf{prior over non-linear function}, while the learning process can be seen in terms of finding a posterior over those unknown function. 
+As a bayes posterior the network can be than trained using the probabilisti perspective, such as searching for the function parameters with maximum posterior probability ( i.e. the Variadic Approach ), or using Monte Carlo to sample directly from posterior.
+%
+In the limit of standard networks with substancial scaling, Neal (1996) proved that the prior distribution over non-linear functions implied by the Bayesian neural network falls in a class of probability distributions known as Gaussian processes. 
+
+% The hyperparameters of the neural network model
+% determine the characteristic lengthscales of the Gaussian process. Neal’s ob-
+% servation motivates the idea of discarding parameterized networks and working
+% directly with Gaussian processes. Computations in which the parameters of
+% the network are optimized are then replaced by simple matrix operations using
+% the covariance matrix of the Gaussian process.
+
 
 %% tell something about the cost function
 
@@ -478,7 +501,7 @@ At the end the overall Loss is composed by the target loss, \textit{mse} for ins
     L(x,y) = \sum_{i=1}^N (y_i - \transpose{\bm{w}}\bm{z_i}(\bm{x}))^2 + \lambda_1 \sum_{j=1}^{L1} L_1(x_i,y_i)_j + \lambda_2 \sum_{k=1}^{L2} L_2(x_i,y_i)_k
 \end{equation}
 
-These activity regularizers are only affecting the loss and thus they only pertain on training, so they are training regularizers and shall not be deployed in a trained network.
+These activity regularizers are only affecting the loss and thus they only pertain on training, so they are \textit{training regularizers} and shall not be eventually deployed in a trained network.
 % \begin{lstlisting}[language=Python, caption=activity L1L2 regularizer in keras (tf 2.0)]
 % @keras_export('keras.regularizers.L1L2')
 % class L1L2(Regularizer):
@@ -512,6 +535,20 @@ pixels have similar color, and are organized into objects. Exactly what it means
 
 \subsubsection{Mixture models}
 
+It has been already presented that directed graphical models can be used to represent joint probability distributions. The basic idea is to graph all conditional dependencies among variables by adding an edge between each of the linked pairs. 
+We also saw as an alternative approach, assuming that the observed variables are correlated because they arise from a hidden common “cause”, that the model can be added with hidden variables (i.e. \textbf{latent variable models}).
+Such expanded models are actually harder to fit because for the latent variables we need to infer their distribution as well as than models with no latent variables.
+%
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=3cm]{img/3_ML/mixed_model_FCL.png} \label{img:ML_mm_flc}}
+    \subfigure[]{\includegraphics[height=3cm]{img/3_ML/mixed_model_LVM.png} \label{img:ML_mm_lvm}}
+    \caption{Connections topology between the fully connected bayes network, where all conditional probabilities are explicitly assigned between each pair of the layers nodes with a total  (a), and the same model with a latent \textit{hidden} variable inserted between layers to represent conditional probabilities (b). }
+    \label{fig:mixture_models}
+\end{figure}
+%
+However once the \acs{LVM} is built the total number of parameters is significantly reduced in respect with the same model that directly represent correlation in the visible space. 
+
 
 
 \subsubsection{linear factor analysis}
@@ -529,8 +566,6 @@ to use is a Gaussian (we will consider other choices later):
 If the observations are also continuous, so $x_i \in R_D$ , we may use a Gaussian for the likelihood.
 Just as in linear regression, we will assume the mean is a linear function of the (hidden) inputs,
 thus yielding
-
-
 
 
 % RR  VAE
@@ -561,6 +596,71 @@ In just three years, Variational Autoencoders (VAEs) have emerged as one of the 
 Copying the input to the output may sound useless, but we are typically not interested in the output of the decoder. Instead, we hope that training the autoencoder to perform the input copying task will result in h taking on useful properties. One way to obtain useful features from the autoencoder is to constrain h to have a smaller dimension than x. An autoencoder whose code dimension is less than the input dimension is called \textbf{undercomplete}. Learning an undercomplete representation forces the autoencoder to capture the most salient features of the training data.
 
 
+In \cref{section:feedforward dense networks} we showed that a neural network can be also seen in a Bayesian description as a problem of conditional probability, where we are interested in the posterior description of a dataset. A very commonly exploited method to infer that posterior distribution is \textit{Variational Inference}~\cite{Jordan:1999:IVM:339248.339252}~\cite{MAL-001}. It has been proposed an alternative strategy to \ac{MCMC} sampling because tends to be faster to train and easier to scale with large datasets.
+
+If we start by considering a joint density of latent variables $\bm{z} = [z_1, z_2, ...,z_m]$ and observations $\bm{x} = [x_1, x_2, ..., x_n]$:
+\begin{equation}
+    p(\bm{z},\bm{x}) = p(\bm{z}) p(\bm{x}|\bm{z})
+\end{equation}
+Applying the Bayes rule we can relate latent variables, with their prior $p(\bm{z})$ distribution, to the observations through:
+\begin{equation}
+    p(\bm{z}|\bm{x}) = \frac{p(\bm{z})p(\bm{x}|\bm{z})}{p(\bm{x})}
+\end{equation}
+where $p(\bm{x}|\bm{z})$ is defined as the data \textbf{likelihood}, $p(\bm{z}|\bm{x})$ the \textbf{posterior} distribution, while
+\begin{equation}
+    p(\bm{x}) = \int_{\mathbb{R}^Z} p(\bm{z}, \bm{x}) d\bm{z}
+\end{equation}
+is usually referred as the \textbf{evidence} and it can be obtained by marginalization of the latent space from the joint density.
+
+While in \acl{MCMC}, we build an ergodic Markov Chain on $\bm{z}$ for which the stationary distribution is the posterior; then we collect a number of samples from the posterior through the chain, and we approximate the posterior with an empirical estimate from the samples (the more dense are the samples, the higher the probability in that region).
+Rather than sampling, the main idea behind \textit{Variational Inference} is to use optimization: given a possible set of functions of approximate densities $\mathcal{Q}$, we try to find the members of this set (i.e. the proper set of parameters once the family is defined by a parametrical functional) that minimizes the distance to the exact posterior. So from this new density $q(\bm{z})$, e can be measure the distance as the Kullback-Leibler divergence with $p(\bm{z}|]\bm{x})$; and the optimization looks for:
+\begin{equation}
+    \tilde{q}(\bm{z}) = \argmin{q(\bm{z}) \in \mathcal{Q}} \KLD{q(\bm{z})}{p(\bm{z}|\bm{x})}
+    \label{eq:variational_inference}
+\end{equation}
+where the KL divergence is defined as:
+\begin{equation}
+    \KLD{q(\bm{z})}{p(\bm{z}|\bm{x})} = \expectation{\log q(\bm{z})}_{q(\bm{z})} - \expectation{\log p(\bm{z}|\bm{x})}_{q(\bm{z})}
+    \label{eq:kulback-leibler}
+\end{equation}
+The idea is, as stated, to turn a inference problem into an optimization process; while the family of chosen functions handle the quality of the minima in KL distance. One of the key points on this approach is indeed to pick a set of functions $\mathcal{Q}$ that is general enough to guarantee an efficient optimization but also flexible enough to capture the posterior details.
+
+\subsubsection{The evidence lower bound}
+We just saw that variational inference seek for a proper candidate to solve \eqref{eq:variational_inference}, so once found the $\tilde{q}(\bm{z})$ it sets that function as the \textit{best approximation} of the posterior. Unfortunately this is not describable in a closed form because the \textit{evidence} depends on the joint probability with inaccessible latent variables.
+So we expand the conditional in \cref{eq:kulback-leibler} as:
+\begin{equation}
+    \KLD{q(\bm{z})}{p(\bm{z}|\bm{x})} = \expectation{\log q(\bm{z})}_{q(\bm{z})}
+                                        - \expectation{\log p(\bm{z},\bm{x})}_{q(\bm{z})} 
+                                        + \log p(\bm{x})
+\end{equation}
+where the last term came out of the expectation because it does not depend on $\bm{z}$. 
+We define as the negative \ac{ELBO} the part of RHS of the equation that depends on $q(\bm{z})$, so:
+\begin{equation}
+    \KLD{q(\bm{z})}{p(\bm{z}|\bm{x})} = - \mathrm{ELBO}_{q(.)} + \log p(\bm{x})
+\end{equation}
+so \acs{ELBO} is:
+\begin{align*}
+    \mathrm{ELBO}_{q(.)} &= \expectation{\log p(\bm{z},\bm{x})}_{q(\bm{z})} - \expectation{\log q(\bm{z})}_{q(\bm{z})} \\
+                         &= \log p(\bm{x}) - \KLD{q(\bm{z})}{p(\bm{z},\bm{x})} 
+\end{align*}
+And being the KL term a distance is also positive definite so:
+\begin{equation}
+    \log p(\bm{x}) \geqslant \mathrm{ELBO}_{q(.)}
+\end{equation}
+so it defines a lower bound of the distance residual we can get in matching the posterior, hence the name. So what we obtained is that to have an approximation function such that the KL distance is minimal, with respect to the choice of the particular function $q(.) \in \mathcal{Q}$, we need "at least" to maximize the \acs{ELBO} addendum.
+To do this we expand its first term using the definition of conditional probability:
+\begin{align*}
+    \mathrm{ELBO}_{q(.)} &= \expectation{\log p(\bm{z},\bm{x})}_{q(\bm{z})} - \expectation{\log q(\bm{z})}_{q(\bm{z})} \\
+                         &= \expectation{\log p(\bm{x}|\bm{z})}_{q(\bm{z})} + \expectation{\log p(\bm{z})}_{q(\bm{z})} - \expectation{\log q(\bm{z})}_{q(\bm{z})} \\
+                         &= \expectation{\log p(\bm{x}|\bm{z})}_{q(\bm{z})} + \KLD{q(\bm{z})}{p(\bm{z})}
+\end{align*}
+We can now make a little digression on this result: the first term of the last equation is a likelihood expectation so it encourages densities that place their mass on latent variables that explain the observed data. The second term is the negative value of KL divergence between the variational density and the prior; so it encourages densities that are close to the prior. 
+Thus optimizing \acs{ELBO} means making the Bayes balance between likelihood and prior for the training dataset.
+
+
+
+
+
 
 
 
@@ -575,6 +675,27 @@ Copying the input to the output may sound useless, but we are typically not inte
 
 
 \section{Latent space topology in a simulated world}
+
+To provide a good playground for the tests that we initially foresaw for this study, being the final purpose of this document to actually make a ML description of simple experimental signals, we built a simple algorithm to simulate possible dataset of one-dimensional signals. This may seem quite naive with respect to complex DNN inputs that characterize the latest works presented in this field, however this is not only matching the simple case of possible feature extraction applied to the acquisition device that  we plan to add to experiment DAQ system. Moreover it present a quite wide application area in the signal conditioning allover the experiment diagnostics: both in the temporal domain as in the spatial domain. The \acs{SXR} that is our main case is provides as output a spatial distribution of the electronic temperatures $T_e$.
+So we just created an automatic generator of a one-dimensional sum of gaussians distribution.
+
+
+\begin{figure}
+    \centering
+    \begin{minipage}{0.4\textwidth}
+    \begin{lstlisting}
+   [{'gain': [1, 1], 'mean': [0.2, 0.8], 'sigma': [0.1, 0.1]},
+    {'gain': [0.5], 'mean': [0.8], 'sigma': [0.1]},
+    {'gain': [0.5], 'mean': [0.2], 'sigma': [0.1]},
+    {'gain': [1], 'mean': [0.5], 'sigma': [0.2]},
+    {'gain': [0.5], 'mean': [0.5], 'sigma': [0.2]}]
+    \end{lstlisting}
+    \end{minipage}
+    \includegraphics[height=5cm]{img/STEP1/dummy_kinds.png}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{figure}
+
 
 \subsection{STEP1}
 
@@ -592,5 +713,8 @@ Copying the input to the output may sound useless, but we are typically not inte
 
 
 \section{Latent space regularization}
+
+
+
 
 \section{Constraining regularizer with semi-supervised training}

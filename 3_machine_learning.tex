@@ -552,7 +552,7 @@ However once the \acs{LVM} is built the total number of parameters is significan
 
 
 \subsubsection{linear factor analysis}
-
+\label{linear factor analysis}
 One problem with mixture models is that they only use a single latent variable to generate the
 observations. In particular, each observation can only come from one of K prototypes. One can
 think of a mixture model as using K hidden binary variables, representing a one-hot encoding
@@ -682,7 +682,7 @@ Thus optimizing \acs{ELBO} means making the Bayes balance between likelihood and
 %
 
 
-\section{Latent space topology in a simulated world}
+\section{Latent space topology}
 
 To provide a good playground for the tests that we initially foresaw for this study we built a simple algorithm to simulate possible dataset of one-dimensional signals. This may seem quite naive with respect to complex \acs{DNN} inputs that characterize the latest works presented in this field, however this turns to worth for our purposes. Indeed it is very simple to manage and matches the simple case of the feature extraction applied to the acquisition device that we plan to add to experiment \acs{DAQ} system. Moreover it present a quite widespread application in the are of signal conditioning allover the experiment diagnostics: both in the temporal domain and in the spatial domain. For example the \acs{SXR} - that is our main case of study - provides at outputs a one-dimensional signal representing the spatial distribution of the electronic temperatures $T_e$. All measures in this case are computed by measures of the integrated signal along the cords, inverted to find the actual point temperature, and finally projected on the central axis in the equatorial plane crossing the the center of the machine and the center of the chamber. The final output is a set of ordered points that can vary in number, position along axis, and value.
 
@@ -744,20 +744,77 @@ A possible minimal configuration of data generator is shown in \Figure{\ref{fig:
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn1.png} \label{step1_4}}
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn2.png} \label{step1_5}}
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn3.png} \label{step1_6}}
-    \caption{ Three instances of latent space reconstruction from \VAE{2} startin from a latent position indicated with ($\bm{+}$) in the scatter plot on top that corresponds to the black curve from decoder output plotted on bottom. In the upper figures the scatter plot shows also 1000 samples from validation dataset where the colour position shows the encoded mean $\bm{\mu}_z$ and the corresponding class in the colour scale), while the grey plot is a reconstruction of the $\bm{\sigma}_z$. The clusters color is also matching the corresponding \textit{kind} of curve that is plotted for reference on bottom figures.} 
+    \caption{ Three instances of latent space reconstruction from \VAE{2} starting from a latent position indicated with ($\bm{+}$) in the scatter plot on top that corresponds to the black curve from decoder output plotted on bottom. In the upper figures the scatter plot shows also 1000 samples from validation dataset where the colour position shows the encoded mean $\bm{\mu}_z$ and the corresponding class in the colour scale), while the grey plot is a reconstruction of the $\bm{\sigma}_z$. The clusters color is also matching the corresponding \textit{kind} of curve that is plotted for reference on bottom figures.} 
     \label{fig:step_1}
 \end{figure}
 %
 In \Figure{\ref{fig:step_1}} three examples of \acs{VAE} reconstruction have been plotted. The parameters for the generator were $d=20$, no generation noise have been applied and the latent space is 2-dimensional. Latent space variables $\bm{z}$ are characterized by their variational parameters, i.e. $\bm{\mu}_z$ and $\bm{\sigma}_z$, and those parameters are plotted in the same figure for the three examples in the top set of graphs for 1K samples of the validation dataset. The scatter plot shows a coloured dot corresponding  the inferred latent position in \textit{xy-axis} and the corresponding \textit{kind} on the colour scale. A further grey dot is also plotted for each of the latent samples after the variational has been applied to generate a Monte Carlo approximation of the training process $\mathcal{N}(\bm{\mu}_z, \bm{\sigma^2}_z)$.
 The same figure shows also a instance of the generative network output with black dots in the lower plots that have been overimposed to the ground-truth curves \textit{kinds} to see the matching. The reconstruction corresponds to the black cross ($\bm{+}$) in the latent space. It is worth to highlight the fact that this ($\bm{+}$) point was a generated point in the latent space and does not corresponds to any sample of either the training set or the validation set. it is a new \textit{unseen} generation instance that lies within the latent space in the corresponding class cluster, but from the trained generator point of view, there is actually any more correlations with the input data; this also corresponds to the Bayes idea where the generated instance are only related with the latent "cause", once we fixed the trained parameters (see plate notation in \Figure{\ref{fig:step1_vae_plate}}).
-Those plot have been generated using the utility functions we implemented for \RFXhunch using the \textit{Bokeh}~\cite{bokeh} library for python and JavaScript; this can provide a useful scope to see the behavior of the decoder moving interactively the point in the 2D latent space ans looking at the reconstruction on the generated plot.
+Those plot have been generated using the utility functions we implemented for \RFXhunch exploiting the \textit{Bokeh}~\cite{bokeh} library for python and JavaScript; this can provide a useful scope to see the behavior of the decoder moving interactively the point in the 2D latent space ans looking at the reconstruction on the generated plot.
 The complete \RFXhunch package will be described with more detail in \cref{section:RFXhunch}.
+%
+\subsection{generative morphing effect}
+When we play with joint encoder/decoder networks, that are our tools to step in and out of the latent space, \acs{VAE} is thought as a directed \acs{RBM}, and it is claimed to extract a meaning from data by extracting latent "concepts" and expanding them to the feature space. On the other hand we already pointed out that the generative effect of \acs{VAE} is also that, once trained, it maintains any actual relation with the data and can generate samples by only means of decoding the latent space. This becomes very clear if we sample a point that is far from the dataset encoded clusters; for example in \Figure{\ref{fig:step1_morph}} two latent space points ($\bm{z}_1$ and $\bm{z}_2$) have been reconstructed by generative network. 
+%
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/morph_Z1Z2.png}\label{fig:step1_morph_z1z2}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/morph_gn2.png} \label{fig:step1_morph_gn2}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/morph_gn4.png} \label{fig:step1_morph_gn4}}
+    \caption{Generative morph effect on reconstruction from \VAE{2}: two latent space point taken from middle space between clusters has been decoded and show how the generative effect can create solution for non existent data "morphing" one class to another. } 
+    \label{fig:step1_morph}
+\end{figure}
+It is quite clear from these figures the real power of the latent space, if we paint the reconstructed signal from any point in the latent space we just traversed all possible configuration that the outputs will assume, so once we know how this space is shaped we can lead the output to maintain certain characteristics. For instance we can constrain the system to remain within some painted boundaries thus implementing a very simple, but robust, non linear control on the outputs.
+
+\subsection{latent space topology}
+When we talked about \textit{linear factor analysis} in \cref{linear factor analysis} we introduced the unidentifiability of the latent variables. So unfortunately upon each training the latent space assume a different configuration. 
+Nonetheless, beside the simple generation on points that lies in the latent "\textit{interstitial}", one start to think about which possible configurations the latent space could assume. Given the fact that the purpose of \acs{VAE} is to adapt the space upon jumps between clusters of similar features, the idea is that we could imagine to simplify the entire cluster with its center of mass and separate the space itself in corresponding regions. This could be easily done with the unsupervised k-means algorithms with k corresponding to the k classes ( the \textit{kinds} ) and let it find the means for each center of mass. At this point we could have an algorithm that actively classify the features upon latent representation, while in the latent space this classification can be plotted by the classical \textit{Voronoi diagram} as shown in \Figure{\ref{fig:voronoi_ls}}. With this defined regions we can say that a curve is of a certain class if its latent coordinates are within the region $k_i$; but what happens in the boundaries? We saw that the algorithm tends to make a morphing adjustments to the signal shape to make the step from one region to the other as smooth as possible, however it is not always possible to do that. For instance we saw in \Figure{\ref{fig:step1_morph_gn4}} that passing from the central Gaussian curve to the double requires a steep movement on the points position.
+
+
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/voronoi_ls.png}\label{fig:voronoi_ls}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/voronoi_sketch_2d.png} \label{fig:voronoi_2d}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/voronoi_sketch_3d.png} \label{fig:voronoi_3d}}
+    \caption{Topology configurations that is automatically generated upon the training of autoencoder } 
+    \label{fig:voronoi}
+\end{figure}
+
+\subsection{elastic fitting}
+
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/elastic_Z1Z2.png} \label{step1_elastic_z1z2}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/elastic_gn1.png} \label{step1_elastic_gn1}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/elastic_gn2.png} \label{step1_elastic_gn2}}
+    \caption{Elastic latent space reconstruction from \VAE{2} with scatter plot of the latent space and two samples of the same decoded class where it can be seen that the autoencoder distributes the $\bm{x}_1$ positions degree of freedom of the database along the dashed line. Two samples $\bm{z}_1$ and $\bm{z}_2$ have been also plotted from the decoder output to see the elasic effect of the curve points distribution. } 
+    \label{fig:step1_elastic}
+\end{figure}
 
 
 
 \section{Latent space regularization}
 
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/training_20-20-10-10_b1e-3.png}    \label{fig:step1_regularization_e3}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/training_20-20-10-10_b1e-3_ls.png} \label{fig:step1_regularization_e3_ls}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/training_20-20-10-10_b1e-2_log.png}\label{fig:step1_regularization_e2}}
+    \subfigure{\includegraphics[height=4.5cm]{img/STEP1/training_20-20-10-10_b1e-2_ls.png} \label{fig:step1_regularization_e2_ls}}
+    \caption{ Latent space regularization } 
+    \label{fig:step1_ls_regularization}
+\end{figure}
 
 
+
+\subsection{Noise rejection}
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=4.5cm]{img/STEP1/recover_noise_err1.png} \label{fig:step1_noise_rejection}}
+    \subfigure[]{\includegraphics[height=4.5cm]{img/STEP1/recover_noise_err2.png} \label{fig:step1_noise_rejection_ls}}
+    \caption{ Noise rejection } 
+    \label{fig:step1_noise}
+\end{figure}
 
 \section{Constraining regularizer with semi-supervised training}

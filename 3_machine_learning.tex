@@ -656,6 +656,14 @@ To do this we expand its first term using the definition of conditional probabil
 \end{align*}
 We can now make a little digression on this result: the first term of the last equation is a likelihood expectation so it encourages densities that place their mass on latent variables that explain the observed data. The second term is the negative value of KL divergence between the variational density and the prior; so it encourages densities that are close to the prior. 
 Thus optimizing \acs{ELBO} means making the Bayes balance between likelihood and prior for the training dataset.
+%
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=4.5cm]{img/3_ML/VAE_1.pdf} \label{fig:step1_vae}}
+    \subfigure{\includegraphics[height=4.5cm]{img/3_ML/VAE_1_plate.pdf} \label{fig:step1_vae_plate}}
+    \caption{ The general description of a Variational Autoencoder shown both in its topological structure (left sketch), where the encoder and decoder are connected by inner reparametrization layers that form the inner latent space variables; and in \textit{plate notation} where all covariates are explained through latent variables (hidden "causes") with normal distribution. }
+    \label{fig:step_1_VAE}
+\end{figure}
 
 
 
@@ -676,29 +684,58 @@ Thus optimizing \acs{ELBO} means making the Bayes balance between likelihood and
 
 \section{Latent space topology in a simulated world}
 
-To provide a good playground for the tests that we initially foresaw for this study, being the final purpose of this document to actually make a ML description of simple experimental signals, we built a simple algorithm to simulate possible dataset of one-dimensional signals. This may seem quite naive with respect to complex DNN inputs that characterize the latest works presented in this field, however this is not only matching the simple case of possible feature extraction applied to the acquisition device that  we plan to add to experiment DAQ system. Moreover it present a quite wide application area in the signal conditioning allover the experiment diagnostics: both in the temporal domain as in the spatial domain. The \acs{SXR} that is our main case is provides as output a spatial distribution of the electronic temperatures $T_e$.
-So we just created an automatic generator of a one-dimensional sum of gaussians distribution.
+To provide a good playground for the tests that we initially foresaw for this study we built a simple algorithm to simulate possible dataset of one-dimensional signals. This may seem quite naive with respect to complex \acs{DNN} inputs that characterize the latest works presented in this field, however this turns to worth for our purposes. Indeed it is very simple to manage and matches the simple case of the feature extraction applied to the acquisition device that we plan to add to experiment \acs{DAQ} system. Moreover it present a quite widespread application in the are of signal conditioning allover the experiment diagnostics: both in the temporal domain and in the spatial domain. For example the \acs{SXR} - that is our main case of study - provides at outputs a one-dimensional signal representing the spatial distribution of the electronic temperatures $T_e$. All measures in this case are computed by measures of the integrated signal along the cords, inverted to find the actual point temperature, and finally projected on the central axis in the equatorial plane crossing the the center of the machine and the center of the chamber. The final output is a set of ordered points that can vary in number, position along axis, and value.
 
-
+\subsection{Gaussian sum generator}
+As a first very general approach we just created an automatic generator of a one-dimensional sum of Gaussians distribution. 
+The generator is lead from a set of parameters, such as: the number of points to generate, the random distribution of possibly missing values, the fixed missing positions, the added generation noise, and so forth. 
+Once the generator is queried for a new instance it selects randomly a label number that corresponds to a particular curve in a defined class of distributions. For the definition of gaussians we use a dictionary named \textit{kinds} that provides, for each possible label a set of arrays of \textit{gain},  \textit{mean}, and \textit{sigma} for each of the sum of Gaussians components.
+In \Figure{\ref{fig:sum_of_gaussians}} an example of five \textit{kinds} setup (aka the reconstruction labels) is shown with the respective representation curves. 
+%
 \begin{figure}
     \centering
-    \begin{minipage}{0.4\textwidth}
-    \begin{lstlisting}
-   [{'gain': [1, 1], 'mean': [0.2, 0.8], 'sigma': [0.1, 0.1]},
-    {'gain': [0.5], 'mean': [0.8], 'sigma': [0.1]},
-    {'gain': [0.5], 'mean': [0.2], 'sigma': [0.1]},
-    {'gain': [1], 'mean': [0.5], 'sigma': [0.2]},
-    {'gain': [0.5], 'mean': [0.5], 'sigma': [0.2]}]
+    \begin{minipage}[b]{0.57\textwidth}
+    \begin{lstlisting}[
+        language=Python,
+        basicstyle=\tiny,
+        numbers=none,
+    ]
+ from Dummy_g1data import Dummy_g1data
+ 
+ ds = Dummy_g1data( feature_dim=40, 
+                    latent_dim=2, 
+                    counts=10000 )
+ ds.kinds = [
+  {'gain': [1, 1],'mean': [0.2, 0.8], 'sigma': [0.1, 0.1]},
+  {'gain': [0.5], 'mean': [0.8], 'sigma': [0.1]},
+  {'gain': [0.5], 'mean': [0.2], 'sigma': [0.1]},
+  {'gain': [1],   'mean': [0.5], 'sigma': [0.2]},
+  {'gain': [0.5], 'mean': [0.5], 'sigma': [0.2]}
+ ]
+ ds.buffer() # buffer 10K samples in memory
+ 
+ # adapt dataset generator to VAE with labels as input
+ ds = ds.ds_array.map(lambda x,k: (x,x) )
+ 
+ 
     \end{lstlisting}
     \end{minipage}
-    \includegraphics[height=5cm]{img/STEP1/dummy_kinds.png}
-    \caption{Caption}
-    \label{tab:my_label}
+    \hfill
+    \begin{minipage}[b]{0.42\textwidth}
+     \includegraphics[height=5cm]{img/STEP1/dummy_kinds.png}
+    \end{minipage}
+    \caption{A generation setup example for five \textit{kinds} of sum of gaussians: on the left the dictionary taht fills the parameters of the generator for each of the five classes; on the right a plot shows the five kind representations where colours helps to distinguish among them. }
+    \label{fig:sum_of_gaussians}
 \end{figure}
-
-
-\subsection{STEP1}
-
+%
+The generation of each dataset instance proceeds as described in the following. At first we chose a ordered set of values along x-axis from a uniform distribution $\bm{x}_1 \in \mathbb{R}^{d}$ (with $x_{1,i} \geq x_{1,i-1}$), where $d$ is the number of desired points generated for each instance. Then, if not specifically asked, a label is also extracted form uniform random integers within the range of \textit{kinds} cardinality; and the related Gaussian exponential is applied for each of the parameter in that \textit{kind} and for each of the points. So created a new set $\bm{x}_2 \in \mathbb{R}^d$ in which:
+\begin{equation}
+    \bm{x}_2 = \sum_{k=1}^K \frac{1}{Z_k} \exp{-\frac{1}{2}\left( \frac{\bm{x}_1-\mu_k}{\sigma_k}\right)^2}
+\end{equation}
+The complete data sample we use as input will now be \textbf{any} combination of $\{\bm{x}_1, \bm{x}_2\}$; for simplicity we chose to construct data with the simple concatenation: $\bm{x} = [\bm{x}_1, \bm{x}_2]$ where now $\bm{x} \in \mathbb{R}^{2d}$.
+The generator is configured as a tensorflow dataset that is is directly fed into the autoencoder one we map each element data and label both with $x$ to train \acs{VAE} with proper matching input and output.
+A possible minimal configuration of data generator is shown in \Figure{\ref{fig:sum_of_gaussians}} where we have five classes of curves in the range $x_i \cap [0,1]$. The same set of curves are also plotted in dense domain to provide a ground-truth for plots. We chose to train a \acs{VAE} with only \textbf{two latent variables} (hereafter indicated as \VAE{2}), this was only motivated by the fact that the result is easier to represent by Cartesian axes. This actually limits the latent space representational power, but this will be discussed in a proper section.
+%
 \begin{figure}
     \centering
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/ls1.png} \label{step1_1}}
@@ -707,9 +744,15 @@ So we just created an automatic generator of a one-dimensional sum of gaussians 
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn1.png} \label{step1_4}}
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn2.png} \label{step1_5}}
     \subfigure{\includegraphics[height=4.5cm]{img/STEP1/gn3.png} \label{step1_6}}
-    \caption{ STEP1 ls/gn }
+    \caption{ Three instances of latent space reconstruction from \VAE{2} startin from a latent position indicated with ($\bm{+}$) in the scatter plot on top that corresponds to the black curve from decoder output plotted on bottom. In the upper figures the scatter plot shows also 1000 samples from validation dataset where the colour position shows the encoded mean $\bm{\mu}_z$ and the corresponding class in the colour scale), while the grey plot is a reconstruction of the $\bm{\sigma}_z$. The clusters color is also matching the corresponding \textit{kind} of curve that is plotted for reference on bottom figures.} 
     \label{fig:step_1}
 \end{figure}
+%
+In \Figure{\ref{fig:step_1}} three examples of \acs{VAE} reconstruction have been plotted. The parameters for the generator were $d=20$, no generation noise have been applied and the latent space is 2-dimensional. Latent space variables $\bm{z}$ are characterized by their variational parameters, i.e. $\bm{\mu}_z$ and $\bm{\sigma}_z$, and those parameters are plotted in the same figure for the three examples in the top set of graphs for 1K samples of the validation dataset. The scatter plot shows a coloured dot corresponding  the inferred latent position in \textit{xy-axis} and the corresponding \textit{kind} on the colour scale. A further grey dot is also plotted for each of the latent samples after the variational has been applied to generate a Monte Carlo approximation of the training process $\mathcal{N}(\bm{\mu}_z, \bm{\sigma^2}_z)$.
+The same figure shows also a instance of the generative network output with black dots in the lower plots that have been overimposed to the ground-truth curves \textit{kinds} to see the matching. The reconstruction corresponds to the black cross ($\bm{+}$) in the latent space. It is worth to highlight the fact that this ($\bm{+}$) point was a generated point in the latent space and does not corresponds to any sample of either the training set or the validation set. it is a new \textit{unseen} generation instance that lies within the latent space in the corresponding class cluster, but from the trained generator point of view, there is actually any more correlations with the input data; this also corresponds to the Bayes idea where the generated instance are only related with the latent "cause", once we fixed the trained parameters (see plate notation in \Figure{\ref{fig:step1_vae_plate}}).
+Those plot have been generated using the utility functions we implemented for \RFXhunch using the \textit{Bokeh}~\cite{bokeh} library for python and JavaScript; this can provide a useful scope to see the behavior of the decoder moving interactively the point in the 2D latent space ans looking at the reconstruction on the generated plot.
+The complete \RFXhunch package will be described with more detail in \cref{section:RFXhunch}.
+
 
 
 \section{Latent space regularization}

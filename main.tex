@@ -39,7 +39,7 @@
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{backcolour}{rgb}{1,1,1}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -57,7 +57,9 @@
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
-    tabsize=2
+    tabsize=2,
+    framextopmargin=50pt,
+    frame=bottomline
 }
  \lstset{style=mystyle}
 
@@ -78,6 +80,9 @@
 \newcommand{\Figure}[1]{\textit{Figure}~#1}
 \newcommand{\Equation}[1]{\textit{Equation}~(#1)}
 \newcommand{\Section}[1]{\textit{Section~#1}}
+\newcommand{\VAE}[1]{$\mathrm{VAE}_#1$}
+\newcommand{\RFXhunch}{\hspace{2mm}\textit{RFX-Hunch}\hspace{2mm}}
+
 
 %% MATH %%
 \newcommand{\transpose}[1]{\ensuremath{#1^{\scriptscriptstyle T}}}

@@ -211,6 +211,68 @@ In a magnetic field charged particles move in a helix  F = q · v × B.  q is th
 % tokamaks benefit from the higher current:
 
 
+\section{Magnetic confined plasma experiments}
+
+Among the several proposed solutions for thermonuclear confinements devices, the torus appeared as the most topological advantageous: the torus, indeed, is the only compact manifold connected and orientable where it is possible to define a continuous vector field without critical points\footnote{that is: once a vector field has been defined on the surface of the torus, there are any point where it goes to zero; this characteristic let the field lines to reconnect on themselves minimizing the energy spent and maximizing the stability of the plasma}.
+In this case the field configurations consist on a set of magnetic toroidal and poloidal components. In \Figure{\ref{fig:intro_toroidal_coords}} a toroidal coordinates ($r,\theta,\varphi$) reference system is represented, where:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=8cm]{img/1_intro/toroidal_coords.png}
+    \caption{Toroidal coordinates reference system}
+    \label{fig:intro_toroidal_coords}
+\end{figure}
+\begin{itemize}
+    \item $r = $ radial distance from central circular axis,
+    \item $\vartheta = $ poloidal angle,
+    \item $\varphi = $ toroidal angle.
+\end{itemize}
+Depending on their characteristics, the magnetic confined machines are divided in three principal categories:
+\begin{itemize}
+    \item \textit{Tokamak}, where both the toroidal field and poloidal field components are present but with a net toroidal predominance that assumes essentially stabilization functions.
+    \item \textit{RFP}, where the toroidal component is almost comparable to the poloidal to the extent that it reaches an inverted value at the boundary ( hence the name "\textit{reversed} field pinch"). Compared to the Tokamak configuration here the stability of plasma is much more critical, but with higher efficiency.
+    \item \textit{Stellarator}, where the geometry of the field is built by a complex displacement of non planar coils that encourage the winding of the plasma column.
+\end{itemize}
+
+\subsubsection{Tokamak configuration}
+In the \textit{Tokamak} systems the toroidal field $B_\varphi$ is produced by a toroidal solenoid winded around the vacuum chamber, while the poloidal field $B_\vartheta$ is created by a strong toroidal current $I_p$ that flaws within the plasma. This current is in turn induced by means of solenoids coupled by the plasma ring (sometimes concatenated with a central coil). The same current is also used to heat the plasma by Joule effect ( Ohmic heating ) with a specific power of $P = \eta J^2$, defined $\eta$ as the plasma resistivity.
+%
+A fundamental parameter to define the \textit{Tokamak} typical features is $\beta$ defined as:
+\begin{equation}
+    \beta = \frac{<p>}{ \frac{B(a)^2}{2\mu_0} }
+    \label{eq:magnetic_beta}
+\end{equation}
+with $<p>$ the average value of plasma pressure within a poloidal section. This parameter is the ratio between the mean kinetic pressure exerted by plasma, and the magnetic pressure of the field that is needed to confine it; the value assumed by $\beta$ is thus the measure of how effective the magnetic configuration results when seen as an energy balance.
+If we compute the \eqref{eq:magnetic_beta} using the typical $B_\varphi$ and $B_\vartheta$ values that are present in a \textit{tokamak}, the resulting $\beta$ is about $2~3\%$; this means that the most of the spent energy that \textit{Tokamak} uses is not for the confinement but is is almost all used to stabilize perturbations.
+Another key factor that defines the relative intensities of magnetic configuration is the so called "\textit{safety factor}" $q$:
+\begin{equation}
+    q(r) = \frac{rB_\varphi(r)}{R_0B_\vartheta(r)}
+\end{equation}
+As it will be widely described in the following sections, the radial profile of this parameter has a fundamental impact on the overall stability of the plasma: it more detail a stable plasma configuration can be obtained by maintaining the $q(r)$ function strictly monotonic.
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=5cm]{img/1_intro/tokamak_profiles.png} \label{fig:intro_safety_factor_profiles_a}}
+    \subfigure[]{\includegraphics[height=5cm]{img/1_intro/rfp_profiles_norev.png} \label{fig:intro_safety_factor_profiles_b}}
+    \subfigure[]{\includegraphics[height=5cm]{img/1_intro/rfp_profiles_rev.png} \label{fig:intro_safety_factor_profiles_c}}
+    \caption{Magnetic field profiles for $B_\varphi$ and $B_\vartheta$, from the toroidal axis to the chamber boundary, for the toroidal confinement devices in \textit{Tokamak} configuration (a), \textit{RFP} without reversal (b), and \textit{RFP} with reversal (c)    }
+    \label{fig:intro_safety_factor_profiles}
+\end{figure}
+As shown in \Figure{\ref{fig:intro_safety_factor_profiles_a}}, the the case of the \textit{Tokamak} configuration the monotonic property of the safety factor is guaranteed by an high ratio of $B_\varphi/B_\vartheta$. Although, because the poloidal fields is generated by the plasma current, to have such a high ratio of the fields it is necessary to maintain it under a certain threshold. This condition implies a in effects a limitation for the possible Ohmic heating bringing with it the need to find other means of additional heating: neutral particles injections (NBI), radio-frequency emission resonating with cyclotron frequencies of electrons or ions, etc.
+
+\subsubsection{RFP configuration}
+The \ac{RFP} is an axial-symmetric configuration provided with a toroidal current, similar to what has been presented for \textit{Tokamak}. The difference between the former and the latter case is in the ratio between the components of the magnetic field: while for \textit{Tokamak} the toroidal field is of one order of magnitude over the poloidal, for the \textit{RFP} the two components are almost the same in average, and in the outer region the poloidal one tends to dominate. As a result, the most part of the magnetic field is generated from the plasma current itself, and with the same plasma current the total magnetic field that is exploited by \acs{RFP} is much lower that the one used by a \textit{Tokmak}. It can be also seen that, in the right conditions, once the plasma current has been induced the toroidal field at the boundary inverts direction; this reversal gives a chance to obtain a monotonic factor $q(r)$ even with a this low magnetic profiles. This is generally facilitated inverting the current direction on the coils of the toroidal system some instants after the pulse begins. For the \acs{RFP} model the profiles of $B_\varphi$(r), $B_\vartheta(r)$ and $q(r)$ are reported in \Figure{\ref{fig:intro_safety_factor_profiles_b}} and \Figure{\ref{fig:intro_safety_factor_profiles_c}} in the pre-reversal and reversal conditions.
+
+Together with this reduced toroidal field intensity comes the possibility of reaching $\beta$ values much higher than the ones that characterize the \textit{Tokamak}. 
+Given its magnetic topology, the RFP exploits the advantage of an easier technology involved in the electromagnetic system. This might be the case even for a reactor, where there might be no need for large superconducting magnetic coils; there is freedom in the choice of the aspect ratio and in principle ignition should be achievable with ohmic heating only.  
+Although the high penalty payed by the \textit{RPF} is on the stability of perturbations that represents a profound limitation for the final achievable temperature, that remains one order of magnitude lower that the one promised by \textit{Tokamak}.
+
+% RW
+A price to be paid for exploiting these advantages concerns magneto-hydrodynamic (MHD) stability. The safety factor q is in fact lower than 1 across the whole plasma, and negative at the edge. Figure 2(a) shows the q profiles of an RFP compared with those of tokamaks and stellarators. In the RFP q profile there are multiple resonant surfaces in the plasma, in particular for modes with poloidal mode numbers m = 0 and 1. This is shown in figure 2(b), which reports a typical RFP q profile. Two main kinds of global, current-driven MHD instabilities may be present in a RFP with resistive wall: (i) resistive kink/TMs, which are resonant in the plasma and are intrinsically linked to the sustainment of the configuration through the aforementioned self-organization process. (ii) RWMs, which are non-resonant ideal modes, slowed down by the resistive wall. RWMs in RFP are current driven and are present also at low plasma beta.
+
+
+RFPs, however, can sustain very high plasma current and this makes it to be considered a potential fusion device with only Ohmic heating. On the other hand, the generation of plasma current needs a time variation of magnetic field which is sustained by the primary transform. This time variation makes the devices, on some level, not in steady state. To overcome this problem, a toroidal configuration which all the field components are generated by external coils is introduced. This device is the so-called stellarators. Figure 1.3 shows a sketch of these two families. In the left graph, the red coils aligned toroidally are the toroidal field coils and the green helical ones are helical field coils. In the right graph, the red cylinder in the device center is the primary transformer. The red coils aligned toroidally are the toroidal field coils and the two green ones in the top and bottom of the device is the vertical stabilization coils. The stabilization coils are introduced because due to the existence of Shafranov shift in toroidal devices, the plasma position needs to be optimized in order to avoid touches between magnetic field and the first wall. 
+The stellarator shows a much more complicated magnetic coil design than one in pinch family. Consequently, the manufacture process for magnetic coils are more complex for stellarators than for pinches. On the other hand, due to lack of plasma current in stellarators, it is almost free of disruptions.
+
+\section{RFX Experiment}
 
 
 \section{A new approach based on machine learning}

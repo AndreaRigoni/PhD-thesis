@@ -1,12 +1,55 @@
 
 \chapter{Embedded ML Infrastructure for Plasma Characterization}
 
-As previously described, in order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment sessions a wide amount of sensors are usually required. 
+As previously described, in order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session a wide amount of sensors are usually required. 
+Although it is not true that the controllability (and observability) of the system strictly depends on that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
+%
+According to the classical \textit{control theory} for dynamical systems, once the precise time derivative description is given in terms of that state space model, a system can be defined as \textit{controllable} if there exist a particular set of inputs that are able to drive  the state to any desired \textit{set point} within a finite time. 
+This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of a few inputs are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two inputs are the steering of the handlebar and the torque on the pedals.
 
-%The quality and abundance of measures is actually a key factor to achieve an accurate description of the system also for the controllability. 
+If the classical discreet time \acl{LTI} state space model is considered in the form:
+\begin{align}
+    & \bm{x}_t = \Phi\bm{x}_{t-1} + \Upsilon\bm{u}_t + \bm{w}_t\\
+    & \bm{y}_t = A\bm{x}_t + \Gamma\bm{u}_t + \bm{v}_t
+    \label{eq:ss_model}
+\end{align}
+Time dependent state space models in \eqref{eq:ss_model}, also known \acl{DLM}, are a widely used approximation for analyzing time series. They provide a very flexible framework allowing concurrent smooth and steep changes that generally well fitting natural process time evolution.
+A more rigorous formulation for \textit{controllability} is given in terms of the \textit{Kalman criterion}:
+\begin{definition}{Kalman criterion}
+The pair $(\Phi,\Upsilon)$ is \textit{controllable} if, given a duration $T>0$ and two arbitrary points $x_0, x_T \in \mathbb{R}^n$, there exists a piece wise continuous function $t \mapsto u(t)$ from $[0,T]$ to $\mathbb{R}^m$, such that the integral $x(t)$ generated from input $u$ with $x(0) = x_0$, satisfies $x(T)=x_T$.
+\end{definition}
+Where, as stated, the definition can be formulated in terms of the integral:
+\begin{equation}
+    e^{\Phi T}x_0 + \int_0^T e^{\Phi(T-t)}\Upsilon u(t) dt = x_T
+\end{equation}
+where the only dependencies are on the state and input matrices $\Phi$ and $\Upsilon$.
+Given the definition is well known that for such models the \textit{controllability} and the \textit{observability} depend on the \textit{Kalman condition}.
 
 
-\section{A new “smart” DAQ chain proposal for features extraction}
+\cite{zheng2017state}
+State space models (SSMs), such as hidden Markov models (HMM) and linear dynamical systems
+(LDS), have been the workhorse of sequence modeling in the past decades From a graphical model
+perspective, efficient message passing algorithms (Stratonovich, 1960; Kalman, 1960) are available
+in compact closed form thanks to their simple linear Markov structure. However, simplicity comes
+at a cost: real world sequences can have long-range dependencies that cannot be captured by Markov
+models; and the linearity of transition and emission restricts the flexibility of the model for complex
+sequences.
+A popular alternative is the recurrent neural networks (RNN), for instance the Long Short-Term
+Memory (LSTM) (Hochreiter  Schmidhuber, 1997) which has become a standard for sequence
+modeling nowadays. Instead of associating the observations with stochastic latent variables, RNN
+directly defines the distribution of each observation conditioned on the past, parameterized by a
+neural network. The recurrent parameterization not only allows RNN to provide a rich function
+class, but also permits scalable stochastic optimization such as the backpropagation through time
+(BPTT) algorithm. However, flexibility does not come for free as well: due to the complex form of
+the transition function, the hidden states of RNN are often hard to interpret. Moreover, it can require
+large amount of parameters for seemingly simple sequence models (Zaheer et al., 2017).
+
+
+
+\section{Easing the curse of dimensionality by disentangled factors}
+
+
+\section{A new “smart” DAQ chain proposal}
 % smart sensory
 % feature extraction concept
 
@@ -51,7 +94,6 @@ Communication of subsamples streamed data for real-time plasma control is achiev
 
 
 
-\section{Easing the curse of dimensionality by disentangled factors}
 
 
 

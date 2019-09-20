@@ -836,4 +836,40 @@ Beside all possible refinements that can be added and are targeted to a better u
 Although the fitting behavior of the simple \VAE{2} model seems to provide an impressive precision in noise rejection, in this case a careful evaluation on the produced output should be also considered. A clear example is a failed reconstruction from noisy data shown in \Figure{\ref{fig:step1_noise_rejection_failed}}: in this example a curve has been created by the generative network itself by selecting a specific point in the boundary between two classes, to have a critical set of covariates that are not in the training dataset. Than the same noise and missing values of the previous example have been applied as it were a normal input. \VAE{2} in this case applies a recovery of the noise preferring to match a curve that matches a small amount of input data (i.e. the tree orange crosses on the lower right) because those noisy values are compatible with a specific class of curves so it is more likely to be in the original training dataset.
 
 
+\section{Other Kinds of Networks}
+
+\subsection{Generative Adversarial Networks}
+
+Like the previously described Autoencoders The Generative Adversarial Networks belong to the generative models family. It means that they are able to produce / to generate (we’ll see how) new content. To illustrate this notion of “generative models”, we can take a look at some well known examples of results obtained with GANs.
+
+\subsection{Recurrent Neural Networks}
+%% LSTM %%
+
+
+
+
+
 % \section{Constraining regularizer with semi-supervised training}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

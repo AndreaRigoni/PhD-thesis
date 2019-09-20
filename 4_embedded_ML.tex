@@ -1,11 +1,12 @@
 
 \chapter{Embedded ML Infrastructure for Plasma Characterization}
 
-As previously described, in order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session a wide amount of sensors are usually required. 
-Although it is not true that the controllability (and observability) of the system strictly depends on that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
+It has been shown in the introductory chapter the diversification of signals within their heterogeneous nature, however a particular discussion should be also addressed to the possible domain of the data itself beyond the particular origin.
+In order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session a wide amount of sensors are usually required, both in time and in spatial domains.
+Although it is not true that controllability (and observability) of the system strictly depends on that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
+This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of a few state variables are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two control variable are the steering of the handlebar and the torque on the pedals. Even if the complete environment of all the variables that must be observed to provide a optimal control on the system states is rather complex, it can be shown that a properly configured latent variables can effectively generate a simpler embedded representation. This in turn leads to a simpler control model taking inputs from the latent states instead of directly depending on the whole detectors.
 %
 According to the classical \textit{control theory} for dynamical systems, once the precise time derivative description is given in terms of that state space model, a system can be defined as \textit{controllable} if there exist a particular set of inputs that are able to drive  the state to any desired \textit{set point} within a finite time. 
-This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of a few inputs are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two inputs are the steering of the handlebar and the torque on the pedals.
 
 If the classical discreet time \acl{LTI} state space model is considered in the form:
 \begin{align}
@@ -23,7 +24,12 @@ Where, as stated, the definition can be formulated in terms of the integral:
     e^{\Phi T}x_0 + \int_0^T e^{\Phi(T-t)}\Upsilon u(t) dt = x_T
 \end{equation}
 where the only dependencies are on the state and input matrices $\Phi$ and $\Upsilon$.
-Given the definition is well known that for such models the \textit{controllability} and the \textit{observability} depend on the \textit{Kalman condition}.
+Given the definition is well known that for such models the \textit{controllability} and the \textit{observability} depend on the \textit{Kalman condition}:
+\begin{equation}
+    \mathrm{rank}\,\mathscr{C} = \mathrm{rank}\left( \Upsilon|\Phi\Upsilon|...|\Phi^{n-1}\Upsilon \right) = n
+\end{equation}
+
+
 
 
 \cite{zheng2017state}

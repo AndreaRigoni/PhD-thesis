@@ -9,13 +9,13 @@ As previously described in the introductory chapter we are being spectators in t
 We can define ML as the available set of tools that analyzing such big amount of information are automatically providing a possible uncovered pattern among them to be eventually able to predict a future output of the system and operate any other kind of decision based on data uncertainty. The intimate meaning of \textit{machine learning} in this context is referred to the fact that the human intervention is on the very base of the algorithm structural definition while it is the actual model itself that stitches to the input data.  
 
 In science, there are essentially two modelling approaches: \textbf{data driven models}; and \textbf{process based models}.
-Although physical modeling is the main primary tool to understand the behaviour of natural processes, and to make inference about the future outcomes, it is becoming an increasingly exploited solution to employ a data driven approach where the process based physical models appear to be not detailed enough to describe complex systems in operational situations. For instance we often look at the sole main physical phenomenon where the output measured quantities are actually corrupted by non linear cascade of underlying effects, or we are even looking at an unknown behavior for witch the model results to be a partial or wrong description for the actual measured representation. 
-In some other cases, a hybrid version of combined physical and statistical model could be also explored, as we will see in the next sections. But the actual point is that we start to look at the measures of an experiment, not only from the perspective of the single independent experience but from a more general point of view that takes into account the whole repetition history and a wider operational space.  
+Although physical modeling is the main primary tool to understand the behaviour of natural processes, and to make inference about the future outcomes, it is becoming an increasingly exploited solution to employ a data driven approach where the process based physical models appear to be not detailed enough to describe complex systems in operational situations. For instance we often look at the sole main physical phenomenon where the output measured quantities are actually corrupted by non linear cascade of underlying effects, or we are even looking at an unknown behavior for which the model results to be a partial or even a wrong description for the actual measured representation. 
+In some other cases an hybrid version of combined physical and statistical model could be also explored, as we will see in the next sections. But the actual point is that we start to look at the measures of an experiment, not only from the perspective of the single independent experience but from a more general point of view that takes into account the whole repetition history and a wider operational space.  
 
 
 \section{Statistical description of DNN}
 
-As already anticipated, in order to gather a wide range of all the possible concurring physical causes that drive the measures, we decided to make use of the latest novel approach of Deep Neural Networks. As a preliminary backward step, this section would provide a slight general description that bases this approach in a statistical oriented fashion. Indeed this is the preferred mathematical representation of the recurrent/repeatable output of a scientific experiment lead by the probability theory as it was generalized by Pierre Laplace (1812). 
+As already anticipated, in order to gather the wide range of all the possible concurring physical causes that drive the measures, we decided to make use of the latest novel approach of Deep Neural Networks. As a preliminary backward step, this section would provide a slight general description that bases this approach in a statistical oriented fashion; this is the preferred mathematical representation of the recurrent/repeatable output of a scientific experiment lead by the probability theory as it was generalized by Pierre Laplace (1812). 
 
 The collated set of all measures along the consecutive experimental repetitions is often referred as the model \textit{dataset}, while a single instance of this dataset with a proper selection of the quantities under analysis is commonly called \textit{features} or \textit{covariates}\footnote{The most precise definition seems to be the term covariate used in Analysis of Covariance, a type of General Linear Model in which the independent variables of interest are categorical, but you also need to adjust for the effect of an observed, continuous variable–the covariate}.
 %
@@ -296,6 +296,9 @@ In the limit of standard networks with substancial scaling, Neal (1996) proved t
 
 
 %% tell something about the cost function
+
+% UNIVERSAL APPROXIMATION !!
+
 
 %  _                _                          
 % | |__   __ _  ___| | ___ __  _ __ ___  _ __  
@@ -843,6 +846,24 @@ Although the fitting behavior of the simple \VAE{2} model seems to provide an im
 Like the previously described Autoencoders The Generative Adversarial Networks belong to the generative models family. It means that they are able to produce / to generate (we’ll see how) new content. To illustrate this notion of “generative models”, we can take a look at some well known examples of results obtained with GANs.
 
 \subsection{Recurrent Neural Networks}
+The defined network topology called \acl{RNN} is ultimately an order dependent network regulariztion of the basic percptron. The vanilla \acs{MLP} takes its inputs in a fixed size vector that restricts the analysis to the finite size ergodic signal. On the other hand the \acs{RNN} are a topology extension that exposes to the input features the network internal state, giving a chance for the model to interpret non-ergodic input windows, and with no predetermined limit in size. \acs{RNN}s take one or many input vectors and produce one or many output vectors in which the output is conditioned not only by direct inputs response, but also by a \textit{hidden state} that represents the current context where input is evolving. In this way, the same input could produce different outputs depending on internal states, and in turn on the previous seen input. Although, this orered sequence of the input covariates is not necessarially time depenent, for example the recurrency could be defined to implement the context analysis of a text.
+%
+% RR
+For supervised learning in discrete time settings, sequences of real-valued input vectors arrive at the input nodes, one vector at a time. At any given time step, each non-input unit computes its current activation (result) as a nonlinear function of the weighted sum of the activations of all units that connect to it. Supervisor-given target activations can be supplied for some output units at certain time steps. For example, if the input sequence is a speech signal corresponding to a spoken digit, the final target output at the end of the sequence may be a label classifying the digit.
+
+An \textit{Elman network} is a three-layer perceptron with the addition of a set of \textit{context} units. The middle (hidden) layer is connected to these context units fixed with a unitary weight. At each step the input is fed forward and the fixed back-ward connections save the previous values of the hidden units in the context ones. In this way the network maintains its inner state:
+\begin{align}
+    & \bm{x}_t = \sigma_x\left( A\bm{x}_{t-1} + B\bm{u}_t + \bm{w}_t \right) \\
+    & \bm{y}_t = \sigma_y\left( C\bm{x}_t + \bm{v}_t \right)
+    \label{eq:elman_model}
+\end{align}
+Similarly the output signal can be used as the inner state as well, in this case the topology structure is referred as the \textit{Jordan} recurrent network:
+\begin{align}
+    & \bm{x}_t = \sigma_x\left( A\bm{y}_{t-1} + B\bm{u}_t + \bm{w}_t \right) \\
+    & \bm{y}_t = \sigma_y\left( C\bm{x}_t + \bm{v}_t \right)
+    \label{eq:jordan_model}
+\end{align}
+
 %% LSTM %%
 
 

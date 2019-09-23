@@ -37,7 +37,9 @@
 \usepackage{cleveref} %% section reference notation
 \usepackage{listings} %% syntax highlight
 \usepackage{xcolor}
- 
+
+\usepackage{systeme} %%systems
+
 %% CODE LISTING STYLE %% 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -95,6 +97,8 @@
 \newcommand{\argmin}[1]{\ensuremath{\underset{#1}{\mathrm{arg}\,\mathrm{min}}}}
 % Kullback-Leibler divergence (or relative entropy)
 \newcommand{\KLD}[2]{\ensuremath{ \,\mathrm{KL}\left( #1\lVert#2 \right) } }
+\newcommand*\conj[1]{\bar{#1}}
+\newcommand*\mean[1]{\bar{#1}}
 
 %% THEOREMS %%
 \usepackage{amsthm}

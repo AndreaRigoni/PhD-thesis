@@ -1,7 +1,16 @@
 \chapter{RFX-Hunch: a closed example based on electron temperature}
 \label{section:RFXhunch}
+With the aim at selecting an informative example of plasma computation that the machine learning could be devoted to we chose to look at the temperature profiles that are coming from the Soft X-Ray diagnostics at RFX. The particular choice is mainly motivate to provide a example that can be at the same time good representative factor of the plasma global configuration even being at the same time not too complex to be handled by simple networks. The electron temperature profile is a very important clue for the plasma state that is very often accessed by physicists during analysis: it can be seen as an instant property that is almost ergodic during the pulse, it is acquired with a good temporal resolution and can be "easily" related to the magnetic configuration for the chosen sample.
 
-\section{What involved ( basing on “SCHEMA” )} % SHAx
+A plasma is composed with a mixture of species characterized by their own mass and electric charge. As first approximation, the plasma may be considered as consisting of two fluids mixed together: the first composed by the electrons and the second by the ions, or to be more specific by all the other heavy species, i.e. ions, neutral atoms, and compound molecules.
+
+What matters for a fusion machine is actually the ions temperature because electrons are not directly involved on fusion process.
+Nevertheless electrons acquire energy from the electric field, which energizes the plasma, and lose part of it through elastic or inelastic collisions; in this way the plasma can move energy from one fluid to the other. 
+ 
+
+
+\section{What involved ( based on “SCHEMA” )} % SHAx
+
 %% FD-NT-27
 \section{Passing from simulated data to actual data  “missing points”  }
 
@@ -14,7 +23,9 @@
 
 \section{parameters to SXR mapping}
 
+
 \subsection{STEP 12.7}
+
 
 \begin{figure}
     \centering

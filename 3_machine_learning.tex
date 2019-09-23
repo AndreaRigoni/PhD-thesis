@@ -824,7 +824,7 @@ With $\beta>1$ the model is pushed to learn a more efficient latent representati
 %
 We adopted this solution because it is very easy to be implemented in the \acs{VAE} code being a simple additional loss factor in the KL addendum, and it has been also proved in~\cite{Higgins2017betaVAELB} to produce an effect comparable with other more complex approaches specifically designed for encouraging disentanglement such as InfoGAN~\cite{NIPS2016_6399} or DC-IGN~\cite{kulkarni2015deep}. 
 In \Figure{\ref{fig:step1_ls_regularization}} two examples of training from the simulated signals are presented; where the loss per epoch is shown for both the training and validation, and the resulting scattering plot of the latent space for two possible $\beta$ selections.
-Seen by the latent space the effect of disentangling factors reflects to a more compact clusters representation. While from the topological point of view the graph of dual Voronoi diagram representation assumes a structure with edges that tend to align with the plot axes, meaning that a single variable is more capable to discriminate the generator classes.
+Seen by the latent space the effect of disentangling factors reflects to a more compact clusters representation. While from the topological point of view the graph of dual Voronoi diagram representation assumes a structure with edges that ` to align with the plot axes, meaning that a single variable is more capable to discriminate the generator classes.
 However this comes with a price that is spent by the generator that loose precision in data reconstruction.
 
 \subsection{Noise rejection}

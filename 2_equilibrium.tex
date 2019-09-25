@@ -329,7 +329,7 @@ As shown in the previous sections the RFP configuration is keen to produce a lar
 magnetic instabilities due to the low profile of the safety factor. The current driven instabilities that are very common in RFPs can grow in the core of plasma producing the so called ``magnetic islands''. In correspondence to these islands toroidal positions the SXR emit more and localized regions
 are identified. 
 Imaging of these SXR structures was allowed by the application of the Fourier-Bessel expansion of the Cormack inversion, as proposed by Nagayama in~\cite{Bonomo25}. 
-The algorithm is studied to achieve a good image reconstruction even with few harmonics, as the case of SXR where the acceptance of integral measuring cords  is affected by the small (and few) openings in the vessel. If the amplitude of the many magnetic instabilities is approximately the same, as in the case of the so-called \acl{MH}, the reconstructed SXR emissivity is almost symmetric; it is shown in~\Figure{\ref{fig:SXR_MH}}. Conversely, in presence of an instability where a single mode dominates, a magnetic island is sustained and, as shown in~\Figure{\ref{fig:SXR_QSH}}, an asymmetric emissivity profile with a localized bight region is detected. This state is called \acl{QSH}.
+The algorithm is studied to achieve a good image reconstruction even with few harmonics, as the case of SXR where the acceptance of integral measuring cords  is affected by the small (and few) openings in the vessel. If the amplitude of the many magnetic instabilities is approximately the same, as in the case of the so-called \acl{MH}, the reconstructed SXR emissivity is almost symmetric; it is shown in~\Figure{\ref{fig:MH_QSH_example}a}. Conversely, in presence of an instability where a single mode dominates, a magnetic island is sustained and, as shown in~\Figure{\ref{fig:MH_QSH_example}b}, an asymmetric emissivity profile with a localized bight region is detected. This state is called \acl{QSH}.
 %
 \begin{figure}
     \centering
@@ -340,6 +340,23 @@ The algorithm is studied to achieve a good image reconstruction even with few ha
 \end{figure}
 %
 In the currently operating RFP experiments, and in RFX-mod likewise, the time evolution of such instabilities is of the order of few ms. This sets a requirement on the bandwidth of the measurements up to several hundreds of kHz.
+
+A new SXR diagnostic named DSX3 have been installed in one of the equatorial ports of RFX-mod chamber; it completes the existing tomographic diagnostic maintaining several primary characteristics of the original SXR manipulators. Further
+features have been added: a larger number of acquired cords, a wider flexibility in the detection system geometry and the possibility of dynamically selecting different ranges of detected radiation energy.
+
+
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=5cm]{img/rfx/SXR_sketch.png}}
+    \subfigure[]{\includegraphics[height=5cm]{img/rfx/SXR3_cords.png}}
+    \caption{DXS3 perspective view (a), and the geometry of the lines of sight of DSX3 (at the tomography toroidal section
+             of RFX-mod vessel) for the three rows of photodiodes: the red lines correspond to the
+             27 diodes of the central row, while the chords for the two external rows are perfectly
+             overlapping (blue lines) }
+    \label{fig:DSX3_sketch}
+\end{figure}
+
 
 
 

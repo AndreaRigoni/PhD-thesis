@@ -146,8 +146,8 @@ This is applied for all (and sole) training data; we chose to apply the zero flo
 \begin{figure}
     \centering
     \subfigure[]{\includegraphics[width=5cm]{img/STEP7_CLEAN/missing_data_example.png}}
-    \subfigure[]{\includegraphics[width=5cm]{img/STEP7_CLEAN/missing_data_example2.png} label{fig:missing data example_b}}
-    \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaNMask layers, where only 5 valid element were present in the input profile (a)(b); a slight effect of VAE denoising is also visible in (b). }
+    \subfigure[]{\includegraphics[width=5cm]{img/STEP7_CLEAN/missing_data_example2.png} \label{fig:missing data example_b}}
+    \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaN-Mask layers, where only 5 valid element were present in the input profile (a)(b); a slight effect of VAE denoising is also visible in (b). }
     \label{fig:missing data example}
 \end{figure}
 Two examples of extreme missing data input have been proposed to a \VAE{2} model pre-trained with our NaN-Mask layers and are shown in~\Figure{\ref{fig:missing data example}}; on blue dots ($\bullet$) the input profile with missing points, and on red cross (+) the output of the network where the output mask layer is disabled guessing the profile form the reconstructed point in latent space.

@@ -228,6 +228,42 @@ Another very powerful alternative approach is to assume that there is an underly
 \subsection{Feed forward dense network}
 \label{section:feedforward dense networks}
 %
+
+% From a statistical point of view, neural networks are nothing more than devices adapting to represent non-linear curves. 
+% Nevertheless, fitting a non linear curve is not a trivial task though; the actual complexity of an interpolated model is of crucial importance. 
+% Indeed, while changing the complexity of the model, the best measure for the training data that the model can obtain becomes increasingly good, but the empirical fit performance first diminishes, then increase again. This happens because a model that is too complex starts to adapt to the training data and generalizes badly. In other words we could say that it learns how to represent the very training set, not any input data.
+% However the over-fitting problem can be turned to a Bayesian approach to keep controlled the model complexity.
+
+% If we give a probabilistic interpretation to the model, then we can evaluate
+% the evidence for alternative values of the control parameters. As was explained
+
+% Bayesian optimization of model control parameters has four important ad-
+% vantages. (1) No âtest setâ or âvalidation setâ is involved, so all available training
+% data can be devoted to both model fitting and model comparison. (2) Reg-
+% ularization constants can be optimized on-line, i.e., simultaneously with the
+% optimization of ordinary model parameters. (3) The Bayesian objective func-
+% tion is not noisy, in contrast to a cross-validation measure. (4) The gradient of
+% the evidence with respect to the control parameters can be evaluated, making
+% it possible to simultaneously optimize a large number of control parameters.
+% Probabilistic modelling also handles uncertainty in a natural manner. It
+% offers a unique prescription, marginalization, for incorporating uncertainty
+% about parameters into predictions; this procedure yields better predictions, as
+% we saw in Chapter 41. Figure 44.6 shows error bars on the predictions of a
+% trained neural network.
+
+% As was mentioned in Chapter 41, Bayesian inference for multilayer networks
+% may be implemented by Monte Carlo sampling, or by deterministic methods
+% employing Gaussian approximations (Neal, 1996; MacKay, 1992c).
+% Within the Bayesian framework for data modelling, it is easy to improve
+% our probabilistic models. For example, if we believe that some input variables
+% in a problem may be irrelevant to the predicted quantity, but we donât know
+% which, we can define a new model with multiple hyperparameters that captures
+% the idea of uncertain input variable relevance (MacKay, 1994b; Neal, 1996;
+% MacKay, 1995b); these models then infer automatically from the data which
+% are the relevant input variables for a problem.
+
+
+
 A feed forward NN, aka \ac{MLP} is again using the linear regression, actually it can be seen as a chain of logistic regression models that are stacked one on top of each other, where the final layer being a \ac{GLM}, either a logistic or a linear regression depending weather we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
 For instance, looking at the simple two layers example, and considering a regression output problem, the model would be written like:
 \begin{equation}

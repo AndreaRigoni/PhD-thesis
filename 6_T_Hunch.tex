@@ -304,10 +304,13 @@ where a standard \acs{VAE} model is trained in advance connecting an inference n
 
 The beauty of the \TF framework come again to ease the syntax: once we have a vae model trained the dataset map function can be used to generate labels online given the feature taken from dataset; in this way a couple (feature, label) can be created to be used for the supervised training.
 An example of this use of network to preconditioning dataset could be the following: \\
-\verb |new_ds = ds.map(lambda p,xy: (p, vae.encode(xy ,training=False))| \\
+\verb|new_ds = ds.map(lambda p,xy: (p, vae.encode(xy ,training=False))| \\
 where \verb|vae| is the pre-trained model and \verb|ds| is the current dataset exposing the couple (\textit{parameters}, \textit{SXR}).
+The corresponding python lines that define the model are instead the following: \\
+\verb|vae = models.AEFIT5.AEFIT5(latent_dim=6, feature_dim=30, dprate=0.1,|\\
+\verb|                           beta=0., scale=2, geometry=[20,20,10,10])|\\
 
-Some example of generated profiles have been shown in~\Figure{\ref{fig:step_12_7_rec}}; where the dashed 
+Some example of generated profiles have been shown in~\Figure{\ref{fig:step_12_7_rec}}; where the three curves represents the related profiles from the generator output. The dashed curve in blue is a plot of the real acquired temperature data that have been cleaned up with a preliminary passage through a recovery autoencoder. The orange cross markers (+) represent the decoded output of the latent space point that corresponds to the input feature (i.e. the blue curve), and it will become the label of the supervised training. Finally the output of the second encoder - the supervised trained network - is passed through the same decoder, generating the output profile with green markers ($\times$), of the guessed temperature.
 \begin{figure}
     \centering
     \subfigure{\includegraphics[height=4.8cm]{img/STEP12_7/Te_rec_215.png} }
@@ -319,7 +322,7 @@ Some example of generated profiles have been shown in~\Figure{\ref{fig:step_12_7
     \caption{ Training 500 epochs - STEP 12.7 mse, slightly overfitted but validation not diverging }
     \label{fig:step_12_7_rec}
 \end{figure}
-
+The direct comparison among these plotted examples shows that the network is actually able to identify the overall shape of the profile, and it is also successfully matching the phase of the dominant perturbation. 
 
 %   ____                                _             
 %  / ___|___  _ __ ___  _ __   ___  ___(_)_ __   __ _ 
@@ -330,11 +333,13 @@ Some example of generated profiles have been shown in~\Figure{\ref{fig:step_12_7
 
 \section{Composing Autoencoders}
 
-Until now the only data that has been accounted is the temperature profile that even being a useful information it becaome 
+Until now the only data that has been accounted is either the temperature profile or the plasma parameters, and each of them has been considered by itself. The neural network approach shown that it is possible to learn how to transfer the common hidden factors that drive experimental outcomes from one diagnostic to another, and in particular a latent space embedding helps to match such information.
+However, aiming at finding a comprehensive representation of the system, a more favourable approach would be to integrate those information together in a unique latent "state" space representation.
 
-
-
-\begin{lstlisting}[language=Python, caption=Internal VAE method to create the composed network topology]
+The actual idea that follows the intuition of a hierarchical subdivision of the complete data inputs in sub domains, each represented by means of embedded manifold, has been realized as a chain of nested autoencoders. This is actually as simple as a new class method that created a nested internal structure from a input list of other autoencoders; this has been named \textit{composing}, and a schema of the built topology is proposed in~\Figure{\ref{fig:VAE_compose}}.
+The simple code has been reported in~\Code{\ref{code:VAE_compose}} for the \TF implementation.
+%
+\begin{lstlisting}[language=Python, caption=Internal VAE method to create the composed network topology, label=code:VAE_compose]
 def compose(self, autoencoders):
     from itertools import chain 
     vaes = autoencoders
@@ -368,12 +373,16 @@ def compose(self, autoencoders):
     self._mkids = vaes
     return self
 \end{lstlisting}
-
-
+The~\Figure{\ref{fig:VAE_compose}} shows how encoders can be connected together: each component is not directly modified but the defined internal layers are referenced inside the new structure. In this way all the autoencoders can live independently from the composition, and can be either trained one by one separately or in the composed hierarchy. This seems a complication of the overall structure that could have been managed in a single big model; however it turns to be in facts on the opposite a simplification, where a pre-training can be done independently and the training of each component, or the nested composing structure, can be interactively activated or deactivated.
+Moreover, as already discussed, the use of embedded spaces appears to be not only a way to integrate heterogeneous data together, but also to create a compact representation that can be faster to train and modular. Where the term modular in this context means the possibility to localize part of computation close to the target diagnostic.
 \begin{figure}
     \centering
     \includegraphics[height=6cm]{img/3_ML/VAE_COMPOSE.eps}
     \caption{Schematic view of the VAE composition algorithm; the first set of autoencoder can be independently trained following the dashed arrow, while the latent space variable are at the same time fed to a nested autoencoder that uses a mix of information coming from the from different representations. }
-    \label{fig:my_label}
+    \label{fig:VAE_compose}
 \end{figure}
+%
+In the presented schema, and implementation, all the components are composed in the same level; one could argue that in this way the different inputs could be treated with the same "importance", however the complete network itself - once the overfiting and underfitting have been paced - tends to build paths that assign the best weights to each parameter, specially if the correct regularization and sparsification has been applied. In addition all the separate \acs{VAE} components do not need to share the same structure, givin a chance to increase or reduce the with and height (aka, the layer sizes and network depth) of each component, adding also custom network or data regularizers.
 
+In this case we does not have a concrete output, because the actual target of this high level representation is to find a possible set of hyperparamters of the overall composition of diagnostics. However looking at the complete composed autoencoder with its property of missing data recovering, the intimate meaning of this mechanism rise up suggesting that the complex nonlinear internal relation that have been created collaborate together to describe the experiment. There can be a sufficient input set to create the missing parameter or not, either way the output is the best match of the recorded situation along the overall already seen behavior of the observed system.
+For example, if two composed autoencoders would be represented by the SXR temperatures and the magnetics, the phase of the dominant mode would enforce the temperature peak position in the profile, while the plasma current would do the same for the peak height.

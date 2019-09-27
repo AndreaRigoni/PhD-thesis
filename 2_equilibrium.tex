@@ -210,20 +210,19 @@ As already anticipated, the RFX experiment was modified with the introduction, a
 % - why High plasma current? because 
 
 
-\subsection{Dynamo and MH states}
+\subsection{RFP Dynamo effect}
 
 Ideal MHD means that plasma resistivity is mathematically equal to zero: this has the key direct consequence that the Alfven theorem holds which states that the magnetic flux can be seen as ``\textit{frozen}'' inside the plasma (or in the other way around the plasma is frozen with the magnetic field line).
-But in a real case scenario the plasma resistivity normally inversely depends on the temperature. The more we approach the ideal MHD conditions the more the temperature is increasing. The direct consequence of the ideal conditions on topology is that it does not change and plasma shows closed flux surfaces. On the other hand, if plasma is thought to be resistive, there can be finite currents that dissipate energy and the topology is allowed to change: field lines or flux surfaces then can be cut and reconnected together. This is called \textit{magnetic reconnection}. The regions where the currents can flow are called the current sheets while the reconnected flux regions are the \textit{magnetic islands}. The plasma changes in topology, and we usually don't like that because within the magnetic islands the quality of confinement is decreased; however this is a good feature for RFP as it will be shown in few lines.
+But in a real case scenario the plasma resistivity normally inversely depends on the temperature. The more we approach the ideal MHD conditions the more the temperature increases. The direct consequence of the ideal conditions on plasma structure topology is that it does not change maintaining closed flux surfaces; on the other hand, if plasma is thought to be resistive, there can be finite currents that dissipate energy and the topology is allowed to change yielding field lines or flux surfaces that can be cut and reconnected together. This is called \textit{magnetic reconnection}. The regions where the currents can flow are called the current sheets while the reconnected flux regions are the \textit{magnetic islands}. The plasma changes in its defined topology, and we usually don't like that because within the magnetic islands the quality of confinement is decreased; however in certain conditions this is a good outcome for RFP as it will be shown in few lines.
 
-It has been shown that even if in the ideal condition the plasma has been made stable through a opportunely shaped safety profile, other instabilities can rise though; due to resistive components in the MHD equation the field lines tear and reconnect each other in the \textit{magnetic islands}.
-
-In an RFP system, where plasma resistivity is not null, there is a need for a mechanism to maintain the magnetic configuration balance over time otherwise diffusivity would flatten the toroidal magnetic field; in this way the magnetic energy would be dissipated out, and the RFP configuration would be lost.
+What has been shown so far is that, even if in the ideal condition the plasma has been made stable through a opportunely shaped safety profile, other instabilities can rise though: due to resistive components in the MHD equation the field lines tear and reconnect each other in the so called \textit{magnetic islands}.
+In an RFP system, where plasma resistivity is not null, there is a need for a mechanism to maintain the magnetic configuration balance over time otherwise diffusivity would flatten the toroidal magnetic field, the magnetic energy would be dissipated out, and the RFP configuration would be lost.
 If we approximate the plasma column to a cylindrical conductor using equations given in~\eqref{} the magnetic field in such a condition is subject of a resistive diffusion phenomenon described by:
 \begin{equation}
     \pdv{\Vec{B}}{t} = \frac{\eta}{\mu_0} \nabla^2 \Vec{B}
 \end{equation}
-Resolving the differential equation this field component - that describe the equivalent toroidal component in RFP - presents a decay time constant of $$\tau_R = \mu_0 a^2 / \eta$$, where $\eta$ being the resistivity of the equivalent conductor and $a$ the radius.
-Contrariwise, the experience shows that the RFP configuration is maintained for times longer than $\tau_R$. This is the result of a spontaneous mechanism of regeneration of the dissipated magnetic toroidal flow, called \textit{dynamo} in analogy with similar phenomena in astrophysical and geophysical plasmas. The dynamo mechanism is responsible for generating an electric field which is added to the externally applied one and helps to drive the missing current density. 
+Resolving the differential equation this field component - that describes the equivalent toroidal component in RFP - presents a decay time constant of $$\tau_R = \mu_0 a^2 / \eta$$, where $\eta$ being the resistivity of the equivalent conductor and $a$ the radius.
+On the contrary the experience shows that the RFP configuration is maintained for times longer than $\tau_R$. This seems to be the result of a spontaneous mechanism of regeneration of the dissipated magnetic toroidal flow, called \textit{dynamo} in analogy with similar phenomena in astrophysical and geophysical plasmas. The dynamo mechanism is responsible for generating an electric field which is added to the externally applied one and helps to drive the missing current density. 
 It is clear to see that at the reversal point, the value of the poloidal current $J_\vartheta$ is not zero. By checking the induction equation and Ohm’s law in the reversal location:
 \begin{equation*}
     \pdv{\Vec{B}}{t} = - \nabla \times \Vec{E}  \hspace{3cm} \Vec{E} + \Vec{v} \times \Vec{B} = \eta \Vec{J}
@@ -232,10 +231,7 @@ Where again $\eta$ is the plasma resistivity. One obtains $E_\vartheta = 0$ and 
 result $J_\vartheta = 0$ disagrees with the typical RFP discharge profile shown in~\Figure{\ref{}}, not justifying the reversal.
 Here the idea: the reversal profile is not directly generated by $d\Vec{B}/dt$ but it is due to a internal \textit{dynamo} mechanism.
 
-This poloidal component $J_\vartheta$ is then responsible for the regeneration of toroidal
-field in the core and for the sustainment of its reversal at the edge. It is worth
-noting that in \eqref{} there is no need of many modes concurring to dynamo, and the
-whole mechanism can be carried by a single perturbation~\cite{Bonomo39}.
+This poloidal component $J_\vartheta$ is then responsible for the regeneration of toroidal field in the core and for the sustainment of its reversal at the edge. It is worth noting that in \eqref{} there is no need of many modes concurring to dynamo, and the whole mechanism can be carried by a single perturbation~\cite{Bonomo39}.
 
 
 The time evolution of a magnetic island is described by the Rutherford equation and it is related to:
@@ -252,24 +248,23 @@ The value of $\Delta^\prime$ is than related to the radial magnetic field in the
 %	
 So the classical tearing mode is a {\em current driven instability}.
 
-
-% If the parallel component of the Ohm law is considered:
-% \begin{equation}
-%     E_\parallel = \frac{\Vec{E}\cdot\Vec{B}}{b} = \frac{E_\varphi B_\vartheta}{B} = \eta j_\parallel
-% \end{equation}
-% Since $E$
-
-% The dynamo electric field is provided by a self-organization of the plasma velocity flows, through the term $\Vec{v} \times \Vec{B}$ in Ohm's law:
-
-% \begin{equation}
-    
-% \end{equation}
-
-
-
 \subsection{SH and QSH states}
 
-The classical theory of RFP foresee the presence of that turbulence to give reasons of the so called Dynamo field.
+The RFP configuration depends on plasma current that is externally driven by an applied toroidal electric field $E_\varphi$. The
+power dissipation through the plasma finite resistance (aka. Ohmic heating), together with the striction applied by magnetic pressure ($\beta$), heats the plasma and produces peaked electron temperature profiles. 
+
+But the plasma resistivity $\eta$ inversely depends on electron temperature\footnote{the complete relation has been formulated by Spitzer as: $$\eta_\bot  = \frac{4\sqrt{2\pi}}{3} \frac{Z_e^2 m_e^{1/2} \ln{\Delta}}{(4\pi\epsilon_0)^2(k_B T_e)^{3/2}} $$.}
+as: $(\eta \propto \frac{1}{T_e^{3/2}})$, so to a local increase in electron temperature corresponds a decrease in resistivity, and hence to a further rising of the current density int that region, and obviously a related increase of Ohmic deposition. In this way, steep localized gradients of the current density profile tend to be generated, in which there is enough free-energy to drive an unstable spread spectrum of tearing modes $(m = 1, |n| \geq 2R_0 /a)$. The non-linear interaction of the $(m = 1, n)$ perturbations has been both theoretically explained and proved by experiments to be responsible of $(m = 0, n \geq 1)$ modes generation, which are resonant at the reversal surface \cite{Bonomo33}. This high magnetic activity translates into a populated spectrum of m = 0 and m = 1 modes.
+Because of the many m=1 modes active in the spectrum, this RFP regime is also called \acl{MH}.
+
+These generated tearing modes plays an important role in the previously mentioned \textit{dynamo} effect; although is worth noting that, as already stated, the MH regime is not the unique solution to the dynamo mechanism. In fact, spontaneous helical symmetric states called \acl{QSH}, in which a single mode dominate the m = 1 spectrum, have been measured in all existing RFP machines~\cite{Bonomo40}; an example of such a spectrum is shown in~\Figure{\ref{fig:MHQSH_b}} . The QSH state is not yet completely understood and is considered as an experimental evidence; however a theoretical approach for a possible Single Helicity (SH) RFP equilibrium, in which only one m = 1 mode is present, has been conjectured~\cite{Bonomo41}. QSH is actually a pure SH, since there exists a residual background of modes with $m = 1, |n| > n0$ where $n_0$ being the dominant; thus these modes are usually referred as the “secondaries”. In a high current regime we also experience very rapidly switching between MH to QSH, this gave reason to define a new magnetic parameter to highlight the instant state of modes raw configuration, that is the \textit{ratio of dominant vs secondaries} marked as $NS$.
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=4.2cm]{img/2_eq/poincare_QSH.png} \label{img:MHQSH_a}}
+    \subfigure[]{\includegraphics[height=4cm]{img/2_eq/QSH_modes_example.png} \label{img:MHQSH_b}}
+    \caption{Poincaré plots of the magnetic configuration mad with ORBIT code (a) with SH, QSH, MH magnetic mode configuration     respectively; an example of toroidal mode number spectra m = 1, n modes in a VS (Virtual Shell controlled) RFX-mod discharge (b). }
+    \label{img:MHQSH_b}
+\end{figure}
 
 
 
@@ -283,8 +278,6 @@ The classical theory of RFP foresee the presence of that turbulence to give reas
 
 % RWR
 RFX-mod is a flexible \ac{RFP} toroidal device (major radius $R=2 m$ and minor radius $a=0.46 m$) with plasma current up to 2 MA \cite{2MA_RFX_Current} and volume $10 m^3$ \cite{SONATO200597}. As in all RFPs, plasma heating is purely ohmic; \acl{RFP} could in principle obtain fusion power with ohmic heating only, and with magnetic field much smaller than in a tokamak—avoiding superconducting coils. RFX-mod is equipped with a very powerful system of active coils for feedback control of plasma MHD stability: 192 coils, independently driven, cover the whole plasma surface.
-
-
 
 
 
@@ -306,7 +299,7 @@ During the first operation of RFX the diagnostic was composed by a single pulse 
 This apparatus presented some limitations: from the precision point of view it suffered of a poor quantum efficiency of the multialkali cathode of the photo-multiplier (MCP-PMT) resulting in a general lack of sensitivity and noisy profile at low electron temperatures. On the other hand the 20 chords acquisition that characterized the acquired profile with a 24 mm spatial resolution was unable to effectively investigate the details of the QSH magnetic islands.
 
 Since the 2005 with the experiment upgrade to RFX-mod the diagnostic was completely renewed. In particular the replacement of the grating spectrometers with a set of four filter polycromators with avalanche photo-diodes (APD) provided a 30 times higher sensitivity and 84 points profile with a new narrow grained 7mm resolution ( $r/a$ from -0.96 to 0.84 ).
-The new Nd:YLF laser diode ($\lambda=1053 nm$) located 15 m away from the center of the vacuum vessel, can produce an up to 7 J burst of 10 pulses per experiment shot. with a single light emission duration of 20ns $\ac{FWHM}$.
+The new Nd:YLF laser diode ($\lambda=1053 nm$) located 15 m away from the center of the vacuum vessel, can produce an up to 7 J burst of 10 pulses per experiment shot. with a single light emission duration of 20ns FWHM (full-width at half maximum).
 
 The light passing through plasma on the equatorial plane scatter in all directions and is collected by photo-multipliers at three different windows at the end of short vertical ports. The 84 pairs of quartz fibers look all the plasma poloidal angles seen by magnifying optics located at the ports. All fibers can be also moved by a special mechanical support that can self orient during the experiment setup state; at the same time all optics can also automatically adjust focus to the desired radial position of interest.
 A further side by side light path decomposes the acquired spectrum in 4 channels using a series of relay lenses.
@@ -343,9 +336,7 @@ In the currently operating RFP experiments, and in RFX-mod likewise, the time ev
 
 A new SXR diagnostic named DSX3 have been installed in one of the equatorial ports of RFX-mod chamber; it completes the existing tomographic diagnostic maintaining several primary characteristics of the original SXR manipulators. Further
 features have been added: a larger number of acquired cords, a wider flexibility in the detection system geometry and the possibility of dynamically selecting different ranges of detected radiation energy.
-
-
-
+%
 \begin{figure}
     \centering
     \subfigure[]{\includegraphics[height=5cm]{img/rfx/SXR_sketch.png}}
@@ -360,4 +351,4 @@ features have been added: a larger number of acquired cords, a wider flexibility
 
 
 
-\section{The complete “SCHEMA” from sensors to plasma parameters}
+% \section{The complete “SCHEMA” from sensors to plasma parameters}

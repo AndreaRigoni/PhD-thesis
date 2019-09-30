@@ -228,42 +228,6 @@ Another very powerful alternative approach is to assume that there is an underly
 \subsection{Feed forward dense network}
 \label{section:feedforward dense networks}
 %
-
-% From a statistical point of view, neural networks are nothing more than devices adapting to represent non-linear curves. 
-% Nevertheless, fitting a non linear curve is not a trivial task though; the actual complexity of an interpolated model is of crucial importance. 
-% Indeed, while changing the complexity of the model, the best measure for the training data that the model can obtain becomes increasingly good, but the empirical fit performance first diminishes, then increase again. This happens because a model that is too complex starts to adapt to the training data and generalizes badly. In other words we could say that it learns how to represent the very training set, not any input data.
-% However the over-fitting problem can be turned to a Bayesian approach to keep controlled the model complexity.
-
-% If we give a probabilistic interpretation to the model, then we can evaluate
-% the evidence for alternative values of the control parameters. As was explained
-
-% Bayesian optimization of model control parameters has four important ad-
-% vantages. (1) No âtest setâ or âvalidation setâ is involved, so all available training
-% data can be devoted to both model fitting and model comparison. (2) Reg-
-% ularization constants can be optimized on-line, i.e., simultaneously with the
-% optimization of ordinary model parameters. (3) The Bayesian objective func-
-% tion is not noisy, in contrast to a cross-validation measure. (4) The gradient of
-% the evidence with respect to the control parameters can be evaluated, making
-% it possible to simultaneously optimize a large number of control parameters.
-% Probabilistic modelling also handles uncertainty in a natural manner. It
-% offers a unique prescription, marginalization, for incorporating uncertainty
-% about parameters into predictions; this procedure yields better predictions, as
-% we saw in Chapter 41. Figure 44.6 shows error bars on the predictions of a
-% trained neural network.
-
-% As was mentioned in Chapter 41, Bayesian inference for multilayer networks
-% may be implemented by Monte Carlo sampling, or by deterministic methods
-% employing Gaussian approximations (Neal, 1996; MacKay, 1992c).
-% Within the Bayesian framework for data modelling, it is easy to improve
-% our probabilistic models. For example, if we believe that some input variables
-% in a problem may be irrelevant to the predicted quantity, but we donât know
-% which, we can define a new model with multiple hyperparameters that captures
-% the idea of uncertain input variable relevance (MacKay, 1994b; Neal, 1996;
-% MacKay, 1995b); these models then infer automatically from the data which
-% are the relevant input variables for a problem.
-
-
-
 A feed forward NN, aka \ac{MLP} is again using the linear regression, actually it can be seen as a chain of logistic regression models that are stacked one on top of each other, where the final layer being a \ac{GLM}, either a logistic or a linear regression depending weather we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
 For instance, looking at the simple two layers example, and considering a regression output problem, the model would be written like:
 \begin{equation}
@@ -452,7 +416,7 @@ Here the $\zeta$ is a coefficient that does not depend on the gradient moments a
 assigns small weights to gradients too far in the past. Therefore the algorithm divides as stated by this term to correct the initialization bias.
 
 
-\subsubsection{Convlutional layers}
+\subsubsection{Convolutional layers}
 
 The previous sections explained how the \ac{ABM} hidden units are able to learn non-linear combinations of the original inputs; this is generally referred as the process of \textbf{feature extraction}. In this context the extraction means that the hidden units provide the tempered features for the input of the final \ac{GLM}. 
 %
@@ -791,7 +755,7 @@ The same figure shows also a instance of the generative network output with blac
 Those plot have been generated using the utility functions we implemented for \RFXhunch exploiting the \textit{Bokeh}~\cite{bokeh} library for python and JavaScript; this can provide a useful scope to see the behavior of the decoder moving interactively the point in the 2D latent space ans looking at the reconstruction on the generated plot.
 The complete \RFXhunch package will be described with more detail in \cref{section:RFXhunch}.
 %
-\subsection{generative morphing effect}
+\subsection{Generative morphing effect}
 When we play with joint encoder/decoder networks, that are our tools to step in and out of the latent space, \acs{VAE} is thought as a directed \acs{RBM}, and it is claimed to extract a meaning from data by extracting latent "concepts" and expanding them to the feature space. On the other hand we already pointed out that the generative effect of \acs{VAE} is also that, once trained, it maintains any actual relation with the data and can generate samples by only means of decoding the latent space. This becomes clear if we sample a point that is far from the dataset encoded clusters; for example in \Figure{\ref{fig:step1_morph}} two latent space points ($\bm{z}_1$ and $\bm{z}_2$) have been reconstructed by generative network. 
 %
 \begin{figure}
@@ -804,7 +768,7 @@ When we play with joint encoder/decoder networks, that are our tools to step in 
 \end{figure}
 It is quite clear from these figures the real power of the latent space, if we paint the reconstructed signal from any point in the latent space we just traversed all possible configuration that the outputs will assume, so once we know how this space is shaped we can lead the output to maintain certain characteristics. For instance we can constrain the system to remain within some predefined boundaries thus implementing a very simple, but robust, non linear control on the outputs.
 
-\subsection{latent space topology}
+\subsection{Latent space topology}
 With the description of \textit{linear factor analysis} in \cref{linear factor analysis} the unidentifiability of the latent variables has been introduced; so unfortunately upon each training the latent space assumes a different configuration. 
 Nonetheless, beside the simple generation on points that lies in the latent "\textit{interstitial}", one start to think about which possible configurations the latent space itself could assume. Given the fact that the purpose of \acs{VAE} is to adapt the space upon jumps between clusters of similar features, the idea is that we could imagine to simplify the entire cluster with its center of mass, and separate the space itself in corresponding regions. This could be easily done with the unsupervised k-means algorithms with k corresponding to the k classes ( the \textit{kinds} ) and let it find the means for each center of mass. At this point we could have an algorithm that actively classify the features upon latent representation, while in the latent space this classification can be plotted by the classical \textit{Voronoi diagram} as shown in \Figure{\ref{fig:voronoi_ls}}. With this defined regions we can say that a curve is of a certain class if its latent coordinates are within the corresponding region $k_i$; but what happens in the boundaries? In the previous section it has been shown that the algorithm tends to make a morphing adjustment to the signal shape to make the step from one region to the other as smooth as possible, however it is not always a feasible solution. For instance, as it can be seen in \Figure{\ref{fig:step1_morph_gn4}}, passing from the central Gaussian curve to the double one requires a steep movement on the position of generated points.
 Although the topological configuration of the latent space remain generally unidentifiable, and so does the clusters organization, deep looking back at \Figure{\ref{fig:step_1}} an overall structure among the samples placed by the encoder in the scatter plot can be glimpsed. For example the two single Gaussian curves that have been defined at plot center (i.e. the curve generated from the last two \textit{kinds}: $k_4, k_5$), corresponding respectively to the $\bm{A}$ cluster (green) and the $\bm{B}$ cluster (top light-orange) have been placed close to each other. And this configuration repeats with high probability with different trainings; this happens because the algorithm finds "easy" to generate a transition from the these two classes, that is the total amount of point movements remained small for each of the training attempt. The same happens for the tree curves at the lower part of the plot: the left orange (\textbf{E}), the previous central green one (\textbf{A}), and the azure one (\textbf{D}). In addition, the shift transition of the Gaussian points protrusion from left to right is actually a "C" shape curve in latent space because the algorithm chose to guarantee the transition from $\bm{D}$ to $\bm{E}$ as well. That because the total cost (meant as the integral of the computed loss) associated with that transition ( i.e. the rise of the bent on one side and the fall of the bent in the other) is also small with respect to other transitions. On the contrary a complete symmetry should exist between the transition from curve \textbf{D} to \textbf{C} and from curve \textbf{E} to \textbf{C}, so those groups of samples could be thought to be equally close to each other; but the training decided for one or the other arrangement because it is associated to a steeper change on reconstructed points than the other solutions. A natural parallelism of such cost transition with the field theory could be argued and indeed a perturbation approach to the study of latent space structure has been recently proposed in~\cite{andrsterr2019perturbation}. Associating an energy jump upon classes helps to identify which are the main degrees of freedoms for the latent variables in performing transitions or any movement in the latent space( remember that we are not bounded to the simple case of multi-class classification).
@@ -821,7 +785,7 @@ In any case the distance between $\bm{E}$ and the other clusters represents a li
     \label{fig:voronoi}
 \end{figure}
 
-\subsection{elastic fitting}
+\subsection{Elastic fitting}
 Even if the representation of \VAE{2} seems to present limitations on some class transition, it is although providing a good fitting for the classes in the proposed example as already shown for three instances in~\Figure{\ref{fig:step_1}}. But what has not been shown yet is that there actually is a further subtle structure of the input dataset generator that \VAE{2} captured from covariates. It is another implicit degree of freedom that comes from the fact that we chose to sample along the x-axis from a \textbf{uniform ordered} distribution; this generates samples that are free to span all along the axis but chained with the strict inequality: $\{\bm{x} | x_{i} \geqslant x_{i-1}\}$.
 \begin{figure}
     \centering

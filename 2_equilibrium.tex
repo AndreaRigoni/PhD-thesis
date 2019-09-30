@@ -1,10 +1,19 @@
 \chapter{RFP Equilibrium}
+\label{section:2_equilibrium}
 
 The success of electromagnetic containment systems depends on the ability to maintain the plasma in equilibrium in the presence of small perturbations
 that could compromise its stability. In Tokamak and RFP type experiments, the instabilities that produce macroscopic effects are described, in their simplest form, by the plasma fluid model MHD ( magnetohydrodynamic model ). 
 We abandon the kinetic description of the single particle to consider the set of charges, thinking of the plasma as a fluid: the dimensions of the survey region are much greater than the Debye length and the Larmor radius. Therefore, a discrete system with separate charges is no longer observed.
 
-\subsection{Single fluid magnetohydrodynamic equilibrium}
+
+%  __  __ _   _ ____  
+% |  \/  | | | |  _ \ 
+% | |\/| | |_| | | | |
+% | |  | |  _  | |_| |
+% |_|  |_|_| |_|____/ 
+
+
+\section{Single fluid magnetohydrodynamic equilibrium}
 
 In the MHD model the equations of classical electromagnetism are combined with those of the fluid motion. Typically the analysis of fluid plasma involves the generalized movements of each ionic species; however, for simplicity it is possible to consider each pair of values relating to ions and electrons in a single parameter and thus obtain a single fluid trend. Moreover, remembering that for fusion gases there is almost neutral charge $n_i = n_e$ the charge density term $\rho = e(n_i - n_e)$ can be omitted. The relevant quantities are thus:
 \begin{itemize}
@@ -69,7 +78,7 @@ In conclusion it can be said that a plasma of small magnetic viscosity can be mo
 
 
 
-\subsection{static equilibrium}
+\subsection{Static equilibrium}
 The study of the plasma MHD instability mainly concerns the perturbations of the ideal system starting from a magneto-static equilibrium point. In this state the relationships that present a temporal variation are null, thus, imposing $\eta=0$ and $\pdv{}{t} = 0$ the system become:
 \begin{align}
     & \nabla \cdot \Vec{B} = 0 \\
@@ -142,7 +151,7 @@ Still remaining in the steady state of equilibrium, where the term of time deriv
 
 
 
-\subsection{classification of instabilities}
+\subsection{Classification of instabilities}
 \label{sez:classificazione}
 
 The general classification of plasma instabilities is usually based either by their main physical causes, or the place where they rise up.
@@ -271,6 +280,23 @@ These generated tearing modes plays an important role in the previously mentione
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+%  ____  _______  __                         _ ____  
+% |  _ \|  ___\ \/ /     _ __ ___   ___   __| |___ \ 
+% | |_) | |_   \  /_____| '_ ` _ \ / _ \ / _` | __) |
+% |  _ <|  _|  /  \_____| | | | | | (_) | (_| |/ __/ 
+% |_| \_\_|   /_/\_\    |_| |_| |_|\___/ \__,_|_____|
+
 \section{RFX-mod2 \\ \small{the opportunity of the best controllable machine}}
 \cite{SONATO2003161}
 \cite{doi:10.1063/1.4806765}
@@ -282,9 +308,19 @@ These generated tearing modes plays an important role in the previously mentione
 RFX-mod is a flexible \ac{RFP} toroidal device (major radius $R=2 m$ and minor radius $a=0.46 m$) with plasma current up to 2 MA and volume $10 m^3$ \cite{SONATO200597}. As in all RFPs, plasma heating is purely ohmic; \acl{RFP} could in principle obtain fusion power with ohmic heating only, and with magnetic field much smaller than in a tokamak—avoiding superconducting coils. RFX-mod is equipped with a very powerful system of active coils for feedback control of plasma MHD stability: 192 coils, independently driven, cover the whole plasma surface.
 
 
-
 \section{RFX diagnostics}
 % kind of RFX diagnostics
+In fusion machines the number of signals to be acquired is very high, it can be divided by nature of the diagnostics signal:
+signals from magnetic probes, from Soft X-Ray detectors, form probes derived from photodiodes, from Langmuir probes, etc.
+%
+We can further divide the diagnostics into 3 main families:
+\begin{itemize}
+    \item Magnetics, and the related plasma current, loop potentials, etc.
+    \item Spectroscopic diagnostics, like XUV-VUV or X-Ray, or electron cyclotron emission. 
+    \item Reflectometers and interferometers, which manipulate optical and laser signals by performing demodulation.    
+          And measurement of electron temperature Te provided by Thomson scattering of laser light (TS)
+\end{itemize}
+
 
 %
 \begin{figure}[ht!]

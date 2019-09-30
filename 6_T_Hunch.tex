@@ -229,7 +229,7 @@ The reconstructed latent space has been plotted in~\Figure{\ref{fig:VAE2_qsh_ls}
     \centering
     \subfigure[]{\includegraphics[height=4cm]{img/STEP7_CLEAN/ls2_tcentro.png} \label{fig:VAE2_qsh_ls_a}}
     \subfigure[]{\includegraphics[height=4cm]{img/STEP7_CLEAN/ls2_tbordo.png} \label{fig:VAE2_qsh_ls_b}}
-    \subfigure[]{\includegraphics[height=4cm]{img/STEP7_CLEAN/ls2_iP.png} \label{fig:VAE2_qsh_ls_c}}
+    \subfigure[]{\includegraphics[height=4cm]{img/STEP7_CLEAN/ls2_Ip.png} \label{fig:VAE2_qsh_ls_c}}
     \caption{A scatter plot of 1K points representing a reconstructed \VAE{2} latent space where colour scale report external quantities respectively: the temperature $T_e$ at the center of plasma column (a), $T_e$ at border, and the plasma current $I_p$ for that pulse at that time. }
     \label{fig:VAE2_qsh_ls}
 \end{figure}
@@ -287,7 +287,7 @@ Finally we could also push our speculation even further saying that the y-axis a
 % |_|   \__,_|_|  \__,_|_| |_| |_|\___|\__\___|_|  |___/
                                                       
 
-\section{parameters to SXR mapping}
+\section{Parameters to SXR mapping}
 
 In the previous section the simple determination of latent space from temperature has been proposed, and the structure of reconstructed space has been shown with respect to external plasma parameters trying to speculate a possible relation.
 Another possible target of learning would be to see if such parameters are a complete information to reach a good guess of that temperature, exploiting the latent configuration as our new set of parameters.

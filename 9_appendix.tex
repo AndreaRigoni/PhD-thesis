@@ -1,4 +1,188 @@
 \chapter{Appendix}
+
+
+
+\section{Statistical description}
+
+%   ____ _     __  __ 
+%  / ___| |   |  \/  |
+% | |  _| |   | |\/| |
+% | |_| | |___| |  | |
+%  \____|_____|_|  |_|
+%
+\subsection{Generalized Linear Models}
+
+The use of exponential distribution turns to be a very clever solution. Indeed, among all families of distributions, where the definition domain does not vary with the parameter being estimated, this family is the only one with a sufficient statistic whose dimension remains bounded if the sample size increases. This means that we can have a compressed representation of the dataset into a fixed size summary without loss of information.
+Exponential families are also important in Bayesian reconstruction where a prior distribution is multiplied by a likelihood function and normalized to produce the posterior. In the case of a likelihood which belongs to an exponential family there always exists a conjugate prior, which is usually also exponentially distributed. 
+%
+%A conjugate prior for the parameter $\eta$ of an exponential family
+The formal definition of a generic exponentially distributed p.d.f. is the following:
+%% EXPONENTIAL
+\begin{equation}
+    p(x|\theta) = \frac{1}{Z(\bm{\theta})}h(x) \exp{[\transpose{\bm{\theta}} \phi(\bm{x})]}
+\end{equation}
+where $\bm{\theta} \in \Theta \subseteq \mathbb{R}^d$ are defined as the \textbf{natural parameters}, $\phi(\bm{x}) \in \mathbb{R}^d$ is called the vector of \textbf{sufficient statistics}, $h(\bm{x})$ is a scaling factor that is usually a unitary constant, and $Z(\bm{\theta})$ is the \textbf{partition function} that normalizes the distribution:
+\begin{equation}
+    Z(\bm{\theta}) = 
+    \int_{\mathcal{X}^n} h(\bm{x}) \exp{[\transpose{\bm{\theta}} \phi(\bm{x})]} dx
+\end{equation}
+Being all the arguments within an exponential operator it is also quite common to embed the partition function too, using $ A(\bm{\theta}) = \log\left(Z(\bm{\theta})\right)$ in the following:
+\begin{equation}
+    p(x|\bm{\theta}) = h(\bm{x}) \exp{[\transpose{\bm{\eta}}\phi(\bm{x}) - A(\bm{\eta}) ]}
+\end{equation}
+where the function $\eta$ has been further introduced to expand the natural parameters to the representation $\bm{\eta}=\eta(\bm{\theta})$, where $\text{dim}(\bm{\theta}) \leq \text{dim}\left(\eta(\bm{\theta})\right)$.
+
+%% BERNOULLI EXPONENTIAL
+\subsubsection*{example: exponential representation of the Bernoulli distribution}
+The Bernoulli distribution for $x\in\{0,1\}$ can be written in exponential family form as:
+\begin{equation}
+\begin{split}
+    \text{Ber}(x|\mu) &= \mu^x(1-\mu)^{1-x} \\
+%                      &= (1-\mu) \exp{\left[ x \log\left(\frac{\mu}{1-\mu}\right)\right]} \\
+                      &= \exp{\left[\transpose{\phi(x)}\bm{\theta} \right]}
+\end{split}
+\end{equation}
+where we set:
+\begin{align*}
+  & \phi(x) = x \\
+  & \theta  = \log\left(\frac{\mu}{1-\mu}\right) \\
+  & Z = 1/(1-\mu)
+\end{align*}
+
+%% GAUSSIAN EXPONENTIAL
+\subsubsection*{example: exponential representation of the Univariate Gaussian distribution}
+The univariate Gaussian can be written in exponential family in this form:
+\begin{equation}
+\begin{split}
+        \mathcal{N}(x|\mu,\sigma^2) &= \frac{1}{(2\pi\sigma^2)^\frac{1}{2}} \exp{\left[-\frac{1}{2\sigma^2}(x-\mu)^2\right]} \\
+        & \frac{1}{Z(\bm{\theta}}\exp{\left[\transpose{\bm{\theta}}\bm{\phi}(x)\right]}
+\end{split}
+\end{equation}
+once the parameters have been set to:
+\begin{align*}
+    & \bm{\phi}(x) = \left[ x, x^2 \right] \\
+    & \bm{\theta}  = \left[ \frac{\mu}{\sigma^2}, -\frac{1}{2\sigma^2} \right] \\
+    & Z(\mu,\sigma^2) = \sqrt{{2\pi\sigma^2}} \exp{\left[ \frac{\mu^2}{2\sigma^2} \right]}
+\end{align*}
+
+%%GLM
+It has been shown that the linear regression predicts the expected value of a given quantity as a linear combination the dataset. This implies that a constant change in the covariates leads also to a constant change in the response (i.e. a linear-response model). This is appropriate when the response variable has a normal distribution (intuitively, when a response variable can vary essentially indefinitely in either direction with no fixed "zero value", or more generally for any quantity that only varies by a relatively small amount).
+However, these assumptions are inappropriate where the response variable is expected to have a different shape. 
+% RR
+As an example, a prediction model might predict that 10 degree temperature decrease would lead to 1,000 fewer people visiting the beach is unlikely to generalize well over both small beaches (e.g. those where the expected attendance was 50 at a particular temperature) and large beaches (e.g. those where the expected attendance was 10,000 at a low temperature). The problem with this kind of prediction model would imply a temperature drop of 10 degrees would lead to 1,000 fewer people visiting the beach, a beach whose expected attendance was 50 at a higher temperature would now be predicted to have the impossible attendance value of -950. Logically, a more realistic model would instead predict a constant rate of increased beach attendance (e.g. an increase in 10 degrees leads to a doubling in beach attendance, and a drop in 10 degrees leads to a halving in attendance). Such a model is termed an exponential-response model (or log-linear model, since the logarithm of the response is predicted to vary linearly).
+%% 
+Generalized linear models overcome this limitation extending the ordinary linear models expanding the response variables to any arbitrary distribution (rather than simply the normal), imposing an arbitrary function of the response variable (the link function) to exploit the linearity with the predicted values. 
+% RR
+For example, the case above of predicted number of beach attendees would typically be modeled with a Poisson distribution and a log link, while the case of predicted probability of beach attendance would typically be modeled with a Bernoulli distribution (or binomial distribution, depending on exactly how the problem is phrased) and a log-odds (or logit) link function.
+%%GLM
+The three main ingredients of a GLM are:
+\begin{itemize}
+    \item The \textbf{exponential family} of probability distributions,
+    \item the usual \textbf{linear predictor} $\eta = \transpose{\bm{w}}\bm{x}$,
+    \item a \textbf{link function} $g$ such that $\expectation{y|\bm{x}} = \mu = g^{-1}(\eta)$.
+\end{itemize}
+
+The GLM probability is composed as follows:
+\begin{equation}
+    p(y_i| \theta, \sigma^2) = 
+    \exp{\left[ \frac{y_i\theta - A(\theta}{\sigma^2} + c(y_i,\sigma^2) \right] }
+\end{equation}
+
+
+%
+%  _____ ___ _     _       _   _ _____ ____  _____ 
+% |  ___|_ _| |   | |     | | | | ____|  _ \| ____|
+% | |_   | || |   | |     | |_| |  _| | |_) |  _|  
+% |  _|  | || |___| |___  |  _  | |___|  _ <| |___ 
+% |_|   |___|_____|_____| |_| |_|_____|_| \_\_____|
+%
+
+%% GLM
+
+%% GAUSSIAN MODEL EXAMPLE
+
+%% CLOSED FORM FOR GAUSSIAN MODEL
+
+
+
+
+%   ____                 _     _           _ __  __           _      _     
+%  / ___|_ __ __ _ _ __ | |__ (_) ___ __ _| |  \/  | ___   __| | ___| |___ 
+% | |  _| '__/ _` | '_ \| '_ \| |/ __/ _` | | |\/| |/ _ \ / _` |/ _ \ / __|
+% | |_| | | | (_| | |_) | | | | | (_| (_| | | |  | | (_) | (_| |  __/ \__ \
+%  \____|_|  \__,_| .__/|_| |_|_|\___\__,_|_|_|  |_|\___/ \__,_|\___|_|___/
+%                 |_|       
+%
+\subsection{Directed Graphical Models}
+In the previous chapter we saw a possible general approach to obtain a regression of a single target variable given its conditional probability with an input process. Suppose now that we are observing a set of multiple correlated variables where the correlation extends from one variable to another in a chain of dependencies. This becomes a stochastic model describing a sequence of possible values for the variables in which the probability of each event depends on the state of the others.
+If we constrain the variable correlation to be strictly ordered the probability of a target variable after all the correlation hops can be written as:
+\begin{equation}
+    p(x_1, x_2, ... x_V | \bm{\theta}) = p(x_1|\bm{\theta})p(x_2|x_1,\bm{\theta})p(x_3|x_2,x_1,\bm{\theta}) ... p(x_V|x_1, ... x_{V-1},\bm{\theta})
+\end{equation}
+Looking at all the possible $p(x_i|\bm{\theta})$ the conditional links among variable appears as a linked directed graph.
+%
+This is called “Graphical model” as it combines graph theory and probability theory to provide a general framework to represent variables interaction. Graphical models trace their origins to many different fields and have been applied in wide variety of settings: for example, to develop probabilistic expert systems, and to understand neural networks. Remarkably, the very same formalism and algorithms can be applied to a wide range of problems.
+%
+However even if the pictorial result is quite intuitive, the joint relation among stochastic variables can easily grow exponentially; for instance if we imagine all distributions having the same finite discrete support composed by $K$ states the representation of all $p(x_i|x_j)$ is $O(K^2)$, the representation of $p(x_i|x_j,x_k)$ is $O(K^3)$ and so forth, so the overall model of V cardinality would become $O(K^V)$. This description of joint discrete possible states, known as the \textbf{conditional probability table}, is sometimes used to describe a fully observed covariates vector in the complete statistical description of the complex systems of variable. Actually this solution, beside requiring a first restriction in the number of possible states that represents each stochastic process, it is also presenting a critical convergence requiring a awful amount of data to reach a meaningful state for such amount of parameters.
+One possible solution, in the same discrete approximation, is to make use a more compact conditional distribution function, such as the multinomial logistic i.e. $p(x_i | \bm{x_j})_{i \neq j} = S_k(\bm{W}_i \bm{x_{j}}$). Although this model has been successfully applied in literature for some generative classifiers~\cite{Bengio:1999:MHD:3009657.3009714}, it appears to remain an overkill in conditioning the system.
+
+Another practical end very common solution is to assume a conditional Independence among variables that are k-hops distant from the others, exploiting the \textbf{Markov assumption} of independence among the link graph.
+For example, under these conditions, imposing a single hop Independence, the chains of links that create are constituted by first order \textbf{Markov chain} shown in the first diagram of \Figure{\ref{fig:simple_markov_chains_a}}, and described by the following joint distribution:
+\begin{equation}
+    p(x_1, x_2, ... x_V) = p(x_1) \prod_{j=1}^V p(x_j|x_{j-1})
+\end{equation}
+equivalently the second order independence can be imposed, generating a graph like in \Figure{\ref{fig:simple_markov_chains_b}} describe by:
+\begin{equation}
+    p(x_1, x_2, ... x_V) = p(x_1) \prod_{j=1}^V p(x_j|x_{j-1},x_{j-2})
+\end{equation}
+In the same way higher-order Markov models can be created, however even the second-order Markov assumption may be inadequate if there are long-range correlations throughout the available observations since the number of parameters will again blow up. 
+
+
+\begin{figure}
+    \centering
+    \subfigure[]{
+    \includegraphics[width=0.3\textwidth]{img/3_ML/DGM_o1_markov.png}
+    \label{fig:simple_markov_chains_a} }
+    \subfigure[]{
+    \includegraphics[width=0.3\textwidth]{img/3_ML/DGM_o2_markov.png}
+    \label{fig:simple_markov_chains_b} }
+    \caption{First order (a) and second order (b) Markov Chain examples, the arrow represents a conditional probability that relates variables each other.}
+    \label{fig:simple_markov_chains}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=2cm]{img/3_ML/naive_bayes_1.pdf}
+    \label{fig:naive_bayes}}
+    \subfigure[]{\includegraphics[height=2cm]{img/3_ML/DGM_o1_hmm.png}
+    \label{fig:hidden_markov}}
+    \caption{Caption}
+\end{figure}
+
+A further possible reduction in the number of joint relations between observed variables can be also given by the formalism itself,  by the assumption that some covariates are correlated because they all arise from a hidden common “cause”. Those common causes can be described as variables themselves but that can't be directly accessed.  Model with hidden variables are also known as latent variable models or LVMs. 
+The very basic example i the \textbf{naive Bayes classifier}, where features are assumed to be conditionally independent given a class label a common target. This is illustrated in \Figure{\ref{fig:naive_bayes}}. The joint probability can be then written as:
+\begin{equation}
+    p(y,\bm{x}) = p(y) \prod_{j=1}^V p(x_j| y)
+\end{equation}
+%
+Another very powerful alternative approach is to assume that there is an underlying hidden process, that can be modeled by a first-order Markov chain, but for which available measures is a noisy observation of this process. The result is known as \acl{HMM}, shown in \Figure{\ref{fig:hidden_markov}}. 
+
+
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[height=2.5cm]{img/3_ML/naive_bayes_2.pdf} \label{fig:plate_naive_bayes}}
+    \subfigure{\includegraphics[height=2.5cm]{img/3_ML/plate_ntz_1.pdf} \label{fig:plate_ntz_1}}
+    \subfigure{\includegraphics[height=2.5cm]{img/3_ML/plate_ntz_2.pdf} \label{fig:plate_ntz_2}}
+    \caption{ Plate notation for DGM }
+    \label{fig:plate_notation}
+\end{figure}
+
+
+
+
+
+
+
 \section{Projects that have been already built upon Anacleto:}
 \subsection{W7X - trigger }
 \cite{RIGONI2018122}

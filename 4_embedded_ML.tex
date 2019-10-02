@@ -5,83 +5,107 @@
 It has been shown in the introductory chapter the diversification of signals within their heterogeneous nature, however a particular discussion should be also addressed to the possible domain of the data itself beyond the particular origin.
 In order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session a wide amount of sensors are usually required, both in time and in spatial domains.
 Although it is not true that controllability (and observability) of the system strictly depends on that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
-This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of a few state variables are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two control variable are the steering of the handlebar and the torque on the pedals. Even if the complete environment of all the variables that must be observed to provide a optimal control on the system states is rather complex, it can be shown that a properly configured latent variables can effectively generate a simpler embedded representation. This in turn leads to a simpler control model taking inputs from the latent states instead of directly depending on the whole detectors.
+This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of a few state variables are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two control variable are the steering of the handlebar and the torque on the pedals. Even if the complete environment of all the variables that must be observed to provide a optimal control on the system states is rather complex, it can be shown that a properly configured latent variables can effectively generate a simpler embedded representation. This in turn led us to start evaluating the possibility to  a simpler control model taking inputs from the latent states instead of directly depending on the whole detectors.
 
-% CONTROL THEORY
-According to the classical \textit{control theory} for dynamical systems, once the precise time derivative description is given in terms of that state space model, a system can be defined \textit{controllable} if there exist a particular set of inputs that are able to drive the state to any desired \textit{set point} within a finite time. 
-If the classical discreet time \ac{LTI} state space model is considered in the form:
-\begin{align}
-    & \dot{\bm{x}} = A\bm{x} + B\bm{u} + \bm{w}\\
-    & \bm{y} = C\bm{x} + D\bm{u} + \bm{v}
-    \label{eq:ss_model}
-\end{align}
+At the same time 
+
+
+% % CONTROL THEORY
+% According to the classical \textit{control theory} for dynamical systems, once the precise time derivative description is given in terms of that state space model, a system can be defined \textit{controllable} if there exist a particular set of inputs that are able to drive the state to any desired \textit{set point} within a finite time. 
+% If the classical discreet time \ac{LTI} state space model is considered in the form:
 % \begin{align}
-%     & \bm{x}_t = A\bm{x}_{t-1} + B\bm{u}_t + \bm{w}_t\\
-%     & \bm{y}_t = C\bm{x}_t + D\bm{u}_t + \bm{v}_t
+%     & \dot{\bm{x}} = A\bm{x} + B\bm{u} + \bm{w}\\
+%     & \bm{y} = C\bm{x} + D\bm{u} + \bm{v}
 %     \label{eq:ss_model}
 % \end{align}
+% % \begin{align}
+% %     & \bm{x}_t = A\bm{x}_{t-1} + B\bm{u}_t + \bm{w}_t\\
+% %     & \bm{y}_t = C\bm{x}_t + D\bm{u}_t + \bm{v}_t
+% %     \label{eq:ss_model}
+% % \end{align}
 
-Time dependent state space models in \eqref{eq:ss_model}, also known \acl{DLM}, are a widely used approximation for analyzing time series. They provide a very flexible framework allowing concurrent smooth and steep changes that generally well fitting natural process time evolution.
-A more rigorous formulation for \textit{controllability} is given in terms of the \textit{Kalman criterion}:
-\begin{definition}{Kalman criterion}
-The pair $(A,B)$ is \textit{controllable} if, given a duration $t>0$ and two arbitrary points $x_0, x_t \in \mathbb{R}^n$, there exists a piece wise continuous function $\tau \mapsto u(\tau)$ from $[0,t]$ to $\mathbb{R}^m$, such that the integral $x(\tau)$ generated from input $u$ with $x(0) = x_0$, satisfies $x(t)=x_t$.
-\end{definition}
-Where, as stated, the definition can be formulated in terms of the integral:
-\begin{equation}
-    e^{A t}x_0 + \int_0^t e^{A(t-\tau)}B u(\tau) d\tau = x_t
-\end{equation}
-where the only dependencies are on the state and input matrices $A$ and $B$.
-Given the definition is well known that for such models the \textit{controllability} and the \textit{observability} depend on the \textit{Kalman condition}:
-\begin{equation}
-    \mathrm{rank}\,\mathscr{C} = \mathrm{rank}\left( B|AB|...|A^{n-1}B \right) = n
-\end{equation}
-% It can be shown that once a system is proved to be controllable can be transformed to a system in \textbf{canonical form} where all 
+% Time dependent state space models in \eqref{eq:ss_model}, also known \acl{DLM}, are a widely used approximation for analyzing time series. They provide a very flexible framework allowing concurrent smooth and steep changes that generally well fitting natural process time evolution.
+% A more rigorous formulation for \textit{controllability} is given in terms of the \textit{Kalman criterion}:
+% \begin{definition}{Kalman criterion}
+% The pair $(A,B)$ is \textit{controllable} if, given a duration $t>0$ and two arbitrary points $x_0, x_t \in \mathbb{R}^n$, there exists a piece wise continuous function $\tau \mapsto u(\tau)$ from $[0,t]$ to $\mathbb{R}^m$, such that the integral $x(\tau)$ generated from input $u$ with $x(0) = x_0$, satisfies $x(t)=x_t$.
+% \end{definition}
+% Where, as stated, the definition can be formulated in terms of the integral:
+% \begin{equation}
+%     e^{A t}x_0 + \int_0^t e^{A(t-\tau)}B u(\tau) d\tau = x_t
+% \end{equation}
+% where the only dependencies are on the state and input matrices $A$ and $B$.
+% Given the definition is well known that for such models the \textit{controllability} and the \textit{observability} depend on the \textit{Kalman condition}:
+% \begin{equation}
+%     \mathrm{rank}\,\mathscr{C} = \mathrm{rank}\left( B|AB|...|A^{n-1}B \right) = n
+% \end{equation}
+% % It can be shown that once a system is proved to be controllable can be transformed to a system in \textbf{canonical form} where all 
 
-%% Structural Controllability
-Recently, the study of the such complex networks with linear dynamics control has gained importance in both science and engineering. Between different aspects in which we can study the controllability we have the notion of structural controllability that has been proposed by Lin in~\cite{1100557} as a framework for studying the controllability properties of directed complex networks where
-% LIN
-%% RR
-% To do this, the basic concept of a "cactus" and the related concept of a "precactus" are introduced. The main result of this paper states that the pair (A,b) is structurally controllable if an only if the graph of (A,b) is "spanned by a cactus." The result is also expressed in a more conventional way, in terms of some properties of the pair (A,b).
+% %% Structural Controllability
+% Recently, the study of the such complex networks with linear dynamics control has gained importance in both science and engineering. Between different aspects in which we can study the controllability we have the notion of structural controllability that has been proposed by Lin in~\cite{1100557} as a framework for studying the controllability properties of directed complex networks where
+% % LIN
+% %% RR
+% % To do this, the basic concept of a "cactus" and the related concept of a "precactus" are introduced. The main result of this paper states that the pair (A,b) is structurally controllable if an only if the graph of (A,b) is "spanned by a cactus." The result is also expressed in a more conventional way, in terms of some properties of the pair (A,b).
 
-% \cite{zheng2017state}
-State space models (SSMs), such as hidden Markov models (HMM) and linear dynamical systems
-(LDS), have been the workhorse of sequence modeling in the past decades From a graphical model
-perspective, efficient message passing algorithms (Stratonovich, 1960; Kalman, 1960) are available
-in compact closed form thanks to their simple linear Markov structure. However, simplicity comes
-at a cost: real world sequences can have long-range dependencies that cannot be captured by Markov
-models; and the linearity of transition and emission restricts the flexibility of the model for complex
-sequences.
+% % \cite{zheng2017state}
+% State space models (SSMs), such as hidden Markov models (HMM) and linear dynamical systems
+% (LDS), have been the workhorse of sequence modeling in the past decades From a graphical model
+% perspective, efficient message passing algorithms (Stratonovich, 1960; Kalman, 1960) are available
+% in compact closed form thanks to their simple linear Markov structure. However, simplicity comes
+% at a cost: real world sequences can have long-range dependencies that cannot be captured by Markov
+% models; and the linearity of transition and emission restricts the flexibility of the model for complex
+% sequences.
 
-As a first attempt the simple \textit{Elman} formulation for the recurrent topology will be applied, this with the aim at demonstrating the connection with linear dynamical systems, showing that such networks represent a superset.
-With the \textit{Elman} forumlation a \acs{RNN} is control dynamical system that, in continuous time, can be described by a system of differential equations:
-\begin{align}
-    & \dot{\bm{x}} = \sigma_x \left( A\bm{x} + B\bm{u} \right) \\
-    & \bm{y} = C\bm{x}
-\end{align}
-where for simplicity we omitted noise components for both the state and the output, and the direct input/output link.
-% why
+% As a first attempt the simple \textit{Elman} formulation for the recurrent topology will be applied, this with the aim at demonstrating the connection with linear dynamical systems, showing that such networks represent a superset.
+% With the \textit{Elman} forumlation a \acs{RNN} is control dynamical system that, in continuous time, can be described by a system of differential equations:
+% \begin{align}
+%     & \dot{\bm{x}} = \sigma_x \left( A\bm{x} + B\bm{u} \right) \\
+%     & \bm{y} = C\bm{x}
+% \end{align}
+% where for simplicity we omitted noise components for both the state and the output, and the direct input/output link.
+% % why
 
-A popular alternative is the recurrent neural networks (RNN), for instance the Long Short-Term
-Memory (LSTM) (Hochreiter  Schmidhuber, 1997) which has become a standard for sequence
-modeling nowadays. Instead of associating the observations with stochastic latent variables, RNN
-directly defines the distribution of each observation conditioned on the past, parameterized by a
-neural network. The recurrent parameterization not only allows RNN to provide a rich function
-class, but also permits scalable stochastic optimization such as the backpropagation through time
-(BPTT) algorithm. However, flexibility does not come for free as well: due to the complex form of
-the transition function, the hidden states of RNN are often hard to interpret. Moreover, it can require
-large amount of parameters for seemingly simple sequence models (Zaheer et al., 2017).
+% A popular alternative is the recurrent neural networks (RNN), for instance the Long Short-Term
+% Memory (LSTM) (Hochreiter  Schmidhuber, 1997) which has become a standard for sequence
+% modeling nowadays. Instead of associating the observations with stochastic latent variables, RNN
+% directly defines the distribution of each observation conditioned on the past, parameterized by a
+% neural network. The recurrent parameterization not only allows RNN to provide a rich function
+% class, but also permits scalable stochastic optimization such as the backpropagation through time
+% (BPTT) algorithm. However, flexibility does not come for free as well: due to the complex form of
+% the transition function, the hidden states of RNN are often hard to interpret. Moreover, it can require
+% large amount of parameters for seemingly simple sequence models (Zaheer et al., 2017).
+
+
+
 
 
 
 
 \section{A new “smart” DAQ chain}
+
 % smart sensory
+
+
 % feature extraction concept
 
-In order to collect magnetic field measurements from EM probes, analog integration system~\cite{pomaro2005transducers} was implemented in RFX-mod, followed by two separate sets of ADC channels, one for precision off-line transient data and the other for real-time control. Re-implementing the same front-end for an increased number of channels is costly, requiring enhanced analog integration and duplication in ADC channels.  A more compact and cost effective solution is being investigated~\cite{gottardo18}, using a configurable FPGA to handle ADC conversion and providing a set of on-line functions directly performed at the FPGA logic level, including the numeric integration in real-time, recording at the same time the dB/dt signals deriving directly from EM coils needed to study the Magneto Hydro Dynamic (MHD) processes taking place into the plasma~\cite{zuin2009current}~\cite{innocente2014tearing}. The possibility of directly acquiring the time derivative of the electromagnetic fields, i.e. the direct signals from EM probes, was not present in the previous system, acquiring integrated signals in order to reduce the number of required ADC channels. This fact introduced a severe limitation in the derivative control required for MHD stabilization because of the bad quality of the computed time derivative.
+
+The RFX-mod experiment is now being further upgraded to RFX-mod2~\cite{Peruzzo2018}: one of the major step foreseen is a substantial improvement of the magnetic measurement system. The total number of the new magnetic pick-up coil sensors will be increased with the aim of improved spatial resolution~\cite{marchiori2017upgraded}. Moreover the sensors will be moved inside the vacuum vessel widening their usable signal bandwidth up to 200~kHz. These desirable characteristics imply demanding requirements for the acquisition system. 
+
+The extension of the present analog integration system~\cite{pomaro2005transducers}, followed by two separate sets of ADC channels, one for precision off-line transient data sampling and one for real-time control, would be costly, requiring several rack cubicles and severely limiting the useful bandwidth. Thus a more compact and cost effective solution is being investigated. A possible one could be based on the ATCA-MIMO-ISOL~\cite{carvalho2010reconfigurable} architecture originally developed for the plasma column vertical stabilization of the JET tokamak experiment and already tested on RFX-mod~\cite{manduchi2012upgrade}. 
+
+In principle this architecture could be suitable for performing the numeric integration need for current real-time plasma control configuration, while simultaneously recording the dB/dt signals suitable for the study of the fast MHD dynamic processes taking place into the plasma~\cite{zuin2009current}~\cite{innocente2014tearing}. The acquisition channels of this architecture are isolated input modules using precision 18-bit, 2~MSamples/s SAR ADC coupled to an FPGA which then routes the data flow to the processing/storage servers through a PCI-e interface. These characteristics of high sensitivity and high serial throughput, combined with the galvanic insulation of the input section of each module make this solution very attractive.
+However for our purposes, the ATCA/PCI-e architecture is still expensive, complex to manage, and requires substantial software and firmware development. 
+
+With this in mind we decided to switch to simpler and more flexible hosting interface, while trying to keep the existing isolated ADC module. The use of the Xilinx Zynq system on chip, integrating both FPGA and CPU cores, allows to set-up a self-contained acquisition board with a drastic simplification of the system, providing both the autonomous local storage for transient recording function, as well as the ability to send real-time decimated and integrated data to the control servers through standard gigabit Ethernet interface. 
+
+To assess the feasibility of this proposal, we developed an interface adapter between the MIMO ISOL ADC module and a commercial Redpitaya Zynq board, and then we investigated the limits of the direct numeric integration technique with presently available electronic components.
+The goal is to check to what extent a directly acquired signal from the RFX-mod2 probes can be digitally integrated. Even if applied to this specific case, the results obtained here could be used as guidelines for other similar applications as well. 
+
+
+This compact and cost effective solution that is recently started to be investigated~\cite{gottardo18}, uses a configurable FPGA to handle ADC conversion and provides a set of on-line functions directly performed at the FPGA logic level, including the numeric integration in real-time, recording at the same time the dB/dt signals deriving directly from EM coils needed to study the Magneto Hydro Dynamic (MHD) processes taking place into the plasma~\cite{zuin2009current}~\cite{innocente2014tearing}. The possibility of directly acquiring the time derivative of the electromagnetic fields, i.e. the direct signals from EM probes, was not present in the previous system, acquiring integrated signals in order to reduce the number of required ADC channels. This fact introduced a severe limitation in the derivative control required for MHD stabilization because of the bad quality of the computed time derivative.
 
 The proposed approach will further reduce the number of ADC channels by merging high frequency transient recording in local memory (up to 1 MHz) and lower frequency streaming (up to 10 kHz) required for real-time plasma control and having a single ADC channel performing both. In RFX-mod a fixed subset of signals from EM probes was used for the active plasma control, requiring a new set of ADC converters in respect to the transient recorders used for data acquisition. In RFX-mod2 it will be possible to re-use any ADC channel from EM probes for real-time plasma control, being the actual number possibly limited by other factors not related to the ADC devices, such as network bandwidth or control computation load. 
-%
+
+
 The flexibility provided by a configurable on board FPGA allows also the inclusion of more sophisticated triggering mechanisms and a deeper integration with the timing systems. Examples of triggering mechanism are given by the acquisition of fast transients requiring high speed sampling only in a given, dynamic Region of Interest (ROI). This feature has been implemented in the first proof-of-concept device described in a later section. Deeper integration with the timing systems imply the ability of getting the clock and the trigger signals not only from digital inputs, but also from the specifically coded signal carrying both clock and trigger information (timing highway)\cite{dio4}. Such signals were used in the RFX-mod timing systems to distribute a synchronous clock and asynchronous triggers and a timing device was required for every ADC rack to extract the clock and the trigger signals. The timing device is no more required for a rack hosting the new ADC devices because the ADC devices can directly extract timing information from the timing highway.  
 %
 The adoption of a System on Chip (SoC) based technology exploiting both an ARM based processing unit and a FPGA logic provides the  flexibility of a configurable device for real-time operations and as well as the possibility of deploying software components directly on-board. The Red Pitaya board~\cite{redpitaya} is currently used for the development of the architecture. A different solution is however foreseen for the production system integrating an external ADC section with the Zynq-based SoC board. An ADC front end, already used in other applications of real-time plasma control~\cite{ATCA-MIMO-ISOL} was initially considered, but its noise characteristics, and in particular the noise dependency on frequency, proved to limit the quality of digital integration. For this reason, a different solution for the ADC stage is being considered.

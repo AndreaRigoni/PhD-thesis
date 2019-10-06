@@ -185,6 +185,7 @@ Another very powerful alternative approach is to assume that there is an underly
 
 \section{Projects that have been already built upon Anacleto:}
 \subsection{W7X - trigger }
+\label{section:W7X}
 \cite{RIGONI2018122}
 The Anacleto framework has been used to develop a general purpose timing device to be used in Wendelstein 7-X diagnostics. The timing device is implemented in a Red Pitaya board and defines two digital outputs to generate clock and gate signals, and two digital inputs to receive a synchronizing 10 MHz clock and a trigger signal. The board is configured via software to generate a pre-programmed timing sequence after the system has been armed and a trigger input signal has been received. The timing sequence is communicated via TCP/IP to the ARM processor hosted in the Zynq chip of the Red Pitaya board. In this case a set of registers have been defined as interface between the processor and the FPGA application, without using interrupt lines. All registers except one are used to specify the time sequence. The remaining register is used as command register to arm and disarm the board. Not considering the time required for developing the FPGA application written in VHDL the creation of the new project, the adaption of the driver from the template and the deploy required less than one working day.
 
@@ -197,6 +198,7 @@ The Anacleto framework has been used to develop a general purpose timing device 
 
 
 \subsection{fast event driven data acquisition for the NIO negative ion beam}
+\label{section:NIO1}
 ~
 A desired topics for a DAQ device is the possibility to increase the level of detail during acquisition based on particular events. It is not uncommon to have an observed quantity that changes rapidly in time and than last steady or possibly in a non interesting state for long periods. An example of is the breakdown event that occurs in the accelerator grids of a ion source, leading to a very fast transient change in the measured currents and voltages of the grid power supply. In this case, fast data acquisition must be triggered by the event itself, acquiring data for a short time window around the event occurrence. This technique has been applied to Nio experiment~\cite{DEMURI2015249} a small radio frequency negative ions beam source with a high voltage electrostatic particle accelerator stage composed of grids. In certain conditions break-down events~\cite{RECCHIA20111545} appear on the high voltage gaps of the grids causing a  high current discharges of the power supply feeding the accelerator. 
 ~
@@ -211,7 +213,7 @@ A subset of the FPGA functionality described in section 3 has been implemented i
 
 
 \subsection{STRIKE beamlets indentification}
-
+\label{section:Horace}
 The instrumented calorimeter STRIKE (Short-Time Retractable Instrumented Kalorimeter Experiment) has been designed to work with the characterization of the negative ion beam in terms of beam uniformity and divergence during short pulse operations. STRIKE is made of 16 1D Composite Carbon Fiber (CFC) tiles, intercepting the whole beam and observed on the rear side by infrared (IR) cameras.
 The beamlet parameters, such as dimension, divergence, position and amplitude, For this purpose to convolutional neural network, CNN, is trained to detect the beamlets and their features on the images from IR. As STRIKE just started to operate, the training was performed with artificial data built on purpose.
 

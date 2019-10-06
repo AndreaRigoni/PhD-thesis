@@ -3,13 +3,13 @@
 
 %With the aim at selecting an informative example of plasma computation that the machine learning could be devoted to, 
 In order to demonstrate the feasibility of the proposed machine learning based technology in a real plasma environment,
-we chose to look at the temperature profiles that are coming from the Soft X-Ray diagnostics in RFX-mod. The particular choice had been mainly motivated by the fact that it provides a realistic example, and a good representative of the plasma configuration, being at the same time not too complex to be handled by simple networks. The electron temperature profile represents indeed a very important parameter for looking at the plasma state that is very often accessed by physicists during analysis: it can be seen as an instant property that is almost ergodic during the pulse, it is acquired with a good temporal resolution, and that can be related to the magnetic configuration for the chosen time sample.
+we have considered the temperature profiles that are coming from the Soft X-Ray diagnostics in RFX-mod. The particular choice had been mainly motivated by the fact that it provides a realistic example, and a good representative of the plasma configuration, being at the same time not too complex to be handled by simple networks. The electron temperature profile represents indeed a very important parameter for looking at the plasma state that is very often accessed by physicists during analysis: it can be seen as an instant property that is almost ergodic during the pulse, it is acquired with a good temporal resolution, and that can be related to the magnetic configuration for the chosen time sample.
 
 A plasma is composed by a mixture of species characterized by their own mass and electric charge. As first approximation, the plasma may be considered as consisting of two fluids mixed together: the first composed by the electrons and the second by the ions, or more specifically by all the other heavy species: ions, neutral atoms, and other compound molecules.
 
 What matters for a fusion machine is actually the ions temperature because electrons are not directly involved on fusion process.
 Nevertheless electrons acquire energy from the electric field, which energizes the plasma, and lose part of it through elastic or inelastic collisions; in this way the plasma can move energy from one fluid to the other. For this reason in \textit{Tokamaks} this represents a direct handle for plasma heating through \acs{ECRH} plants. In RFX we don't have such input and the electron temperature are almost directly related to the plasma current and the magnetic pressure (\textit{pinch} effect).
-In addition the acquired profile represents a local information of the internal state of plasma giving a chance to see through the simple external configuration.
+In addition the acquired profile represents a local information of the internal state of plasma giving a chance to see it beyond the simple external configuration.
 \begin{figure}
     \centering
     \includegraphics[height=5cm]{img/rfx/shot_example.png}
@@ -19,15 +19,8 @@ In addition the acquired profile represents a local information of the internal 
 This holds for the Thomson scattering too, indeed: the SXR invese-transformed profile of the plasma bremsstrahlung radiation, and the intensity of the scattered light from TS, provide the same kind of measure being both of them related to electrons velocity.
 However, as already discussed, the two diagnostics are not interchangeable as they present different characteristics. In particular the TS is known to provide a more accurate measure both in spatial resolution and in the the acquired quantity. On the other hand the SXR measure results quite noisy, easily biased by plasma-wall interaction debris of carbon and other materials, and usually presenting a set of reconstructed points that vary in position and in number. But it has a very fine grained resolution in the time domain.
 In RFX we have the SXR3 time resolution of about $500 \mu s$.
-\begin{figure}
-    \centering
-    \subfigure[]{\includegraphics[height=3.8cm]{img/rfx/b7_bsec_ip.eps} \label{fig:rfx_parameters_a}}
-    \subfigure[]{\includegraphics[height=3.8cm]{img/rfx/b7B_f.eps} \label{fig:rfx_parameters_b}}
-    \subfigure[]{\includegraphics[height=3.8cm]{img/rfx/bsecB_f.eps} \label{fig:rfx_parameters_c}}
-    \subfigure[]{\includegraphics[height=4cm]{img/rfx/te_ipla.png} \label{fig:rfx_parameters_d}}
-    \caption{Some plasma parameters correlation scatter plots from RFX-mod RFP experimental campaigns, respectively: the dominant mode (red markers) and secondaries (black markers) vs the plasma current $I_p$ (a), the dominant, and the secondaries vs the reversal parameter (b,c), and the mean plasm electron temperature $T_e$ vs the plasma current (d). }
-    \label{fig:rfx_parameters}
-\end{figure}
+In \Figure{\ref{fig:rfx_shot_22069}} several plots of the plasma observed characteristic quantities are plotted for a high-current pulse. From the plot it can be seen that with an almost exact matching on the value of the plasma current, the dominant mode starts to fluctuate with a continuous switching between a QSH state and a MH, i.e. from a single dominant mode to several exited modes and viceversa. Those phenomena of internal magnetic recombination of modes, and how to control them, are the main target of RFP studies. 
+Associated to this steep changes of the magnetic configuration high gradients of the internal electron temperature are measured, thus the interest on correlating these two quantities and, as it will be shown, the shape of the SXR profile. 
 
 
 %  ____        _                 _   
@@ -43,6 +36,16 @@ In RFX we have the SXR3 time resolution of about $500 \mu s$.
 Once selected the set of signals that were thought to present all needed ingredient for reconstructing the plasma configuration a complete dataset able to comply with \Tensorflow input data of the fitting algorithms. Within the \acs{TF} framework a particular structure is devoted to represent such dataset; this structure is meant to provide a set of commodity routines that are used afterwards to handle the training process organization, such as: the split of training and validation data, the batching subdivision, the mapping for adapting to the particular model, applying data regularization algorithm (simple shuffling for example), and so forth.
 For this reason making out fusion data compatible with this structure is a key point to have a flexible input for all possible constructed network and ML models. 
 This structure is defined in a special \TF object class that can be simply included in python source directly reading a sequence array, a record array of structured data, or database structures such as \Pandas \textit{dataframe}~\cite{mckinney-proc-scipy-2010}.
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=3.8cm]{img/rfx/b7_bsec_ip.eps} \label{fig:rfx_parameters_a}}
+    \subfigure[]{\includegraphics[height=3.8cm]{img/rfx/b7B_f.eps} \label{fig:rfx_parameters_b}}
+    \subfigure[]{\includegraphics[height=3.8cm]{img/rfx/bsecB_f.eps} \label{fig:rfx_parameters_c}}
+    \subfigure[]{\includegraphics[height=4cm]{img/rfx/te_ipla.png} \label{fig:rfx_parameters_d}}
+    \caption{Some plasma parameters correlation plots from RFX-mod RFP experimental campaigns, respectively: the dominant mode (red markers) and secondaries (black markers) vs the plasma current $I_p$ (a), the dominant, and the secondaries vs the reversal parameter (b,c), and the mean plasm electron temperature $T_e$ vs the plasma current (d). }
+    \label{fig:rfx_parameters}
+\end{figure}
 
 Although this is the actual structural output shape of our dataset we had to cope with the heterogeneity of our data sources: being part of the signal dataset coming from a \ac{IDL} data-structure array of a complex and accurate selection on relevant experiment pulses~\cite{Gobbin_QSH}, and part from raw or elaborated signals directly read from the global \MDSplus database of pulses.
 For this reason we chose to make a first collection of all signal in a separate database that could be thought as a signal common cache of all the used components in the presented ML recipes.
@@ -136,7 +139,7 @@ In particular concerning the electron temperature we composed the \textbf{te} el
 From this point of view the generated signal can be seen just like the dummy example that has been used to investigate the properties of the variational autoencoder in section~\cref{section:VAE}; again we can see the variation on x-axis as an extension of the 1D signal to create a general function mapping in which the x-domain is the position on the direction of reconstructed measures and the y-domain is the related acquired temperature.
 Beside the values of the actual y-axis temperature, the main difference from the previous generated dataset is that the related position, although being in the same way an ordered set, is not completely random, but the shift can be seen almost as an added structured noise.
 This is in fact a slight simplification of the problem and for the model itself that relax the need of reconstructing the previously discussed \textit{elastic fit} factors in the latent space.
-On the other hand what is reasonably to expect from those profile is a continuous passage from a flat low-temperature configuration to a central peaked curve where eventually the "\textit{hunch}" can be either centered or shifted depending on whether we are looking at a QSH or a MH configuration and also, in the former case, the actual poloidal position of the \textit{island} that directly depends on the phase of the running dominant mode.
+On the other hand what is reasonabe to expect from those profile is a continuous passage from a flat low-temperature configuration to a central peaked curve where eventually the "\textit{hunch}" can be either centered or shifted depending on whether we are looking at a QSH or a MH configuration and also, in the former case, the actual poloidal position of the \textit{island} that directly depends on the phase of the running dominant mode.
 It is nevertheless worth to be specified that both datasets, the dummy generated sum of gaussian envelops an the real temperature profiles, are formally identical in their public API. Therefore  any applied algorithm can be used with one or the other, with the same script structure; the main difference resides only in the supervised labelling: the real curves temperature profile does not provide the related associated label, that in the dummy case describes the generation class to which it belongs (previously named \textit{kind}).
 
 

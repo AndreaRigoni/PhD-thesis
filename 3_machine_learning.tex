@@ -553,23 +553,22 @@ To do this we expand its first term using the definition of conditional probabil
 
 We need now to derive an estimate of the distribution of $q(z)$ able to describe the latent space Z that can reproduce (through the decoder) the input X. Since we are interested in inferring $p(x)$ it makes sense to construct a $q$ which depends on $x$ and makes small the Kullback Leibler divergence:
 \begin{equation}
- \KLD{q(z)||p(z)}
- \label{kl}
+ \KLD{q(z)}{p(z)}
 \end{equation}
 So we replace $q(z)$ with a $q(z|x)$ in the divergence. The usual choice for $q$ is:
 \begin{equation}
-    q(z|x) = \mathcal{N}(z| \mu(X,\varteta), \Sigma(x,\vartheta))
+    q(z|x) = \mathcal{N}(z| \mu(X,\vartheta), \Sigma(x,\vartheta))
 \end{equation}
-where $\mu$ and $\Sigma$ are arbitrary deterministic functions with parameters $\varteta$ that can be learnt from data.
+where $\mu$ and $\Sigma$ are arbitrary deterministic functions with parameters $\vartheta$ that can be learnt from data.
 In practice $\mu$ and $\Sigma$ are implemented via neural networks and $\Sigma$ is constrained to be a diagonal matrix.
-Out target assumes that the desired distribution $p(z)$ be a normal gaussian $\mathcal{N}(\bm{0},I)$ where $I$ is the identity matrix and $\bm{0}$ is a vector of zeroes. Under the above assumptions the divergence $$ \KLD{q(z|x)||p(x)} $$ can be computed in a closed form being the KL divergence of two gaussian distributions.
+Out target assumes that the desired distribution $p(z)$ be a normal gaussian $\mathcal{N}(\bm{0},I)$ where $I$ is the identity matrix and $\bm{0}$ is a vector of zeroes. Under the above assumptions the divergence $$ \KLD{q(z|x)}{p(x)} $$ can be computed in a closed form being the KL divergence of two gaussian distributions.
 The evaluation of the remaining term of equation \eqref{} $ \expectation{[log p(x|z)]}_{q(z)} $
 would require using sampling to estimate the expectation, but getting a good estimate would require passing many samples of $z$ through the decoder function which would be expensive. 
 As is standard in sthocastic gradient descent, just one sample of $z$ is taken, and $p(x|z)$ for that $z$ is taken as an approximation of 
 $\expectation{[log p(x|z)]}_{q(z)}$.
 The full equation we want to optimize is the ELBO minimization over the given data D, that is:
 \begin{equation}
-    \mathbb{E}_{X \cap D} \left[ \log p(x|z) - \KLD{q(z|x)||p(z|x)} \right]
+    \mathbb{E}_{X \cap D} \left[ \log p(x|z) - \KLD{q(z|x)}{p(z|x)} \right]
 \end{equation}
 In order to understand how term $\log p(x|z)$ is computed, recall that in VAE the choice of the output distribution is gaussian, 
 i.e. $ p(x|z) = \mathcal{N}(x|f(z), \sigma^2 \cdot I ) $, where $f(z)$ is the mean, that is the decoder output, and the covariance is the identity matrix times some scalar $\sigma$.

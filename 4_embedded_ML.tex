@@ -213,10 +213,10 @@ In \Figure{\ref{fig:noise_drift_b}} a set of integrated EM probe signals has bee
 %
 \begin{figure}
     \centering
-    \subfigure[]{\includegraphics[width=4cm]{img/4_EmbeddedML/18.png} \label{}}
-    \subfigure[]{\includegraphics[width=4cm]{img/4_EmbeddedML/22.png} \label{}}
-    \subfigure[]{\includegraphics[width=4cm]{img/4_EmbeddedML/20a.png} \label{}}
-    \subfigure[]{\includegraphics[width=4cm]{img/4_EmbeddedML/24a.png} \label{}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/18.png} \label{}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/22.png} \label{}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/20a.png} \label{}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/24a.png} \label{}}
     \caption{Noise integrated signals histograms after 10s of ACD acquisition, with and without the input amplifier (a)(b); and two samples of integrated signal compared to a reference without noise in the same situations (c)(d).}
     \label{fig:before_after_correction}
 \end{figure}
@@ -251,85 +251,166 @@ This is the topic of the next section.
 
 
 
-
-
-
-
+%   ___  _   _ _   _ 
+%  / _ \| \ | | \ | |
+% | | | |  \| |  \| |
+% | |_| | |\  | |\  |
+%  \__\_\_| \_|_| \_|
+%
 \section{Quantized neural networks for embedded implementation}
 \label{section:quantum}
 
-In numerical computation we refer to the \textit{quantization} as the process of constraining the number of bit that reproduce a numerical value. In effect any digital number is already intrinsically quantized, in the sense that its representation is defined on a limited discreet domain. Nevertheless, even if the number of bits that are used to represent a digital quantity is finite, and so is the possible set of values that it can assume, the actual position of those values in the target domain is not strictly fixed. This means that we can decide where to place any of possible available reproduction number to fit the desired manifold.
+In numerical computation we refer to \textit{quantization} as the process of constraining the number of bit that reproduce a numerical value. In effect any digital number is already intrinsically quantized, in the sense that its representation is defined on a limited discreet domain. 
+Nevertheless, even if the number of bits that are used to represent a digital quantity is finite, and so is the possible set of values that it can assume, the actual position of those values in the target domain is not strictly fixed. This means that we can decide where to place any of possible available reproduction number to fit the desired manifold.
 
 If the function that maps the digital representation with a numerical entity is linear the numerical format can be described by only two parameters: the \textbf{range}, which refers to the range of all possible numbers that can be represented, and the \textbf{precision} that tells how many values can be represented within the dynamic range, which in turn determines the resolution (the distance in the target domain between two adjacent numbers).
 
 In the context of deep learning, and in information theory in general, the predominant numerical format used for both training and final deployment is the floating point, either in 32-bits or 64-bits versions. For a \acs{MLP}, for example, floating point operations involves the linear combination of weights and biases with input features for each layer, and the non-linear activation function. The formulation of floating point numerical format is a very clever solution that adapt the range to the represented number.
 
-Floating-point can be thought in concept similar to the scientific notation. Their numbers consist of a signed set of digits of a fixed length in a given \textbf{base} (the radix), this is referred as the \textbf{mantissa} (or \textit{significand}). The length of mantissa determines the precision to which numbers can be represented. The radix point position is assumed always to be within these given digits in a fixed position, while a signed integer \textbf{exponent} modifies the magnitude of the number.
+Floating-point can be thought in concept similar to the scientific notation. Their numbers consist of a signed set of digits of a fixed length in a given \textbf{base} (the radix), this is referred as the \textbf{mantissa} (or \textit{significand}). The length of mantissa determines the precision to which numbers can be represented. The radix point position is assumed to be within these given digits in a fixed position, while a signed integer \textbf{exponent} modifies the magnitude of the number.
 To finally obtain the actual represented value of the floating-point number the mantissa is multiplied by the base raised to the power of the exponent. This is shifting the radix point from its defined position by a number of places equal to the value of the exponent: to the right if the exponent is positive, or to the left if the exponent is negative.
 Symbolically, this represented value can be derived as 
 %
 $$ (-1)^s \,\, m \times b^e $$
 %
 where: $s$ is the sign $m$ is the mantissa (absolute value), $p$ is the precision (the mantissa number of digits), $b$ is the base, and $e$ is the exponent.
-The standard IEEE-754~\cite{1985--ieee754} is the widely adopted notation for floating points numerical computation, it is defined with base 2 and uses a mantissa with radix point at first digit. In this case both exponent and mantissa are binary numbers, and mantissa has always the first digit equal 1 ( with the sole exception of the representation of the real number 0.0 ). 
-
-
 
 % The flexibility introduced by floating point dynamic range is that the numbers can be represented not uniformly spaced; the difference between two consecutive numbers grows with a scale defined by the chosen exponent.
 
+However, because of this dynamic range mapping, the floating point may require a slight amount of computational resources.
+In many cases a specific hardware component is dedicated to the floating point computation. When a processing unit is executing an algorithm where a such operation is not directly supported, it tries to decompose it into a series of simpler \acs{FP} operations, either by basic internal routines or by means of specific libraries.
+In systems without \acs{FP} dedicated hardware, the CPU switch instead to a series of arithmetic operations that remain on the processor \ac{ALU} and keep it busy.
 
-%RR
-However given this dynamic mapping of the scale the floating point may require a slight amount of computational resources.
-When a processing unit is executing an algorithm where a floating-point operation is not directly supported by the hardware, the CPU tries to use a series of simpler floating-point operations, either by basic internal routines or by means of specific libraries.
-In systems without \acs{FP} dedicated hardware, the CPU uses a series of fixed-point arithmetic operations that remain on the processor \ac{ALU}.
-
-For example the currently used convolutional networks in imaging, such as the VGG~\cite{Simonyan15} family, contain over
+Complex operations are not generally required for neural networks, with the only exception of the activation function that can be in most of the cases simplified to a composition of linear sub-functions (i.e. ReLU ref.\cref{section:feedforward dense networks}). All internal NN layers are composed, on the other hand, by a huge amount of simple operations that are the linear combination of the trained weights, and in the \acs{CNN} case the convolution of the weighted kernel with input arrays.
+For example a current model of convolutional network for imaging, such as the VGG~\cite{Simonyan15} family, contain over
 $1.3\tilde1.4\times10^8$ internal parameters, and require over $15\times10^9$ \acs{FP} operations to classify a single image.
 
-%RR
-While CPU and GPU clusters are currently the go-to platforms for CNN and many other machine learning applications, a customized hardware solution on FPGA can offer significant improvements in energy efficiency and power dissipation. These factors may be critical in enabling the increased use of CNNs in low-power settings such as unmanned drones or embedded computing
+While CPU and GPU clusters are the preferred platforms for \acs{CNN} and machine learning applications in general, customized hardware solutions based on \acs{FPGA} or even \acs{ASIC} can offer significant improvements in energy efficiency and power dissipation. 
+These factors may represent a critical point for enabling the use of such networks in low-power and constrained resources embedded computing.
 
+\subsubsection*{FP implementation}
 
-The steps for performing the floating-point Addition/Subtraction are: 
-1) Separate the sign, exponent and mantissa of the inputs, and check whether the inputs are zero, infinity or an invalid representation in the standard. Add the hidden bit to the mantissa.
-2) Compare the two inputs: a logical shift right operation must be performed over the smaller of the two numbers. The number of bits of the mantissa shifted right, dependent on the exponent’s difference, and this difference is a preliminary exponent calculation result. Finally, add/sub the current mantissas.
-3) Shift left the achieved mantissa until its most significant bit (MSB) is 1. For each shift decreases the current exponent by 1. Finally, concatenate the sign, exponent and mantissa of the final results.
+The standard IEEE-754~\cite{1985--ieee754} is the widely adopted notation for floating points numerical computation, it is defined with base 2 and uses a mantissa with radix point at first digit. In this case both exponent and mantissa are binary numbers, and mantissa has always the first digit equal 1 ( with the sole exception of the representation of the real number 0.0 ). 
+Two further operations have been also added in the standard. In a binary number with the radix point fixed after the first digit, the first digit results always 1 (it is always a number like 1.xxxxx with the sole exception of 0.0). For this reason this \textit{hidden bit} is removed from the actual mantissa and hardware eventually adds it during operation if the number is not zero.
+In addition the exponent two's complement notation can represent a problem in comparing two number: for instance $2^1$ results smaller than $2^{-1}$ being their single precision exponents respectively $0000\,0001$ and $1111\,1111$. For this reason in this case a \textit{bias} equals to 127 is added to exponent (in single precision exponent is 8 bit sized) making it centered on its range.
 
-The steps for performing a multiplication are:
-1) Separate the sign, exponent and mantissa of the inputs, and check whether the inputs are zero, infinity or an invalid representation in IEEE-754 standard. Add the hidden bit to the mantissas.
-2) Multiply mantissas, add exponents, and determine the product sign.
-3) Whether the MSB is 1 in the mantissas multiplication result, hence, no normalization is needed. The current mantissa is shifted left until a 1 is achieved. For each shift operation the current exponent is decreased by 1. Finally, concatenate the sign, exponent and mantissa of the final results.
+For example, to comply with the standard, the steps to perform a floating-point addition/subtraction are: 
+1 - Separate the three components (sign, exponent and mantissa) from the inputs numbers.
+2 - Check whether the inputs are zero, infinity or an invalid representation in the standard. 
+3 - Add the hidden bit to the mantissa.
+4 - Compare the inputs to adapt the range: a logical right shift operation is performed over the smaller of the two numbers. The number of bits of the mantissa shifted right, based on the exponents difference, and the output is a preliminary exponent result. 
+5 - Finally, add/sub the current mantissas.
+6 - Shift left the achieved mantissa until its most significant bit (MSB) is 1. 
+7 - For each shift just performed decrease the current exponent by 1. 
+8 - Finally, concatenate the sign, exponent and mantissa of the final results.
 
+% The steps for performing a multiplication are:
+% 1 - Separate the inputs components.
+% 2 - Check whether the inputs are zero, infinity or an invalid representation. 
+% 3 - Add the hidden bit to the mantissas.
+% 4 - Multiply mantissas, add exponents, and determine the product sign.
+% 5 - Whether the MSB is 1 in the mantissas multiplication result, hence, no normalization is needed. 
+% 6 - The current mantissa is shifted left until a 1 is achieved. For each shift operation the current exponent is decreased by 1. Finally, concatenate the sign, exponent and mantissa of the final results.
 
-However, if the target is the FPGA implementation, the full IEEE 754 floating point standard~\cite{1985--ieee754} shows to be quite hardware resources demanding in terms of LUT (Look up tables for logic operations), FF (flip flops), and DSP (digital signal processors) counts~\cite{num_lut_for_fp}~\cite{1227254}. 
-For example for a 32-bit floating point number the following resources are consumed in a Xilinx Virtex5 family device (xc5vlx110T).
+Similar routines are applied to perform multiplication, division and other more complex operations, eventually performing iterative routines to get the result~\cite{num_lut_for_fp}.
+A possible hardware accelerator solution for such kinds of operations can be also present in FPGAs and is represented by the \ac{DSP} component, in particular all the Xilinx 7 series family implement the DSP48E1 design~\cite{xilinx_dsp}. 
+This component implement in hardware most of the common operation that are performed during signal processing and floating point too.
+
+However, if the target is the FPGA implementation, the full IEEE 754 floating point standard shows to be quite hardware resources demanding in terms of LUT (Look Up Tables for logic operations), FF (flip flops), and \acs{DSP} counts~\cite{1227254}. 
+An accurate foresight of resource allocation is a difficult task because the actual amount of resources strictly depend on the implementation version and on the overall optimization of the logic during synthesis\footnote{ synthesis, in FPGA logic design, is the process of adapting a RTL (register transfer level) design in to a new logic configuration that fits into the selected hardware target. The implementation follows a customizable optimization policy that prefers speed, latency or resource utilization.}.
+
+An example of single-precision (32-bit) resource utilization per FP operation is presented in~table~\ref{tab:kintex_fp_resources} for a generic Xilinx Kintex-7 FPGA starting form Vivado 2019.1 syntesis of the single Floating Point IP unit~\cite{ xilinx_FP_v7.1}.
 %
 \begin{table}[]
     \centering
-    \begin{tabular}{l|l|c|c|c|c|c}
-        \textbf{Operation} & \textbf{Optimization} & \textbf{LUT-FF} & \textbf{LUT} & \textbf{FF} & \textbf{DSP} & \textbf{Latency} $[ns]$ \\
+    \begin{tabular}{l|l|c|c|c|c}
+        \textbf{Operation} & \textbf{Optimization} & \textbf{LUT} & \textbf{FF} & \textbf{DSP48E} & \textbf{Max freq [MHz]} \\
         \hline
-        Add/Sub   & DSP48E  & 354 & 238 & 342 & 2 & 1.0 \\
-                  & speed   & 578 & 379 & 602 & 0 & 5.4 \\
-                  & latency & 656 & 500 & 668 & 0 & 1.1 \\
-                  
-        Multiply  &        & 35 & 74  & 5 & 1.7 
+        Add/Sub   & DSP (full)    & 205 & 309 & 2 & 724 \\
+                  & DSP (med)     & 276 & 429 & 1 & 724 \\
+                  & speed         & 352 & 562 & 0 & 866 \\
+        %\hline          
+        Multiply  & DSP (full)    & 92  & 166 & 2 & 724 \\
+                  & DSP (med)     & 240 & 362 & 1 & 724 \\
+                  & speed         & 576 & 672 & 0 & 821 \\      
+        %\hline          
+        Exp       & DSP           & 858 & 631 & 1 & 687 \\
     \end{tabular}
-    \caption{Caption}
-    \label{tab:my_label}
+    \caption{Resource utilization in terms of LUT (look up tables), FF (flip flops) and DSP (digital signal processors) for floating-point operation in handling in a Xilinx FPGA (source: Vivado 2019~\cite{xilinx_FP_resources_v2019}).  }
+    \label{tab:kintex_fp_resources}
 \end{table}
+The table shows the reduced number of needed logic operations where a DSP is involved, but on the other hand the small more efficient computation in the case of a complete logic computation.
 
-multiply-add \cite{62143}
+A complete analysis of the total amount of operation is rather complex and non useful as all parameters mostly depend on the specific implementation. Nevertheless an independent study on the total computational power claims form Xilinx has been conducted on the Kintex-7 thechnology in~\cite{intel_GFLOPS_claims} and the result are reported in~table~\ref{tab:kintex_num_adders}.
+\begin{table}[]
+    \centering
+    \begin{tabular}{l|c|c|c|c}
+         \textbf{Technology} & \textbf{Type} & \textbf{\# Adders} & \textbf{LUT-FF req.} & \textbf{GFLOPS} \\
+         \hline
+         28 nm              & DSP   & 1080 & 382K   & 500  \\
+                            & logic & 2720 & 1.52M  & 1496 \\ \hline    
+         tot                &       & 3800 & 1.95M  & 1996 \vspace{1cm} \\
+         20 nm              & DSP   & 1440 & 509K & 746   \\
+                            & logic & 6743 & 3.89M & 4157 \\ \hline    
+         tot                &       & 8183 & 4.4M  & 4904 \\
+    \end{tabular}
+    \caption{Total number of single precision floating point adders that can be deployed in a Xilinx Kintex-7 FPGA, and the related GFLOPS (floating point operations per second $\times 10^9$). Source:~\cite{intel_GFLOPS_claims} }
+    \label{tab:kintex_num_adders}
+\end{table}
+This shows that even the last 20 nm technology can address up to 8K operation in FPGA, that is far below a desired space to fit a useful network.
+To solve the problem many approaches have been proposed in literature and in the market. A family of ML dedicated ASICs have been proposed by Google in 2016 called \ac{TPU}. Other proposed a complex computation in repeated computing cycles, called \textit{systolic array} networks, that are optimized to exploit both logic and DSP~\cite{Zhang:2015:OFA:2684746.2689060}~\cite{Wei:2017:ASA:3061639.3062207}.
 
+In the search of a reduced resource consumption for deep learning models the research eventually led to the use of lower-precision formats to represent numbers. 
 
-% RR
-The desire for reduced bandwidth and compute requirements of deep learning models has driven research into using lower-precision numerical formats. It has been largely proved that both linear combination and non linear activation can be effectively represented using a fixed point math, in particular 8-bit integers (INT8) have been successfully applied without incurring in significant loss of accuracy. 
-But, not enough, the use of even lower bit-widths, such as 4/2/1-bits, is an active field of research that has also shown great results.
+\subsubsection*{Quantized implementation}
 
+The quantization of a neural network concerns the demonstration that both the linear combination and the non-linear activation of each neuron can be effectively represented using fixed point notation.
+In particular a wide research has been redirected to the 8-bit integers (INT8) as they proved to be successfully applied at many models without incurring in significant loss of accuracy.
+But, not enough, the use of even lower size such as 4-bits, 2-bit and even 1-bit, is an active field of research that has also shown great results.
 
+The obvious benefit from this change of numeric notation is the significantly reduced bandwidth and storage needed. For instance, using INT8 for weights and activation functions consumes 4x less overall bandwidth compared to FP32.
+Additionally integers compute faster than floating points and they are also much more area and energy efficient.
+For instance a INT8 vs the FP32 area occupation is 116x smaller for adder implementation and 27x for multiplier implementation in FPGA~\cite{choukroun2019lowbit}.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=10cm]{img/4_EmbeddedML/FLOATP_vs_FIXEDP.png}
+    \caption{Floating point vs Fixed point numeric representation examples showing difference in the exponent notation that is part of the number for the former and shared for the latter.}
+    \label{fig:floatp_vs_fixedp}
+\end{figure}
 
+As shown in \Figure{\ref{fig:floatp_vs_fixedp}} the fixed point computation have a limited number of bits representative of a dynamic range that is share among all used numbers. Each number can express any value on $[-2^{n-1}, 2^{n-1}-1]$ where n is the used number of bits. For example in the INT8 notation the range is $[-128,127]$, for INT4 it is $[-8,7]$, down to INT1 that represents the limit case of a threshold representation. 
+This representation can be managed directly with standard math operations becoming simple to implement and fast to compute.
+A further shared exponent can be applied to set a proper extended range, but the precision remains fixed.
 
+This limitations lead usually to a problem of \textit{numeric overflow}. This is particularly the case of the intermediate results accumulation during training~\cite{courbariaux2014training} thus accumulators is usually represented with a higher number of bits.
+
+The INT8 choice is considered a "\textit{conservative}" quantization, this is because it usually provide a good approximation on the output accuracy of the network. Many models have been compared showing a difference on the output accuracy of few percents. In many cases the conversion from FP32 to INT8 is done by the simple quantization of the trained parameters. The scale factor (i.e. the shared exponent) must be computed for each of the parameters and for all the activation functions.
+For weights and biases this is easy, as they are set once training is complete. For the activations the range must be computed with respect to the possible input. It can be obtained "online" during inference, or "offline" with a calibration subset of data.
+
+The so called \textit{online} method calculates and retains the min/max values of each of tensors that pass thought the network in run-time. In this way the network autonomously adapts to the range of the input features. 
+But this represents a sever computational issue due to the fact that the actual scaling must be computed not in the range of the input, but on the output of the activation.
+On the other hand a small amount of training data can be kept to "calibrate" the scaling factor \textit{offline}. This happens once on this reduced set before the deployment of the network. The calibration batches are accompany the model and serve as a determination of the range of internal functions outputs.
+
+As any statistical analysis the estimation of the scaling factor can be dominated by few element that are statistically outliers. A moment estimation on the calibration dataset must thus be performed optimizing the scaling to provide a distribution of values with the highest possible information, eventually clipping some of the dataset values.
+A method for analytically computing such clipping values is proposed in~\cite{banner2018posttraining}.
+
+A more robust implementation can exploit a restricted scope scaling factor, where the exponent is shared among a subset of the internal parameters. For example this can be restricted on a per-layer basis, or it can be done for each channel. This can (and must) be again optimized on the calibration dataset. 
+A per-layer basis scaling example is the fixed point notation applied to the \textit{batch normalization}. In this case the scoped scaling is not needed for the layer parameters and can be applied to the normalizer only.
+
+The quantization on lower bit notations such as INT4 or INT2 is instead considered "\textit{aggressive}". 
+This means that the simple translation of the offline trained network is not enough to obtain a good approximation and leads to significant accuracy degradation.
+To improve the network performance some more adaptations must be performed:
+\begin{itemize}
+    \item \textbf{Training/Re-Training}: 
+    \item \textbf{Replacing activation functions}:
+    \item \textbf{Modify network structure}:
+    \item \textbf{Avoid input and output layers}:
+    \item \textbf{Iterative quantization}:
+    \item \textbf{Mixed Weights and Activation Precision}:
+\end{itemize}
+
+STE Straight through estimator~\cite{bengio2013estimating}
 
 
 

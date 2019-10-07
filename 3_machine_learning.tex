@@ -314,7 +314,7 @@ So convolutional layers are a form of regularization in the sense that, while fo
 
 \subsubsection{Dropouts}
 Being the nature of NN training a stochastic process, it is also prone to find different solution of the same problem, depending for example on the initial conditions. This eventually leads to possible local minima. 
-Dropout is another network regularization method that makes the training process behave like it were contemporaneously training a large set of neural networks with different architectures in parallel.
+Dropout is another network regularization method that makes the training process behave like it were contemporaneously training a large set of neural networks with different architectures in parallel~\cite{Srivastava:2014:DSW:2627435.2670313}.
 By dropping a unit out, we mean temporarily removing it from the network, along with all its incoming and outgoing connections.
 So, during training, some number of layer outputs are randomly ignored or as the name says they are “dropped out”. This has the effect that in each attempt the actual layer that plays in optimization looks-like a layer with a different number of nodes and connectivity with respect to the previous one. In last effect, each update to a layer during training is performed with a different “view” of the configuration as the overall network were a different one.
 
@@ -481,12 +481,10 @@ Modern autoencoders have generalized the idea of encoder and decoder beyond the 
 
 \subsection{Variational autoencoders and ELBO minimization}
 \label{section:VAE}
-% RR
-In just three years, Variational Autoencoders (VAEs) have emerged as one of the most popular approaches to unsupervised learning of complicated distributions. VAEs are appealing because they are built on top of standard function approximators (neural networks), and can be trained with stochastic gradient descent.
 
-% RR
-Copying the input to the output may sound useless, but we are typically not interested in the output of the decoder. Instead, we hope that training the autoencoder to perform the input copying task will result in discovering useful properties. One way to obtain useful features from the autoencoder is to constrain hidden layer to have a smaller dimension than x. An autoencoder whose code dimension is less than the input dimension is called \textbf{undercomplete}. Learning an undercomplete representation forces the autoencoder to capture the most salient features of the training data.
+In few years, Variational Autoencoders (VAEs) emerged as one of the most popular approaches for unsupervised learning of complicated distributions. VAEs are appealing because they are built on top of the standard neural networks (or DNN), and can be trained with the usual stochastic gradient descent.
 
+The Autoencoder input to output copy may sound useless, but on the contrary the actual interest is not in the output of the decoder (i.e. the generated input copy). Instead, the hope it that training the autoencoder to perform the copy task will result in discovering useful properties laying underneath the data distribution. One way to obtain such useful features from the autoencoder is to constrain at least one hidden layer to have a smaller dimension than x. An autoencoder whose code dimension is less than the input dimension is called \textbf{undercomplete}. Learning an undercomplete representation forces the autoencoder to capture the most salient features of the training data.
 
 In \cref{section:feedforward dense networks} we showed that a neural network can be also seen in a Bayesian description as a problem of conditional probability, where we are interested in the posterior description of a dataset. A very commonly exploited method to infer that posterior distribution is \textit{Variational Inference}~\cite{Jordan:1999:IVM:339248.339252}~\cite{MAL-001}.
 % It has been proposed an alternative strategy to \ac{MCMC} sampling because tends to be faster to train and easier to scale with large datasets.

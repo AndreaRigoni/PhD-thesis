@@ -156,8 +156,8 @@ The proper extension to multiple output can be done by using a matrix compositio
     p(\bm{y}|\bm{x}, \bm{w}) = \mathcal{N}\left( \bm{y}|\bm{W},\phi \right)
 \end{equation}
 where the probability has been shaped with the weights matrix $\bm{W}$ taking into account the possible MIMO configuration of the perceprton.
-It is worth stressing the fact that a key factor for the activation function $g(\bm{x},\bm{v})$ is to be a non-linear operator because the overall network would collapse into a large linear regression otherwise. Usually the activation is the logistic function $g(u) = \text{sigm}(u)$ or the recently much common flavors of the \textbf{rectified linear units} (ReLU) that provide a non linear activation with a minimal computational effort.
-%
+It is worth stressing the fact that a key factor for the activation function $g(\bm{x},\bm{v})$ is to be a non-linear operator because the overall network would collapse into a large linear regression otherwise. Usually the activation is the logistic function $g(u) = \text{sigm}(u)$ or the recently much common flavors of the \textbf{rectified linear units} (ReLU) that provide a non linear activation with a minimal computational effort. The ReLU has the benefit of being scale invariant: $\textrm{max}(0,ax) = a\textrm{max}(0,x)$ for $ a \geq 0 $.
+% FINIRE !!!!
 % SHOW A FIGURE OF THE POSSIBLE ACTIVATION FUNCTIONS
 % 
 %

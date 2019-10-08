@@ -257,8 +257,12 @@ This is the topic of the next section.
 % | |_| | |\  | |\  |
 %  \__\_\_| \_|_| \_|
 %
-\section{Quantized neural networks for embedded implementation}
+\section{Quantized neural networks}
 \label{section:quantum}
+
+A key factor to obtain a full featured neural network running in a embedded device, and in particular within the FPGA logic, is the possibility to reduce the needed operations precision. In this section the floating-point computation is briefly introduced exposing the high required computational effort that is involved when such notation is implemented in FPGA. In particular this results non feasible for a complete parallel computation. However a reduced precision representation of networks prove to perform equally well and give a chance to be implemented as low level logic operations.
+
+\subsubsection*{Floating-point notation}
 
 In numerical computation we refer to \textit{quantization} as the process of constraining the number of bit that reproduce a numerical value. In effect any digital number is already intrinsically quantized, in the sense that its representation is defined on a limited discreet domain. 
 Nevertheless, even if the number of bits that are used to represent a digital quantity is finite, and so is the possible set of values that it can assume, the actual position of those values in the target domain is not strictly fixed. This means that we can decide where to place any of possible available reproduction number to fit the desired manifold.
@@ -288,7 +292,7 @@ $1.3\tilde1.4\times10^8$ internal parameters, and require over $15\times10^9$ \a
 While CPU and GPU clusters are the preferred platforms for \acs{CNN} and machine learning applications in general, customized hardware solutions based on \acs{FPGA} or even \acs{ASIC} can offer significant improvements in energy efficiency and power dissipation. 
 These factors may represent a critical point for enabling the use of such networks in low-power and constrained resources embedded computing.
 
-\subsubsection*{FP implementation}
+\subsubsection*{hardware implementation issue}
 
 The standard IEEE-754~\cite{1985--ieee754} is the widely adopted notation for floating points numerical computation, it is defined with base 2 and uses a mantissa with radix point at first digit. In this case both exponent and mantissa are binary numbers, and mantissa has always the first digit equal 1 ( with the sole exception of the representation of the real number 0.0 ). 
 Two further operations have been also added in the standard. In a binary number with the radix point fixed after the first digit, the first digit results always 1 (it is always a number like 1.xxxxx with the sole exception of 0.0). For this reason this \textit{hidden bit} is removed from the actual mantissa and hardware eventually adds it during operation if the number is not zero.
@@ -362,7 +366,7 @@ To solve the problem many approaches have been proposed in literature and in the
 
 In the search of a reduced resource consumption for deep learning models the research eventually led to the use of lower-precision formats to represent numbers. 
 
-\subsubsection*{Quantized implementation}
+\subsubsection*{Quantized networks}
 
 The quantization of a neural network concerns the demonstration that both the linear combination and the non-linear activation of each neuron can be effectively represented using fixed point notation.
 In particular a wide research has been redirected to the 8-bit integers (INT8) as they proved to be successfully applied at many models without incurring in significant loss of accuracy.
@@ -398,19 +402,99 @@ A method for analytically computing such clipping values is proposed in~\cite{ba
 A more robust implementation can exploit a restricted scope scaling factor, where the exponent is shared among a subset of the internal parameters. For example this can be restricted on a per-layer basis, or it can be done for each channel. This can (and must) be again optimized on the calibration dataset. 
 A per-layer basis scaling example is the fixed point notation applied to the \textit{batch normalization}. In this case the scoped scaling is not needed for the layer parameters and can be applied to the normalizer only.
 
-The quantization on lower bit notations such as INT4 or INT2 is instead considered "\textit{aggressive}". 
-This means that the simple translation of the offline trained network is not enough to obtain a good approximation and leads to significant accuracy degradation.
-To improve the network performance some more adaptations must be performed:
+Many different implementations of the INT8 networks have been proposed, because they adapt to almost all hardware in the market with trivial changes. In all architectures the fixed point optimization provided a sensible improvement on both the speed of reconstruction and size limits of the network that can handled. This in turn gave a further push ahead toward the intense use of complex DNN structures.
+This led some hardware vendor to invest on hardware optimized fixed point computation: the last Google \textit{TPU edge} ASIC cores are only available for the fixed point INT8 operations; Xilinx on the other ends designed specific synthesis optimization to better exploit the DSP slices for performing INT8 operations in NN~\cite{xilinx_INT8_DNN}.
+
+% EXAMPLE HERE !
+
+\subsubsection{Aggressive quantization}
+
+The quantization on lower bit notations such as INT4, INT2 or even binary thresholds is instead considered "\textit{aggressive}". 
+This means that the simple translation of the offline trained network is not enough to obtain a good approximation and entails a significant accuracy degradation.
+
+% STE Straight through estimator~\cite{bengio2013estimating}
+One of the main mathematical concerns about the description of network quantization is the process of back-propagating the loss through the quantized activation functions. The activation is indeed hardly approximated and the output jumps through discrete results providing a non differentiable function. In the perspective of a stochastic representation of neurons the quntization can be modeled as an opportunely shaped additive noise. A good description is provided in~\cite{bengio2013estimating} as a new kind of network units named \textit{Non-Smooth Stochastic Neurons} in which the output of activation is modeled as:
+\begin{equation}
+    g_i = f(a_i, z_{Qi})  \hspace{3cm}  a_i = \transpose{\bm{w_i}}\bm{x_i}
+\end{equation}
+where $a_i$ is the usual linear composition of the i-th network unit, $z_{Qi}$ represents the respective noise component, and $f(\cdot)$ has a non-zero gradient with respect to $a_i$.
+
+The intuition tells us that if the noise $z_{Qi}$ is added or multiplied in the computation of $g_i$ the gradients can be obtained as usual. 
+For example if a binomial shaped noise is applied just after the neuron non-linearity, acting as a binary threshold on activation output, it behaves like a \textit{dropout} noise~\cref{section:training_regularization}~\cite{Srivastava:2014:DSW:2627435.2670313} or, if the training is applied in an autoencoder, it can be seen as a \textit{masking} noise~\cite{vincent_et_al_denoise2008} (as in denoise autoencoders \cref{section:RFXhunch}).
+
+However, form a mathematical perspective, if we want for example $g_i$ to be binary then $f$ will have derivative that is 0 almost everywhere (and become infinite at the threshold), so that gradients can not be analytically obtained.
+A possible solution in closed form that provide the loss for the single i-th unit in such a case is provided in~\cite{bengio2013estimating}. This is completely avoiding the backpropagation process and it exploit the noise as a way to obtain an estimate of the local loss directly. This is actually very promising because it could become in the future a way to overcome the need of a separate training phase having networks that learn from the small perturbations, and automatically adapt to the internal nodes precision. However there is still any available implementation for that.
+
+Conversely, in the same work, the greedy approach of simply back-propagating the function directly as if it had been a sample from the \textbf{identity function} proved to provide significant results. Indeed the fact that during training the average is performed over the batch set guarantees a good estimate of the gradient once a sufficient number of cases are collected.
+This approach actually take inspiration on the original binary activation perceptron algorithm~\cite{Rosenblatt58theperceptron} where the gradient was calculated through the standard chain sure, but insted through a modified chain in which the derivative of the identity function served as a proxy for the original derivative of the binary output $1_{\{x>0\}}$.
+This is called Straight-Through Estimator (STE) and represents a simple approach widely used to approximate quantized functions gradient~\cite{yin2019understanding}.
+
+
+The main method to effective improve the neurons reconstruction even in quantized environment is making the training process itself adapted to be run for quantization. This is actually done by properly enhancing the network nodes with an extended structure~\cite{Jacob_2018}. 
+This is commonly referred as a "quantization aware" training. The network extension consists on storing both the quantized and floating-point version for some of the internal neurons parameters.
+This is a rather complex re-factoring of the internal structures, but fortunately many available tools (\Tensorflow and Xilinx implementations will be presented at the end of this section) are already providing such methods automatically for the most common components of the network models (dense activation, convolution, batch-norm, etc.). 
+%
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=6cm]{img/4_EmbeddedML/QNN_normal_neuron.png}  \label{fig:qnn_neuon_a}}
+    \subfigure[]{\includegraphics[height=6cm]{img/4_EmbeddedML/QNN_simul_quantization.png}  \label{fig:qnn_neuon_b}}
+    \caption{Simulated quantization performed during training to take into acount the quantization thresholds: the normal neuron schema with convolution, linear combination and activation (a), a modified version with quantized parameters and some duplicate that are maintained in floating-point to optimize the backpropagation pass (b). Source:~\cite{Jacob_2018} }
+    \label{fig:qnn_neuron}
+\end{figure}
+
+It is worth noting is that these new nodes only simulates quantization. The real quantization is performed in a separate step. A schematic representation of the changed and duplicated quantities for a convolutional network is shown in \Figure{\ref{fig:qnn_neuron}}.
+In this way the quantization error is handled using nodes with simulated discrete values, in order to look at the effect when training passes forward and backward through the network. Quantization is always performed in all the training steps: in forward pass applied to all weights and activation functions, and during the backpropagation when the gradient is approximated by straight-through estimator (STE). The parameters are also always updated at high precision by means of the opportunely copied values in the floating-points variables. This ensures the required precision in accumulating all parameters tiny adjustments.
+Additionally, all minimum and maximum values for weights and activations are determined during training. This allows the model to be easily converted to fixed point, eliminating the need for an external calibration step.
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{img/4_EmbeddedML/crelu.png} \label{fig:qrelu_a}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{img/4_EmbeddedML/qrelu.png} \label{fig:qrelu_b}}
+    \caption{ The ReLU activation function clipped to the maximum representable value of a INT2 with scaling factor $\alpha$ (a). The same function after the application of INT2 quantization (b).
+    Source:~\cite{yin2019understanding} }
+    \label{fig:qrelu}
+\end{figure}
+
+
+
+To improve the network performance in an aggressive quantization environment (this is very likely the case for FPGAs) additional adaptations must be performed, the most relevant approaches are described in the following:
 \begin{itemize}
-    \item \textbf{Training/Re-Training}: 
-    \item \textbf{Replacing activation functions}:
-    \item \textbf{Modify network structure}:
-    \item \textbf{Avoid input and output layers}:
-    \item \textbf{Iterative quantization}:
-    \item \textbf{Mixed Weights and Activation Precision}:
+    \item \textbf{Training/Re-Training}: The simple activation and linear combination quantization does not bring a sufficient accuracy in the reconstruction of the neurons outputs. It is therefore needed a way to adapt the training process itself to be "aware" of the qantization that is being applied underneath. 
+    The training procedure can be performed on a modified network as before described, either from scratch or for an already trained base. The quantized model trained bootstrapping with already optimized FP32 weights is proven to lead to higher accuracy, as opposed to training from scratch~\cite{zhou2017}. 
+    In alternative the FP32 network can be used as a teacher network, where the quantized network training loss is computed both from the ground-truth and from the comparison with the teacher network output.
+    
+    \item \textbf{Replacing activation functions}: All the continuous functions on neurons activation must be replaced with their quantized counterparts. However a particular attention must be paid to the unbounded functions, like ReLU. The intrinsic range limit imposed by quantization behaves like a clip function on the activation, and the network tends to loose the benefit of scale invariance brought by ReLU. In this case a bounded function with hard coded values is used. Once the clipping value is set, this provides the scale factor too, and no further calibration is required.
+    
+    \item \textbf{Modify network structure}: Another successful idea is to compensate the loose of precision with higher number of units in layer, making quantized network wider than their original FP32 versions. For example a single FP32 convolution has been replaced with multiple binary convolutions, each scaled to represent a different "base", covering a larger dynamic range overall~\cite{NIPS2017_6638}. 
+    
+    \item \textbf{Avoid input and output layers}: Input and output layer are sized as the features and the labels dimension respectively. In most of the cases this is far less than the size of internal nodes. The output layer is also the place where the ultimate regression is performed thus leading the precision of the result. On the other side the input, that is also limited in size with respect to internal layers, is much sensitive to weights pruning because all the network depends on them. 
+    Therefore many modern models tends to leave the input and output layers as single-precision or possibly with a conservative quantized notation such as the INT8~\cite{choi2018pact}.
 \end{itemize}
 
-STE Straight through estimator~\cite{bengio2013estimating}
+
+
+
+
+
+
+
+% TQT Training Quantized networks GRAFITIST
+
+
+% Datatype LUTs LUTs LUTs DSPs DSPs DSPs Cavg Crel
+% min max avg min max avg ×10−6
+% \hline
+% FP32   & 356   & -     & -     & 4 & - & - & 766.6  & 63.79 \\
+% INT16  & 21.64 & 38.36 & 28.66 & 1 & 1 & 1 & 181.16 & 15.07 \\
+% INT8   & 83.28 & 91.92 & 86.38 & 0 & 0 & 0 & 186.02 & 15.48 \\
+% INT4   & 27.18 & 35.56 & 30.06 & 0 & 0 & 0 & 64.76  & 5.39  \\
+% INT2   & 10.98 & 18.74 & 13.52 & 0 & 0 & 0 & 29.12  & 2.42  \\
+% Binary & 4.24  & 8.00  & 5.58  & 0 & 0 & 0 & 12.02  & 1     
+
+
+
+
+
 
 
 

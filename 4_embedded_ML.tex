@@ -7,11 +7,11 @@ In order to provide high quality descriptions of the plasma properties during a 
 Although it is not true that controllability (and observability) of the system strictly depends on that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
 This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of few variables are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two control variable are the steering of the handlebar and the torque on the pedals. 
 
-Even if the complete environment of all the variables that must be observed to provide a optimal control on the system states is rather complex, it can be shown\cite{Lesort_2018}~\cite{an2019unsupervised} that a properly configured latent variables can effectively generate a simpler embedded representation. This in turn led us to start evaluating the possibility to a simpler control model that would take inputs from the latent states instead of directly depending on the whole detectors.
-Such a system would be possible only if many sub-systems of the experiment diagnostics would apply these ML techniques and cooperate to a unified embedded representation. This is rather a long shot scenario that is currently difficult to foresee in a concrete implementation, however some small steps could have been done exploiting the already ongoing changes of RFX-mod2.
+Even if the complete environment of all the variables that must be observed to provide an optimal control on the system states is rather complex, it can be shown\cite{Lesort_2018}~\cite{an2019unsupervised} that a properly configured latent variables can effectively generate a simpler embedded representation. This in turn led us to start evaluating the possibility to a simpler control model that would take inputs from the latent states instead of directly depending on the whole detectors.
+Such a system would be possible only if many sub-systems of the experiment diagnostics would apply these ML techniques and cooperate to a unified embedded representation. This is actually a long shot scenario that is currently difficult to foresee in a concrete implementation, however some small steps have been done exploiting the already ongoing changes of RFX-mod2.
 
 A new setup of the magnetic probes is under study for the experiment, combining the structural upgrade of the conductive shell with the redesign of the magnetic sensor system, to gain a more detailed access at the Magneto Hydro Dynamic (MHD) processes that take place into the plasma~\cite{zuin2009current}~\cite{innocente2014tearing}.
-Part of the study that has been carried out during this research regarded the possible adoption of a fully digital solution, using a configurable FPGA to handle ADC conversion and providing a set of on-line functions including the realtime numeric integration and signals recording.
+Part of the study that has been carried out during this research regarded the possible adoption of a fully digital solution, using a configurable FPGA to handle ADC conversion and providing a set of on-line functions that include the realtime numeric integration and signals recording.
 
 This fits well with the possibility of eventually apply also more sophisticated algorithms that are not handled by the central CODAS only but also in the peripheral devices that compose the acquisition front-end. 
 However the fundamental prerequisite is to achieve a compact and reliable implementation of such algorithms, and in particular for the encoder-decoder networks that attain the latent embedding. This must embrace a clever selection on both the hardware and software component of the acquisition system. In this chapter a proposal for a new DAQ chain is presented, together with the early results for the new magnetic acquisition system in RFX-mod2. Then, in~\cref{section:quantum}, a method to embed the neural network in such devices is explained.
@@ -224,7 +224,7 @@ In \Figure{\ref{fig:noise_drift_b}} a set of integrated EM probe signals has bee
 The study on This module showed the feasibility of a completely digital approach for the electromagnetic probes acquisition in RFX-mod2. We exploited existent hardware from ATCA-MIMO-ISOL system from Jet interfaced to a flexible FPGA SoC Board to learn the communication interface. The noise spectrum revealed that this module is not actually adequate for the purpose of performing the digital integration of the EM signals, thus a further investigation will be required to improve the signal to noise ratio in such architecture. However the chain of acquisition has been successfully built for the system ADC module and FPGA host, proving that the technology is almost ready to provide such digital signal elaboration.
 This opened the way to explore other kinds of signal elaborations, such as the introduction of ML algorithms, and will make possible to use all electromagnetic channels to extract plasma state information for the control.
 
-\subsection*{Machine Learning for digital signal conditioning}
+\subsection*{Machine Learning for digital signal elaboration}
 
 In RFX-mod a fixed reduced set of signals from EM probes was used for the active plasma control, requiring a new set of ADC converters in respect to the transient recorders used for data acquisition. In RFX-mod2 it will be possible to re-use any ADC channel from EM probes for real-time control, and the actual number will be only limited by other factors, not related to the ADC devices, such as network bandwidth or control computation load. 
 
@@ -416,6 +416,7 @@ This means that the simple translation of the offline trained network is not eno
 One of the main mathematical concerns about the description of network quantization is the process of back-propagating the loss through the quantized activation functions. The activation is indeed hardly approximated and the output jumps through discrete results providing a non differentiable function. In the perspective of a stochastic representation of neurons the quntization can be modeled as an opportunely shaped additive noise. A good description is provided in~\cite{bengio2013estimating} as a new kind of network units named \textit{Non-Smooth Stochastic Neurons} in which the output of activation is modeled as:
 \begin{equation}
     g_i = f(a_i, z_{Qi})  \hspace{3cm}  a_i = \transpose{\bm{w_i}}\bm{x_i}
+    \label{eq:qnn_noise}
 \end{equation}
 where $a_i$ is the usual linear composition of the i-th network unit, $z_{Qi}$ represents the respective noise component, and $f(\cdot)$ has a non-zero gradient with respect to $a_i$.
 
@@ -456,7 +457,6 @@ Additionally, all minimum and maximum values for weights and activations are det
 \end{figure}
 
 
-
 To improve the network performance in an aggressive quantization environment (this is very likely the case for FPGAs) additional adaptations must be performed, the most relevant approaches are described in the following:
 \begin{itemize}
     \item \textbf{Training/Re-Training}: The simple activation and linear combination quantization does not bring a sufficient accuracy in the reconstruction of the neurons outputs. It is therefore needed a way to adapt the training process itself to be "aware" of the qantization that is being applied underneath. 
@@ -473,12 +473,182 @@ To improve the network performance in an aggressive quantization environment (th
 
 
 
+\subsection*{Binarized Thresholds in FPGA}
+
+Many tools are currently supporting quantization aware training. \Tensorflow framework provides a dedicated tool in \texttt{tensorflow.contrib.quantize} that is a standard implementation of quantization-aware training with simlated quantized activations. Another emerging tool is the Xilinx Grafitist~\cite{tqt2019}. It has been specifically designed for FPGA oriented deployment and exploit all the main training optimization previously discussed.
+
+Although those tools represents the state of the art for modern optimized network inference and claim to obtain the best results, the target they are designed for are high-end hardware capable to run numerical fixed-point computation efficiently. 
+In particular they are designed for precision down to INT4.
+With the spatial constraints of the small chip that can be afforded in our devices (the Zynq 7000 for instance) a further reduction is desirable.
+
+A possible technique is to pass to the single bit quantization i.e. the so-called \ac{BNN}.
+Talking about binary neuron a further distinction must be discussed between the simple binarization of the weights and the full binary architecture that includes binary activation.
+
+The simple BNN unit, with binarized weights only, is a standard MLP where all the kernels parameters are replaced by a single bit number (-1 or +1). But the output is calculated just as usual: first combining the inputs with these -1 or +1, and then applying the activation function (either in floating point precision or in fixed point). At first glance, it seems a fairly radical method with dubious results. In practice the results are surprisingly good when the correct training procedures are followed.
+On a standard CPU the multiplication between a FP number and an integer (i.e. the binary weight) is twice as fast as between two FPs. This binary neural network reduces the memory load at 32x and the computation load at 2x. 
+However again the both the executing time and the area saving in FPGA is almost the same as in the standard configuration. A proper FPGA design always presents the complexity of the multiplication cycle, whether the floating points or integers are used. 
+
+On the other hand a clever reduction to a fully binarized architecture has been proposed in~\cite{courbariaux2016binarized}.
 
 
+The idea is that a DNN is mainly composed by convolutions and matrix multiplications. Thus the key arithmetic operation performed in deep learning, as already discussed, is the multiply and accumulate (add) operation. 
+The true BNNs are than characterized by both composition and activation constrained to either $-1$ or $+1$ values.
 
+So the magic comes from the use of binary XNOR operation. If within the network both inputs and weights are binary numbers, the vector-matrix multiplications can be replaced by a simple logical XNOR operation.
+As the digital truth-table diagram in \Figure{\ref{fig:XNOR}} shows, the XNOR works as a multiplier once '0' is treated as the '-1' representation. 
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=5cm]{img/4_EmbeddedML/XNOR_gate.png}
+    % TODO: add variations
+    \caption{The truth table of the XNOR operation}
+    \label{fig:XNOR}
+\end{figure}
+%
+As a result, most of the 32-bit floating point multiply-accumulations are replaced by 1-bit XNOR-count operations.
+The accumulation of the vector-matrix results for the XNOR is the count of the number of true bits in output. 
+This forms an output vector with integers. 
+Then a further binary threshold, acting as the neuron activation, converts back there integers into a binary number that is suitable for the next binary layer.
 
+This XNOR network runs a lot faster since no matrix multiplications are needed anymore. 
+And, what is more important for us, the latency is sensibly reduced because no cycles or systolic designs are needed.
+This brings also a big impact on the resource utilization.
+For instance, a 32-bit floating point multiplier spends more than 200 slices in a Xilinx FPGA (as seen before), whereas a 1-bit XNOR gate is already implemented in LUTs and costs a single slice.
 
-% TQT Training Quantized networks GRAFITIST
+This improved performance come at the price of a reduced accuracy, to a deep optimization must be performed.
+The threshold is adaptive and depends on the absolute weight average and input values.
+Most XNOR networks also do not binarize the input and output layers. 
+%
+In order to transform the real-valued variables into the binary version, two different binarization functions can be performed~\cite{Courbariaux2015BinaryConnectTD}.
+A deterministic binarization approach is:
+\begin{equation}
+    x_b = {\rm Sign}(x) = \left\{ \begin{array}{ll}
+                        +1 & \mbox{if $x \geq 0$},\\
+                        -1 & \mbox{otherwise},\end{array} \right.
+\end{equation}
+where $x_b$ represents any binarized variable (weight or activation) and $x$ the real-valued counterpart.
+This is really straightforward to be implemented and seems to produce good results.
+
+Alternatively a stochastic approach can be appied:
+\begin{align}
+\label{eq:sampled-wb}
+    x_b = \left\{ \begin{array}{ll}
+            +1 & \mbox{with probability $p = \sigma(x)$},\\
+            -1 & \mbox{with probability $1-p$},\end{array} \right. 
+\end{align}
+where $\sigma$ is the so called {\em ``hard sigmoid''} function:
+\begin{equation}
+    \sigma(x) = {\rm clip}(\frac{x+1}{2},0,1) = \max(0,\min(1,\frac{x+1}{2})).
+\end{equation}
+This second version is actually more appealing than the simple sign function, but on the other hand it is harder to implement as it requires to generate random bits during quantization.
+
+Either the sign function in the former case and the stochastic substitution in the latter represent non differentiable activation. This makes them apparently incompatible with backpropagation.
+However in both the cases the quantization can be seen as the noise component in~\eqref{eq:qnn_noise} and perfectly match the example of binary activation already discussed.
+This opens many possibilities and future improvements that could come on one side from the use of stochastic activation threshold, and form the use of a local loss computation by means of small perturbations (the same jitter needed for $x_b$). 
+%
+%However the sole deterministic version is currently implemented with a backpropagation done with STE.
+
+% Consider the sign function quantization
+% \[
+% q = {\rm Sign}(r),
+% \]
+% and assume that an estimator $g_q$ of the gradient $\frac{\partial C}{\partial q}$
+% has been obtained (with the straight-through estimator when needed).
+
+% Then, our straight-through estimator of $\frac{\partial C}{\partial r}$ is simply
+% \begin{equation}
+%   \label{eq:straight-through-gradient}
+% g_r = g_q 1_{|r|\leq 1}.
+% \end{equation}
+% % Note that this preserves the correct sign of the gradient and cancels the
+% Note that this preserves the gradient's information and cancels the
+% gradient when $r$ is too large. 
+% % MC: I made a little MNIST experiment. straight through estimator without cancellation -> error rate is around 13%, as if we were using a linear model.
+% Not cancelling the gradient when $r$ is too large significantly worsens the performance. 
+% The use of this straight-through estimator is illustrated in Algorithm \ref{alg:train}.
+
+% The derivative $1_{|r|\leq 1}$ can
+% also be seen as propagating the gradient through {\em hard tanh}, which
+% is the following piece-wise linear activation function:
+% \begin{equation}
+%     {\rm Htanh}(x) = {\rm Clip}(x,-1,1) = \max(-1,\min(1,x)).
+% \end{equation}
+% Which derivative is indeed $1_{|r|\leq 1}$.
+% Note that {\em tanh} would saturate as well, but in a smooth way.
+% We choose a hard tanh over tanh (a.k.a. soft tanh) because it is cheaper to implement and works very well
+% in our experiments. 
+
+The implemented approach consist on exploiting the sign function as the neuron non-linearity, and for weights the following procedure is applied during training:
+all real-valued weights ($w^r$) are constrained between -1 and 1, by clipping them after a batch normalization.
+The real-valued weights would otherwise grow very large without any impact on the binary weights.
+Then when using a weight $w^r$, it is quantizes using $w^b = {\rm Sign}(w^r)$.
+
+% def hard_sigmoid(x):
+%     return tf.clip_by_value((x + 1.)/2., 0, 1)
+
+% def round_through(x):
+%     '''Element-wise rounding to the closest integer with full gradient propagation.
+%     A trick from [Sergey Ioffe](http://stackoverflow.com/a/36480182)
+%     a op that behave as f(x) in forward mode,
+%     but as g(x) in the backward mode.
+%     '''
+%     rounded = tf.round(x)
+%     return x + tf.stop_gradient(rounded-x)
+
+% # The neurons' activations binarization function
+% # It behaves like the sign function during forward propagation
+% # And like:
+% #   hard_tanh(x) = 2*hard_sigmoid(x)-1
+% # during back propagation
+% def binary_tanh_unit(x):
+%     return 2.*round_through(hard_sigmoid(x))-1.
+
+% def binary_sigmoid_unit(x):
+%     return round_through(hard_sigmoid(x))
+
+% def binarization(W, H):
+%     return H * binary_tanh_unit(W / H)
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.6\textwidth]{img/4_EmbeddedML/BinaryNET_training.png} \label{fig:bnn_training_a}}
+    \subfigure[]{\includegraphics[width=0.3\textwidth]{img/4_EmbeddedML/BNN_kernel_example.png} \label{fig:bnn_training_b}}
+    \caption{Training curves comparison between standard DNN and the BNN version (a). A binarized kernel example form CIFAR-10 (b). Source:~\cite{courbariaux2016binarized}. }
+    \label{fig:bnn_training}
+\end{figure}
+
+\subsubsection*{Hardware deployment}
+
+The XNOR BNN models have not yet been included in the standard quantization tools like Tensorflow-LITE or Graffitists, however some implementation are available with custom modification of the networks components.
+For the Xilinx Zynq several version have been ported like CIFAR-10 (convolutional) or MNIST (MLP), while for the final implementation and deployment a specific tool called FINN can handle the construction of an embedded firmware using Vivado and HLS (some details will be provided in the next chapter). This is actually in an early stage and aims to provide a base library for studying the low precision implementation of DNN in FPGA. Both in QNN (8,4,2 bits) and BNN.
+%
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{img/4_EmbeddedML/Zynq_BNN_Time.png}     \label{fig:bnn_zynq_time}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{img/4_EmbeddedML/Zynq_BNN_Accuracy.png} \label{fig:bnn_zynq_acc}}
+    \caption{Results from Pretrained BNN composed by 6 convolutional layers, 3 max pool layers and 3 fully connected layers deployed on Zynq 7020 using FINN, with the following precision sets: 1 bit weights and 1 bit activation (W1A1), 1 bit weights and 2 bit activation (W1A2), and 2 bit weights and 2 bit activation (W2A2). Time per image classification (a). Accuracy of the classification on validation set (b). }
+    \label{fig:bnn_zynq}
+\end{figure}
+%
+In \Figure{\ref{fig:bnn_zynq}} the results of a convolutional network modeled on the basis of the VGG\-16 and featuring 6 convolutional layers, 3 max pool layers and 3 fully connected layers has been ran on the Zynq 7020 core. The network configurations provide 3 different precision on the internal weights and activation functions: 1 bit weights and 1 bit activation (W1A1), 1 bit weights and 2 bit activation (W1A2), and 2 bit weights and 2 bit activation (W2A2). The definition of the weights and the thresholds for activation have been trained in advance using Berkley Caffe framework~\cite{finn} against the CIFAR-10 dataset~\cite{cifar-10}
+
+The obtained network performance is impressive, given the reduced resources of the hardware: the W2A2 classifies all the 10K images from the dataset in 11 s, so the average equivalent frame-rate for an image sequence could is 860~fps, up to W1A1 and W1A2 that handle images at 3050~fps. Additionally it appears also clear that the augmented precision in activation function in W1A2 brings a slight improvement on accuracy maintaining the same speed of the W1A1.
+The analogue reconstruction for the same network implemented in ARM on the same chip results in the optimal case (W1A1) in a rate of 0.6 fps; more than 3 order of magnitude under the FPGA implementation.
+
+% Accuracy W1A1:  79.22 %
+% Accuracy W1A2:  82.66 %
+% Accuracy W2A2:  84.29 %
+
+% W1A1
+% Inference took 3278711.85 microseconds, 327.87 usec per image
+% Classification rate: 3049.98 images per second
+% W1A2
+% Inference took 3278537.90 microseconds, 327.85 usec per image
+% Classification rate: 3050.14 images per second
+% W2A2
+% Inference took 11626612.55 microseconds, 1162.66 usec per image
+% Classification rate: 860.10 images per second
+
 
 
 % Datatype LUTs LUTs LUTs DSPs DSPs DSPs Cavg Crel
@@ -490,12 +660,7 @@ To improve the network performance in an aggressive quantization environment (th
 % INT4   & 27.18 & 35.56 & 30.06 & 0 & 0 & 0 & 64.76  & 5.39  \\
 % INT2   & 10.98 & 18.74 & 13.52 & 0 & 0 & 0 & 29.12  & 2.42  \\
 % Binary & 4.24  & 8.00  & 5.58  & 0 & 0 & 0 & 12.02  & 1     
-
-
-
-
-
-
+% Source: \cite{Su_2018}
 
 
 

@@ -295,6 +295,7 @@ Finally we could also push our speculation even further saying that the y-axis a
                                                       
 
 \section{Parameters to SXR mapping}
+\label{section:Parameters_to_SXR}
 
 In the previous section the simple determination of latent space from temperature has been proposed, and the structure of reconstructed space has been shown with respect to external plasma parameters trying to speculate a possible relation.
 Another possible target of learning would be to see if such parameters are a complete information to reach a good guess of that temperature, exploiting the latent configuration as our new set of parameters.
@@ -340,11 +341,11 @@ The direct comparison among these plotted examples shows that the network is act
 
 \section{Composing Autoencoders}
 
-Until now the only data that has been accounted is either the temperature profile or the plasma parameters, and each of them has been considered by itself. The neural network approach shown that it is possible to learn how to transfer the common hidden factors that drive experimental outcomes from one diagnostic to another, and in particular a latent space embedding helps to match such information.
-However, aiming at finding a comprehensive representation of the system, a more favourable approach would be to integrate those information together in a unique latent "state" space representation.
+Until now the only data that has been accounted is either the temperature profile or the plasma parameters, and each of them has been considered as single instance. The neural network approach shows that it is possible to learn how to transfer the common hidden factors that drive experimental outcomes from one diagnostic to another, and in particular a latent space embedding helps to match such information.
+However, aiming at finding a comprehensive representation of the system, a more favourable approach would be to integrate those information together in a unique latent "state" space.
 
-The actual idea that follows the intuition of a hierarchical subdivision of the complete data inputs in sub domains, each represented by means of embedded manifold, has been realized as a chain of nested autoencoders. This is actually as simple as a new class method that created a nested internal structure from a input list of other autoencoders; this has been named \textit{composing}, and a schema of the built topology is proposed in~\Figure{\ref{fig:VAE_compose}}.
-The simple code has been reported in~\Code{\ref{code:VAE_compose}} for the \TF implementation.
+The actual idea that follows the intuition of a hierarchical subdivision of the complete data inputs in sub domains, each represented by means of a embedded manifold, has been realized as a chain of nested autoencoders. This is actually as simple as a new class method that created a nested internal structure from a input list of further autoencoders; this has been named \textit{composing}, and a schema of the built topology is proposed in~\Figure{\ref{fig:VAE_compose}}.
+The simple code, reported in~\Code{\ref{code:VAE_compose}}, provides the \TF implementation.
 %
 \begin{lstlisting}[language=Python, caption=Internal VAE method to create the composed network topology, label=code:VAE_compose]
 def compose(self, autoencoders):
@@ -389,7 +390,10 @@ Moreover, as already discussed, the use of embedded spaces appears to be not onl
     \label{fig:VAE_compose}
 \end{figure}
 %
-In the presented schema, and implementation, all the components are composed in the same level; one could argue that in this way the different inputs could be treated with the same "importance", however the complete network itself - once the overfiting and underfitting have been paced - tends to build paths that assign the best weights to each parameter, specially if the correct regularization and sparsification has been applied. In addition all the separate \acs{VAE} components do not need to share the same structure, givin a chance to increase or reduce the with and height (aka, the layer sizes and network depth) of each component, adding also custom network or data regularizers.
+In the presented schema, and implementation, all the components are composed at the same level. One could argue that in this way the different inputs could be treated with the same "importance", however the complete network itself - once resolved possible overfiting or underfitting - tends to build paths that assign the best weights to each of the parameters, specially if the correct regularization and sparsification has been applied. In addition all the separate \acs{VAE} components do not need to share the same structure. This gives a further chance to increase or reduce the width and height (aka, the layer sizes and network depth) of each component, or even add custom regularizers, in order to have a better local latent representation. 
 
-In this case we does not have a concrete output, because the actual target of this high level representation is to find a possible set of hyperparamters of the overall composition of diagnostics. However looking at the complete composed autoencoder with its property of missing data recovering, the intimate meaning of this mechanism rise up, suggesting that the complex nonlinear internal relation that have been created collaborate together to describe the experiment. There can be a sufficient input set to create the missing parameter or not, either way the output is the best match of the recorded situation along the overall already seen behavior of the observed system.
+In this case we does not have a concrete output, because the actual target of this high level representation is to find a possible set of hyperparamters of the overall composition of diagnostics. However if we look at this composed autoencoder with its property of recovering missing data, the intimate meaning of this mechanism rises up, suggesting that the complex nonlinear internal relations that have been created collaborate together to describe the experiment. There can be a sufficient input set to create the missing parameters or not, either way the output is the best match of the recorded situation along the overall already seen behavior of the observed system.
 For example, if two composed autoencoders would be represented by the SXR temperatures and the magnetics, the phase of the dominant mode would enforce the temperature peak position in the profile, while the plasma current would do the same for the peak height.
+
+
+

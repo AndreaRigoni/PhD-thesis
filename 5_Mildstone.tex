@@ -25,6 +25,15 @@ A interesting meter of the evolution rate in the context of ML is the publicatio
 
 \section{Tensorflow}
 
+\Tensorflow framework~\cite{tensorflow2015-whitepaper} has been designed as an interface for machine learning algorithms containing the implementations for many of them and a base of execution. A computation can be executed in \Tensorflow with little or no changes on a wide variety of hardware architectures and operative systems, ranging from embedded devices up to large-scale distributed systems for parallel computation. The system is flexible enough to express a wide variety of models: this includes training and inference algorithms for \acs{DNN}, and it can be used for conducting research and for deploying in production environment. 
+The beauty of the framework definition is that it has been meant to provide an abstract definition of the algorithms by means of representative interfaces. Once these interface have been implemented and instantiated, it also provides a way of handling the message passing among instances composing and handling complex "flow" of data. In this way a single script, for example written in python, can handle a wide set of distributed computation, where the specific implementation appears almost hidden to the user but is able to adapt to extreme hardware optimization underneath.
+
+The idea of a single definition for transferring data among distributed system is not a real novelty though. This is actually the key component for a distributed system and many attempt have been made to create a unique representation for that. 
+%Some publicly available like OpenORB D-BUS ~\cite{} some not DCE, COM, ZeroC
+This holds also for tools that are already been adopted by fusion community. For example the MDSplus data acquisition system uses a unified definition of exchanged types as well, called "descriptors", that is in turn inspired by the internal structures of the Digital-VMS system.
+
+The idea of embracing \Tensorflow comes on one side from the widespread utilization on the ML community
+
 
 
 \section{Anacleto - embedded FPGA development}

@@ -1,7 +1,7 @@
 \chapter{RFP Equilibrium}
 \label{section:2_equilibrium}
 
-The success of electromagnetic containment systems depends on the ability to maintain the plasma in equilibrium in the presence of small perturbations
+The success of magnetic confinement systems depends on the ability to maintain the plasma in equilibrium in the presence of small perturbations
 that could compromise its stability. In Tokamak and RFP type experiments, the instabilities that produce macroscopic effects are described, in their simplest form, by the plasma fluid model MHD ( magnetohydrodynamic model ). 
 We abandon the kinetic description of the single particle to consider the set of charges, thinking of the plasma as a fluid: the dimensions of the survey region are much greater than the Debye length and the Larmor radius. Therefore, a discrete system with separate charges is no longer observed.
 
@@ -52,7 +52,7 @@ Finally to close the system you can choose to introduce alternatively:
     \begin{equation}
         \eta = 0
     \end{equation}
-    \item teh addition of a state constraint for the ideal gas, considering only isothermal or adiabatic transformations:
+    \item the addition of a state constraint for the ideal gas, considering only isothermal or adiabatic transformations:
     \begin{equation}
         \pdv{}{t}\left( \frac{p}{\rho_m^\gamma} \right) = 0
     \end{equation}
@@ -66,11 +66,11 @@ From the MHD equations it is also possible to derive some considerations regardi
     \pdv{\Vec{B}}{t} = \nabla \times ( \Vec{v} \times \Vec{B} ) + \frac{\eta}{\mu_0} \nabla^2 \Vec{B}
     \label{eq:coupling_plasma_1}
 \end{equation}
-This report describes the dynamic coupling between the magnetic field and the displacement of the fluid. If we compare the two contributions of \eqref{eq:coupling_plasma_1}, considering as viscosity factor $\nu_m = \eta/\mu_0$, we get:
+This term describes the dynamic coupling between the magnetic field and the displacement of the fluid. If we compare the two contributions of \eqref{eq:coupling_plasma_1}, considering as viscosity factor $\nu_m = \eta/\mu_0$, we get:
 \begin{equation}
     \frac{|\nabla \times \Vec{v} \times \Vec{B}|}{|\nu_m \nabla^2 \Vec{B}|} \simeq \frac{\frac{x \cdot B}{L}}{\nu_m\frac{B}{L^2}} = \frac{vL}{\nu_m} \equiv \mathcal{R}_m
 \end{equation}
-where L is the characteristic variation length for the quantities considered. $R_m$ is called Magnetic Raynolds Number and quantifies the prevalence of plasma flow phenomena with respect to $\Vec{B}$ diffusion.
+where L is the characteristic variation length for the quantities considered. $R_m$ is called Magnetic Reynolds Number and quantifies the prevalence of plasma flow phenomena with respect to $\Vec{B}$ diffusion.
 
 When, as generally happens, it is the first component to be dominant $(R_m >> 1)$, the relationship expresses the conservation of the magnetic flux through any surface bounded by a closed line, independently of the movement of the fluid. This result is also expressed by Alfven's theorem: in a conductive fluid with zero (or very small) resistivity, the magnetic field lines remain frozen in a given volume of the fluid itself.
 In conclusion it can be said that a plasma of small magnetic viscosity can be more effectively compressed by strong gradients; at the same time, however, a turbulent motion is obtained in which the variation of the field increasingly depends on transport phenomena.
@@ -92,9 +92,9 @@ The study of the plasma MHD instability mainly concerns the perturbations of the
 %     -\nabla p + \Vec{J} \times \Vec{B} = 0
 % }
 % \end{equation}
-From the third equation it is clear that the pressure gradient is maintained orthogonal to the field and current lines, constructing a set of surfaces, one inside the other~(\Figure{}), called toroidal isobar magnetic surfaces\footnote{It should be noted that the magnetic and current fields of the first and second relations are solenoidal and lead to necessarily closed surfaces. If we consider a constant pressure module along this surface, with an intersection angle between the perpendicular field vectors everywhere, we obtain the torus as a possible solution.}. These are said rational surfaces when the field lines that run through them recombine on themselves after a few toroidal turns, or ergodic when, not recombining, they cover the entire surface.
+From the third equation it is clear that the pressure gradient is maintained orthogonal to the field and current lines, constructing a set of nested surfaces, called magnetic flux surfaces\footnote{It should be noted that the magnetic and current fields of the first and second relations are solenoidal and lead to necessarily closed surfaces. If we consider a constant pressure module along this surface, with an intersection angle between the perpendicular field vectors everywhere, we obtain the torus as a possible solution.}. These are said rational surfaces when the field lines that run through them recombine on themselves after a few toroidal turns, or ergodic when, not recombining, they cover the entire surface.
 
-The effects of a generic stability disturbance of the balance just described is now explicitated using the spatial transformation in Fourer series; the perturbation $\Tilde{\psi}$ can be expressed as:
+The effects of a generic stability disturbance of the balance just described is now made explicit using the spatial transformation in Fourier series; the perturbation $\Tilde{\psi}$ can be expressed as:
 \begin{equation}
     \Tilde{\psi}(\Vec{r},t) = \sum_k \Tilde{\psi}_k(r) e^{i(\Vec{k}\cdot\Vec{r}-\omega t)} = \sum_k \Tilde{\psi}_k e^{i(m\vartheta+n\varphi-\omega t)}
 \end{equation}
@@ -113,7 +113,7 @@ $$  p_b(r) = R_0\Delta\varphi = \int_0^{2\pi} \frac{1}{R_0} \frac{B_\varphi(r)}{
 
 
 
-The perturbation $\tilde{\psi}(m,n)$ whose steps are coupled with the field lines is called \textit{resonant}, and is the cause of instability. In this picture it is evident that the \emph{'' safety factor ''} $q(r)$ is related to the stability of the plasma; in fact, if $q$ is rational, any displacement of the plasma from the equilibrium position can have a component that is screwed onto the magnetic surfaces with the same periodicity as the field. If, on the other hand, $q(r)$ is irrational the field lines continue to be screwed onto the toroidal surface without ever rejoining with themselves, sweeping ergodically the entire surface.
+The perturbation $\tilde{\psi}(m,n)$ whose steps are coupled with the field lines is called \textit{resonant}, and is the cause of instability. In this picture it is evident that the \emph{''safety factor''} $q(r)$ is related to the stability of the plasma; in fact when $q$ is rational, any displacement of the plasma from the equilibrium position can have a component that is screwed onto the magnetic surfaces with the same periodicity as the field. If, on the other hand, $q(r)$ is irrational the field lines continue to be screwed onto the toroidal surface without ever rejoining with themselves, sweeping ergodically the entire surface.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%FIGURA%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -125,13 +125,13 @@ The perturbation $\tilde{\psi}(m,n)$ whose steps are coupled with the field line
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In turn, more adjacent surfaces that have the same safety factor couple with each other giving rise to resonance phenomena, becoming themselves a source of instability; for this reason we introduce the parameter called the \emph{'' shear ''}
+In turn, more adjacent surfaces that have the same safety factor couple with each other giving rise to resonance phenomena, becoming themselves a source of instability; for this reason we introduce the parameter called \emph{'' shear ''}
 %
 \begin{equation}
  s(r) \equiv \frac{r}{q(r)}\frac{dq(r)}{dr} = \frac{r}{p_b}\frac{dp_b}{dr}
 \end{equation}
 %
-it represents the variation along $r$ of the pitch of the field lines. It is therefore essential that the pitch is variable monotonically to avoid destabilizing the entire system.
+which represents the variation along $r$ of the pitch of the field lines. It is therefore essential that the pitch is variable monotonically to avoid destabilizing the entire system.
 In \Figure{\ref{fig:profiles-tokarfp}} the radial profiles of the safety factor for Tokamak and RFP experiments are plotted; note that the configuration has been chosen in such a way that the trends represent strictly monotone functions.
 
 \subsubsection{The cylindrical approximation}
@@ -160,14 +160,16 @@ In the former case we divide them by the source of destabilization, there can be
 The pressure driven modes, also called “pressure driven instabilities” ( for example “interchaged modes or balooning modes” are pressure driven), can be derived directly from the equilibrium equation (force balance between kinetic and magnetic pressure) when we have strong gradient in the perpendicular current.
 The current driven modes are instabilities that grow in time, they dissipate energy. In this case the parallel current gradient is the main driving phoenomena: kink modes are an example of current driven instabilities. Kink modes can be either internal or external; and usually the external kink sets the actual limit on the maximum achievable current. So the q factor at the edge instability is set by an external kink. Certainly they can also combine and give rise to a balooning-kink mode.
 
-In the second class we divide instabilities based on the place where they rise; they can be: external (edge boundary involved) or internal (only inside plasma) modes. 
+Another classification criterion for the instabilities is based on the place where they rise; the modes can be: \emph{external} when the edge boundary involved or \emph{internal} when it develops only inside plasma. 
 They are also called \emph{fixed-boundary} and \emph{free boundary} instabilities when identified with respect to the column surface displacement. The former have an effect inside the column, not affecting the movements of the plasma surface, the latter \emph{free boundary} instabilities are macroscopic and involve the overall displacement of the vacuum-plasma interface.
-This is the worst case because in this way the overall confinement is usually lost: if such an instability development the plasma changes shape and could touch directly the first wall and the first facing components. This is dangerous because you have a parallel flux of energetic particles going directly to the materials, and a strong plasma wall interaction pollutes the gas leading to the end of the discharge.
-%
-Any mode can be further subdivided based on the wave numbers that describe the relative perturbation $\tilde{\psi}(\Vec{r}) =
+This is the worst case because they usually lead to overall confinement loss: if such an instability develops, the distorted shape leads to an excess of heating flux on the plasma facing components. The parallel flux of energetic particles from the plasma toward the facing component, sputters and/or evaporates the material, polluting the plasma with high-Z atoms causing  radiative losses (the \emph{thermal quench}) which finally abrupt end of the discharge (the \emph{current quench}).
+
+Any mode can be further labelled by the wave numbers that describe its relative perturbation
+with the pair of values $(m, n)$:
+$\tilde{\psi}(\Vec{r}) =
 \Tilde{\psi}_0(r)e^{i(m\vartheta+n\varphi)}$.
-%
-The poloidal modes\footnote{generally the perturbation is expressed with the term way to indicate the pair of values $(m, n)$} of number $m = 0$ give rise to instability called \emph{`` sausage instabilities ''}, and are due to flow exchanges. These instabilities can be easily described by observing a pure z-\textit{pinch} experiment in cylindrical geometry: as shown in the \Figure{\ref{fig:press-curr1}}, the axial constrictions of the plasma column involve different values of $B_\theta \sim 1/r$. The kinetic pressure is the same everywhere, while the magnetic pressure tends to be stronger at the saddle, giving rise to bulges that are increasingly amplified.
+
+The modes with poloidal number $m = 0$, (i.e. $(0,n)$) give rise to the \emph{``sausage instabilities ''}. These instabilities can be easily described by observing a pure z-\textit{pinch} experiment in cylindrical geometry: as shown in the \Figure{\ref{fig:press-curr1}}, the axial constrictions of the plasma column involve different values of $B_\theta \sim 1/r$. The kinetic pressure is the same everywhere, while the magnetic pressure tends to be stronger at the saddle, giving rise to bulges that are increasingly amplified.
 %
 \begin{figure}[ht]
  \centering
@@ -175,34 +177,37 @@ The poloidal modes\footnote{generally the perturbation is expressed with the ter
  \includegraphics[ width=5cm ] {img/2_eq/press-curr1.eps}}
  \subfigure[]{ \label{fig:press-curr2}
  \includegraphics[ width=5cm ] {img/2_eq/press-curr2.eps}}
- \caption{Pressure and current instabilities}
+ \caption{Pressure (\emph{sausage}) and current (\emph{kink}) instabilities}
 \end{figure}
-%
-The modes of poloidal number $m = 1$ give rise, instead, to instabilities called \emph{``kink instabilities''}, \Figure{\ref{fig:press-curr2}}. In this case the curvature of the column of plasma involves the thickening of the field at the lower surface concave part; there is again an increase in the magnetic pressure which gradually tends to amplify itself.
-%
-These instabilities are quite dangerous, as they are often rapid and so it is hard to get rid of them, with growth times in the order of $1/\tau_A$ \footnote{$\tau_A = a/v_A$, with $ v_A $ the Alfvén speed and $a$ the minor torus radius, it refers to field variations frozen plasma \cite{fridberg}.}; they are mainly built in the presence of resonant surfaces and are generally stabilized by a strong toroidal field.
 
-As a conclusion of the considerations made in the previous paragraph regarding the safety factor $ q $ and the shear, it is interesting to mention now the the Kruskal-Shafranov criterion for stability in Tokamak configurations. In modes $ m = 1 $ we have resonance for $q(r)=1/n$; to ensure stability it is necessary to keep $ q>1 $. However it is important to remember that $ q (r) $ has a minimum trend in the center of the column and increases towards the periphery; therefore, because the criterion holds everywhere, it is good that the value of $ q $ on the periphery remains bounded as $ 2<q(a)<3 $\footnote{therefore, on the basis of these observations, placing the value at the periphery of $q(a)=\frac{a}{R_0}\frac{B_\varphi(a)}{B_\vartheta(a)}~\simeq~3$ and considering an aspect ratio $a/R_0 \simeq 3$, we explain the presence of a strong imbalance between the fields $B_\varphi$ and $B_\vartheta$ in the Tokamak configuration.}.
+The modes with poloidal number $m = 1$ (i.e. $(1,n)$) from another class of instabilities called \emph{``kink''}, \Figure{\ref{fig:press-curr2}}. In this case the curvature of the column of plasma involves the thickening of the field at the lower surface concave part; there is again an increase in the magnetic pressure which gradually amplifies itself.
+%
+These instabilities are generally the most unstable and dangerous, as they rapidly grow and so is hard to get rid of them, with growth times in the order of $1/\tau_A$ \footnote{$\tau_A = a/v_A$, with $ v_A $ the Alfvén speed and $a$ the minor torus radius, it refers to field variations frozen plasma \cite{fridberg}.}; they are seeded by the resonant surfaces and are generally stabilized by a strong toroidal field.
+
+As a conclusion, recalling the considerations made in the previous paragraph about the safety factor $ q $ and the shear, it is interesting to mention now the the Kruskal-Shafranov criterion for stability in tokamak configurations. Kink modes $(1,n)$ we have resonance at $q(r)=1/n$; to ensure stability it is necessary to keep $q>1$ everywhere inside the plasma. On tokamaks $ q (r) $ has usually a minimum in the center of the column and then increases towards the periphery; therefore, since the criterion has to hold everywhere, the value of $q$ on the periphery should remains bounded at $ q(a) \gtrsim 3 $\footnote{Therefore placing the value at the periphery of $q(a)=\frac{a}{R_0}\frac{B_\varphi(a)}{B_\vartheta(a)}~\simeq~3$ and considering a typical aspect ratio $a/R_0 \simeq 3$, this criterion explains the strong amplitude difference between the toroidal $B_\varphi$ and poloidal $B_\vartheta$ fields of the tokamak.}.
 
 
 \subsection{The resistive wall modes}
 
-An important example of \textit{kink instability} is represented by the so called \ac{RWM}. They are formed by the non zero resistance of the conductive shell; they are relatively slow since they depend on the time of penetration of the field into the material of the shell $\gamma_{RWM} \propto 1/\tau_w$. Their value is defined as:
+An important example of kink instability is represented by the so called \ac{RWM}. They are the remnant of the ideal kink modes when the plasma is cased in a continuous conductor of finite resistance (the \emph{shell}). They are relatively slow, since they depend on the characteristic resistive decay time of the shell (usually made of metal), which translates in the penetration time of the field: $\gamma_{RWM} \propto 1/\tau_w$. Their value is defined as:
 %
 \begin{equation}
  \tau_w = \mu_0 \sigma r_w \delta_w
 \end{equation}
 %
-where $\sigma$ is the conductivity of the wall, $ r_w $ the corresponding radius and $\delta_w \ll r_w$ the wall thickness. The \acs{RWM}s are characterized by the presence of a radial field $b_r|_{r=r_s} \neq 0$, where $ r_s $ is the radius of the resonant surface that generates the unstable mode, which makes the recombination of the field lines possible.
-%
+where $\sigma$ is the conductivity of the wall, $ r_w $ the corresponding radius and $\delta_w \ll r_w$ the wall thickness. 
+
+The \acs{RWM}s are characterized by the presence of a radial field $b_r|_{r=r_s} \neq 0$, where $ r_s $ is the radius of the resonant surface that generates the unstable mode, which makes the recombination of the field lines possible.
+
 A spontaneous growth of \acs{RWM} instability has been experimentally observed in \acs{RFP} with non-resonant \emph{'' current driven ''} perturbations characterized by $ m = 1 $, and several harmonics $ n $ which can be simultaneously unstable with different growth factors $\gamma$\cite{pizz46}\cite{pizz47}\cite{gregoratto}.
 
-In Tokamak configurations the spectrum of RWM modes is usually characterized by the dominant toroidal component of mode $ n = 1 $ and by various poloidal modal components with $m=2,3,4$ etc.\footnote{
-However, recent experiments shown that in some Tokamak configurations there is the presence of ideal \textit{kink} instabilities of non-resonant \emph{current driven} modes. These instabilities seem to be excited by the free energy in the gradients of the plasma current that arise during the ascent current ramp~\cite{baruzzo9, baruzzo10, baruzzo11}. This effect has the double disadvantage of limiting the maximum growth rate obtainable for the induction of the plasma current and, at the same time, they define a minimum value of the safety factor at the edge.}.
+In tokamak configuration the spectrum of RWM modes is usually characterized by the dominant toroidal component of mode $ n = 1 $ and by various poloidal modal components with $m=2,3,4$ $(2,1),(3,1),... $ etc.
+\footnote{
+However, recent experiments shown that in some tokamak configurations there is the presence of ideal \textit{kink} instabilities of non-resonant \emph{current driven} modes. These instabilities seem to be excited by the free energy in the gradients of the plasma current that arise during the ascent current ramp~\cite{baruzzo9, baruzzo10, baruzzo11}. This effect has the double disadvantage of limiting the maximum growth rate obtainable for the induction of the plasma current and, at the same time, they define a minimum value of the safety factor at the edge.}.
 %
 Usually the study of \acs{RWM}s is conducted in \acs{RFP} configuration, because in this context they are more easily reproducible and do not cause great damage to the walls of the chamber. Nevertheless, their stabilization is an important challenge also for modern Tokamak machines, being one of the main factors that limit the high $\beta$ configurations.
 
-To control the wall modes, in recent years some stabilization methods applicable to both the two configurations have been studied. Among these the stabilization based on the plasma rotation effect consists in the production of a toroidal angular momentum through the orientation of the neutral beam injector. This theory suggests that stabilization can be effectively achieved for angular velocities above a critical value ($\Omega_c \thickapprox 1KHz$) However, experimental observations have shown that, although this value is sufficient to maintain stability, in fact it is not compatible with values of $\beta$ above a certain threshold \cite{baruzzo12}. In fact, beyond a given restriction, the plasma tends to slow down the rotation, creating the conditions for the onset of \acs{RWM}. This method is effective for ensuring the functioning of recent Tokamak configurations~\cite{baruzzo12}, but not for the acs{RFP} configuration~\cite{baruzzo13}; it is also not yet clear whether it can be successfully used in the ITER project\footnote{International Thermonuclear Experimental Reactor, in Latin `` the way '': it is the machine that represents the passage between the studies performed so far on the physical and technological aspects of the fusion and the future power plant for the production of fusion energy.} due to the limited torque actually applicable by high-energy \acs{NBI}.
+To control the wall modes, in recent years some stabilization methods applicable to both the two configurations have been studied. Among these the stabilization based on the plasma rotation effect consists in the production of a toroidal angular momentum through the orientation of the neutral beam injector. This theory suggests that stabilization can be effectively achieved for angular velocities above a critical value ($\Omega_c \approx 1 kHz$) However, experimental observations have shown that, although this value is sufficient to maintain stability, in fact it is not compatible with values of $\beta$ above a certain threshold \cite{baruzzo12}. In fact, beyond a given restriction, the plasma tends to slow down the rotation, creating the conditions for the onset of \acs{RWM}. This method is effective for ensuring the functioning of recent Tokamak configurations~\cite{baruzzo12}, but not for the acs{RFP} configuration~\cite{baruzzo13}; it is also not yet clear whether it can be successfully used in the ITER project\footnote{International Thermonuclear Experimental Reactor, in Latin `` the way '': it is the machine that represents the passage between the studies performed so far on the physical and technological aspects of the fusion and the future power plant for the production of fusion energy.} due to the limited torque actually applicable by high-energy \acs{NBI}.
 %
 So, the solution offered by the presence of the conductive shell in the ideal wall hypothesis (perfectly conductive and continuous) has proved to be able to maintain stable equilibrium in presence of high growth factor MHD perturbations~\cite{gimblett_5,gimblett_6}; in the real case where the wall has a minimal - but not null - resistivity, the system generates \acs{RWM} type instabilities.
 
@@ -222,28 +227,30 @@ As already anticipated, the RFX experiment was modified with the introduction, a
 
 \subsection{RFP Dynamo effect}
 
-Ideal MHD means that plasma resistivity is mathematically equal to zero: this has the key direct consequence that the Alfven theorem holds. This states that the magnetic flux can be seen as ``\textit{frozen}'' inside the plasma (or in the other way around the plasma is frozen with the magnetic field line).
-But in a real case scenario the plasma resistivity normally inversely depends on the temperature. The more we approach the ideal MHD conditions the more the temperature increases. The direct consequence of the ideal conditions on plasma structure topology is that it does not change maintaining closed flux surfaces; on the other hand, if plasma is thought to be resistive, there can be finite currents that dissipate energy and the topology is allowed to change yielding field lines or flux surfaces that can be cut and reconnected together. This is called \textit{magnetic reconnection}. The regions where the currents can flow are called the current sheets while the reconnected flux regions are the \textit{magnetic islands}. The plasma changes in its defined topology, and it is usually undesirable because within the magnetic islands the quality of confinement is decreased; however in certain conditions this is a good outcome for RFP as it will be shown in few lines.
+The ideal MHD is a plasma approximation with resistivity set to zero: this has the key direct consequence that the Alfven theorem holds. This states that the magnetic flux can be seen as ``\textit{frozen}'' inside the plasma (or in the other way around the plasma is frozen with the magnetic field line).
+This approximation can be applied on experimental conditions where the resistivity is small and can be negletcted. Since in the plasma resistivity inversely depends on the temperature, this usually corresponds to high temeprature regimes.
+The direct consequence of the ideal conditions on plasma structure topology is that it does not change ans maintains the nested closed flux surfaces; on the other hand, if plasma is thought to be resistive, the magnetic field topology is allowed to change, and in some cases yielding field lines or flux surfaces to be cut and recombined, a process called \textit{magnetic reconnection}. The regions where the currents can flow are called the current sheets while the reconnected flux regions are the \textit{magnetic islands}. The plasma changes in its defined topology, and it is usually undesirable because within the magnetic islands the quality of confinement is decreased; however in certain conditions this is a good outcome for RFP as it will be shown in few lines.
 
-What has been shown so far is that, even if in the ideal condition the plasma has been made stable through a opportunely shaped safety profile, other instabilities can rise though: due to resistive components in the MHD equation the field lines tear and reconnect each other in the so called \textit{magnetic islands}.
-In an RFP system, where plasma resistivity is not null, there is a need for a mechanism to maintain the magnetic configuration balance over time otherwise diffusivity would flatten the toroidal magnetic field, the magnetic energy would be dissipated out, and the RFP configuration would be lost.
-If we approximate the plasma column to a cylindrical conductor using equations given in~\eqref{eq:mhd_sol1} the magnetic field in such a condition is subject to a resistive diffusion phenomenon described by:
+What has been shown so far is that, even if in the ideal condition the plasma has been made stable through a suitable shaped safety profile, other instabilities can rise through resistive components in the MHD equation the field lines tear and reconnect each other in the so called \textit{magnetic islands}.
+In an RFP system the plasma resistivity cannot be neglected and there is a need for a mechanism to maintain the magnetic configuration balance over time, against the magnetic diffusivity which tend to flatten out the toroidal field.
+
+The description of this process can be made clear by approximating the plasma column to a cylindrical conductor and using equations given in~\eqref{eq:mhd_sol1} the magnetic field in such a condition is subject to a resistive diffusion phenomenon described by:
 \begin{equation}
     \pdv{\Vec{B}}{t} = \frac{\eta}{\mu_0} \nabla^2 \Vec{B}
 \end{equation}
-Resolving the differential equation this field component - that describes the equivalent toroidal component in RFP - presents a decay time constant of $$\tau_R = \mu_0 a^2 / \eta$$, where $\eta$ being the resistivity of the equivalent conductor and $a$ the radius.
-On the contrary the experience shows that the RFP configuration is maintained for times longer than $\tau_R$. This seems to be the result of a spontaneous mechanism of regeneration of the dissipated magnetic toroidal flow, called \textit{dynamo} in analogy with similar phenomena in astrophysical and geophysical plasmas. The dynamo mechanism is responsible for generating an electric field which is added to the externally applied one and helps to drive the missing current density. 
-It is clear to see that at the reversal point, the value of the poloidal current $J_\vartheta$ is not zero. By checking the induction equation and Ohm’s law in the reversal location:
+Resolving the differential equation this field component - that describes the equivalent toroidal component in RFP - presents a decay time constant of $$\tau_R = \mu_0 a^2 / \eta$$ 
+where $\eta$ being the resistivity of the equivalent conductor and $a$ its radius.
+On the contrary the experience shows that the RFP configuration is maintained for indefinite times, much longer than $\tau_R$. This is the result of a spontaneous mechanism of regeneration of the dissipated magnetic toroidal flow, called \textit{dynamo} in analogy with similar phenomena in astrophysical and geophysical plasmas. The dynamo mechanisms are responsible for generating an electric field which is added to the externally applied one and helps to drive the missing current density. 
+It is clear to see that at the reversal point, the value of the poloidal current $J_\vartheta$ is not zero. The induction equation and Ohm’s law:
 \begin{equation*}
     \pdv{\Vec{B}}{t} = - \nabla \times \Vec{E}  \hspace{3cm} \Vec{E} + \Vec{v} \times \Vec{B} = \eta \Vec{J}
     \label{eq:ohm_dynamo}
 \end{equation*}
-Where again $\eta$ is the plasma resistivity. One obtains $E_\vartheta = 0$ and $E_\varphi = \eta J_\varphi$. But the former
-result $J_\vartheta = 0$ disagrees with the typical RFP discharge profile shown in~\Figure{\ref{fig:intro_safety_factor_profiles}}, not justifying the reversal.
-The idea is than that the reversal profile is not directly generated by $d\Vec{B}/dt$ but it is due to a internal \textit{dynamo} mechanism.
+At the reversal location $E_\vartheta = 0$, 
+but $J_\vartheta \neq 0$ in agreement with the typical RFP discharge profile shown  in~\Figure{\ref{fig:intro_safety_factor_profiles}}.
+The reversal profile is then not generated by $d\Vec{B}/dt$, which is null in stationary condition, but must be due to am internal \textit{dynamo} mechanism, linked to the flow term $\Vec{v} \times \Vec{B}$.
 
 This poloidal component $J_\vartheta$ is then responsible for the regeneration of a toroidal field in the core and for the sustainment of its reversal at the edge. It is worth noting that in \eqref{eq:ohm_dynamo} there is no need of many modes concurring to the dynamo, and the whole mechanism can be carried by a single perturbation~\cite{Bonomo39}.
-
 
 The time evolution of a magnetic island is described by the Rutherford equation and it is related to:
 \begin{equation}
@@ -252,23 +259,24 @@ The time evolution of a magnetic island is described by the Rutherford equation 
 %
 where $\tau_R$ is the local resistive time, $R$ is the geometrical radius, $w$ is the reconnected island width, and $\Delta^\prime$ is the logarithmic jump of the radial magnetic field component across the rational surface.
 %
-The value of $\Delta^\prime$ is than related to the radial magnetic field in the jump.
+The value of $\Delta^\prime$ is than related to the radial magnetic field in the jump:
 \begin{equation}
     \Delta^\prime (w) = \frac{1}{B_r} \left( \frac{dB_r}{dr}_\text{left} - \frac{dB_r}{dr}_\text{right} \right)
 \end{equation}
 %	
-So the classical tearing mode is a {\em current driven instability}.
+This jump correspond to a thin layer of finite current on the resonant surface and defines the \emph{classical tearing mode} which is a current driven instability.
 
 \subsection{SH and QSH states}
 
-The RFP configuration depends on plasma current that is externally driven by an applied toroidal electric field $E_\varphi$. The
-power dissipation through the plasma finite resistance (aka. Ohmic heating), together with the striction applied by magnetic pressure ($\beta$), heats the plasma and produces peaked electron temperature profiles. 
+The RFP configuration depends on plasma current that is externally driven by an applied toroidal electric field $E_\varphi$. 
+The power dissipation through the plasma finite resistance (aka. Ohmic heating), together with the striction applied by magnetic pressure ($\beta$), heats the plasma and produces peaked electron temperature profiles. 
 
 But the plasma resistivity $\eta$ inversely depends on electron temperature\footnote{the complete relation has been formulated by Spitzer as: $$\eta_\bot  = \frac{4\sqrt{2\pi}}{3} \frac{Z_e^2 m_e^{1/2} \ln{\Delta}}{(4\pi\epsilon_0)^2(k_B T_e)^{3/2}} $$.}
-as: $(\eta \propto \frac{1}{T_e^{3/2}})$, so to a local increase in electron temperature corresponds a decrease in resistivity, and hence to a further rising of the current density int that region, and obviously a related increase of Ohmic deposition. In this way, steep localized gradients of the current density profile tend to be generated, in which there is enough free-energy to drive an unstable spread spectrum of tearing modes $(m = 1, |n| \geq 2R_0 /a)$. The non-linear interaction of the $(m = 1, n)$ perturbations has been both theoretically explained and proved by experiments to be responsible of $(m = 0, n \geq 1)$ modes generation, which are resonant at the reversal surface \cite{Bonomo33}. This high magnetic activity translates into a populated spectrum of m = 0 and m = 1 modes.
+as: $(\eta \propto \frac{1}{T_e^{3/2}})$, so to a local increase in electron temperature corresponds a decrease in resistivity, and hence to a further rising of the current density in that region, and obviously a related increase of Ohmic deposition. In this way, steep localized gradients of the current density profile tend to be generated, in which there is enough free-energy to drive an unstable spread spectrum of tearing modes $(m = 1, |n| \geq 2R_0 /a)$. The non-linear interaction of the $(m = 1, n)$ perturbations has been both theoretically explained and proved by experiments to be responsible of $(m = 0, n \geq 1)$ modes generation, which are resonant at the reversal surface \cite{Bonomo33}. This high magnetic activity translates into a populated spectrum of m = 0 and m = 1 modes.
 Because of the many m=1 modes active in the spectrum, this RFP regime is also called \acl{MH}.
 
-These generated tearing modes plays an important role in the previously mentioned \textit{dynamo} effect; is worth noting though that, as already stated, the MH regime is not the unique solution to it. In fact, spontaneous helical symmetric states called \acl{QSH}, in which a single mode dominate the m = 1 spectrum, have been measured in all existing RFP machines~\cite{Martin_1999}; an example of such a spectrum is shown in~\Figure{\ref{fig:MHQSH_b}} . The QSH state is not yet completely understood and is considered as an experimental evidence; however a theoretical approach for a possible Single Helicity (SH) RFP equilibrium, in which only one m = 1 mode is present, has been conjectured~\cite{Cappello_1996}. QSH is actually a pure SH, since there is a residual background of modes with $m = 1, |n| > n0$ where $n_0$ being the dominant; thus these modes are usually referred as the “secondaries”. In adition in high current regimes we also experience very rapidly switching between MH to QSH. This gave reason to define a new magnetic parameter to highlight the instant state of modes raw configuration, that is the \textit{ratio of dominant vs secondaries}, marked as $NS$.
+These generated tearing modes plays an important role in the previously mentioned \textit{dynamo} effect; is worth noting though that, as already stated, the MH regime is not the unique solution to it. 
+In fact, spontaneous helical symmetric states called \acl{QSH}, in which a single mode dominate the m = 1 spectrum, have been measured in all existing RFP machines~\cite{Martin_1999}; an example of such a spectrum is shown in~\Figure{\ref{fig:MHQSH_b}}. The QSH state is not yet completely understood and is considered as an experimental evidence; however a theoretical approach for a possible Single Helicity (SH) RFP equilibrium, in which only one m = 1 mode is present, has been conjectured~\cite{Cappello_1996}. QSH is actually not a pure SH, since there is a residual background of modes with $m = 1, |n| > n0$ where $n_0$ being the dominant; thus these modes are usually referred as the “secondaries”. In addition in high current regimes we also experience very rapidly switching between MH to QSH states. This gave reason to define a new magnetic parameter to highlight the state, that is the \textit{ratio of dominant vs secondaries}, marked as $N_S$.
 \begin{figure}
     \centering
     \subfigure[]{\includegraphics[height=4.2cm]{img/2_eq/poincare_QSH.png} \label{img:MHQSH_a}}
@@ -311,16 +319,15 @@ RFX-mod is a flexible \ac{RFP} toroidal device (major radius $R=2 m$ and minor r
 \section{RFX diagnostics}
 % kind of RFX diagnostics
 In fusion machines the number of signals to be acquired is very high, they can be classified by the nature of the diagnostics:
-signals from magnetic probes, from Soft X-Ray detectors, form probes derived from photodiodes, from Langmuir probes, etc.
+signals from magnetic probes, from Soft X-Ray detectors, from light sensors such as photodiodes amd photomultipliers, from Langmuir probes, etc.
 %
-We can further divide the diagnostics into 3 main families:
+We can further divide the diagnostics into 4 main families:
 \begin{itemize}
     \item Magnetics, and the related plasma current, loop potentials, etc.
-    \item Spectroscopic diagnostics, like XUV-VUV or X-Ray, or electron cyclotron emission. 
-    \item Reflectometers and interferometers, which manipulate optical and laser signals by performing demodulation.    
-          Measurement of electron temperature Te provided by Thomson scattering of laser light (TS)
+    \item Spectroscopic diagnostics, which measure the spontaneous e.m. radiaton emitted by the plasma, ranging from the microwaves (electron cyclotron emission, ECE) to X-Ray, with all sorts in between: infrared, visible, UV and XUV. 
+    \item Reflectometers and interferometers, which are based on the modification on the phase and polarization of an microwave coherent beam or optical laser, once they pass through the plasma.  
+    \item Measurement of electron temperature Te provided by the light diffused by Thomson scattering (TS) when an intense laser pulse illuminates the plasma.
 \end{itemize}
-
 
 %
 \begin{figure}[ht!]
@@ -332,7 +339,7 @@ We can further divide the diagnostics into 3 main families:
 %
 
 \subsection{Thomson Scattering}
-The Thomson scattering  has been a key-factor diagnostic at RFX since the initial operations for the study of RFP plasma configuration, yielding a fundamental correlation between the electron temperature diffusivity and the magnetic fluctuations that link the plasma confinement to the dynamo related modes~\cite{}. This also evolved in the possibility to identify a hot asymmetric island when the temperature gradient extends to the plasma core in the \ac{QSH} state.
+The Thomson scattering  has been a key-factor diagnostic at RFX since the initial operations for the study of RFP plasma configuration, yielding a fundamental correlation between the electron temperature and the magnetic fluctuations that link the plasma confinement to the dynamo related modes~\cite{}. This also evolved in the possibility to identify a hot asymmetric island when the temperature gradient extends to the plasma core in the \ac{QSH} state.
 During the first operation of RFX the diagnostic was composed by a single pulse of laser from ruby diode ( $\lambda = 694 nm$ ) passing through the plasma in the equatorial plane, and two grating photo-multipliers spectrometers.
 This apparatus presented some limitations: from the precision point of view it suffered of a poor quantum efficiency of the multialkali cathode of the photo-multiplier (MCP-PMT) resulting in a general lack of sensitivity and noisy profile at low electron temperatures. On the other hand the 20 chords acquisition that characterized the acquired profile with a 24 mm spatial resolution was unable to effectively investigate the details of the QSH magnetic islands.
 
@@ -353,8 +360,8 @@ The recording system is also quite complex: for RFX-mod the detected signal has 
 % We chose the most reliable and fast response diagnostics ... (SXR and Magnetic coils MHD)
 % Other possible diagnostics can be added ( cope with time dim )
 % Possibility to trigger in realtime other diagnostics ( i.e. Thomson Scattering )
-
-In 1996 a SXR tomographic system was installed in a RFP (Reversed Field
+The measurement of the Thomoson scattering are very precise, but are available only at few times during the shots and thus is not possible to follow the time evolution of the temperature.
+A continuous measurement of the temperature can be obtained from a soft X-ray (SXR) detection system. In 1996 a SXR tomographic system was installed in a RFP (Reversed Field
 Pinch) experiment for the first time \cite{Franz_2001}. 
 As shown in the previous sections the RFP configuration is keen to produce a large amount of magnetic instabilities due to the low profile of the safety factor. The current driven instabilities that are very common in RFPs can grow in the core of plasma producing the so called ``magnetic islands''. 
 At the islands toroidal positions the SXR emits more, and localized regions are identified. 

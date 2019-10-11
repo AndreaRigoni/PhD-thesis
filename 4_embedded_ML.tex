@@ -2,16 +2,17 @@
 \chapter{Embedded ML Infrastructure for Plasma Characterization}
 \label{section:4_embedded_ML}
 
-It has been shown in the introductory chapter the diversification of signals within their heterogeneous nature, however a particular discussion should be also addressed to the possible domain of the data itself beyond the particular origin.
-In order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session a wide amount of sensors are usually required, both in time and in spatial domains.
-Although it is not true that controllability (and observability) of the system strictly depends on that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
+%It has been shown in the introductory chapter the diversification of fusion relevant signals within their heterogeneous nature, however a particular discussion should be also addressed to the possible domain of the data itself beyond the particular origin.
+In order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session, a wide amount of sensors are usually required, producing a large set of data both in time and in spatial domains.
+However it is not generally true that the control of the system strictly depends on all that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
 This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of few variables are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two control variable are the steering of the handlebar and the torque on the pedals. 
 
-Even if the complete environment of all the variables that must be observed to provide an optimal control on the system states is rather complex, it can be shown\cite{Lesort_2018}~\cite{an2019unsupervised} that a properly configured latent variables can effectively generate a simpler embedded representation. This in turn led us to start evaluating the possibility to a simpler control model that would take inputs from the latent states instead of directly depending on the whole detectors.
-Such a system would be possible only if many sub-systems of the experiment diagnostics would apply these ML techniques and cooperate to a unified embedded representation. This is actually a long shot scenario that is currently difficult to foresee in a concrete implementation, however some small steps have been done exploiting the already ongoing changes of RFX-mod2.
+Even if the complete environment of all the variables that must be observed to provide an optimal control on the system states is rather complex, it can be shown that a properly configured latent variables can effectively generate a simpler embedded state representation for control~\cite{Lesort_2018, an2019unsupervised}. This in turn led us to start evaluating the possibility of a simpler control model that would take inputs from the latent states instead of directly depending on the whole detectors.
+Such a system would be possible only if many sub-systems of the experiment diagnostics would apply these ML techniques and cooperate to a unified embedded representation. 
+This is actually a long shot scenario that is currently difficult to foresee in a concrete implementation, however some small steps have been done exploiting the already ongoing changes of RFX-mod2.
 
 A new setup of the magnetic probes is under study for the experiment, combining the structural upgrade of the conductive shell with the redesign of the magnetic sensor system, to gain a more detailed access at the Magneto Hydro Dynamic (MHD) processes that take place into the plasma~\cite{zuin2009current}~\cite{innocente2014tearing}.
-Part of the study that has been carried out during this research regarded the possible adoption of a fully digital solution, using a configurable FPGA to handle ADC conversion and providing a set of on-line functions that include the realtime numeric integration and signals recording.
+Part of the study that has been carried out during this research regarded the possible adoption of a fully digital solution, using a configurable FPGA to handle ADC conversion and providing a set of on-line functions that include the real-time numeric integration and signals recording.
 
 This fits well with the possibility of eventually apply also more sophisticated algorithms that are not handled by the central CODAS only but also in the peripheral devices that compose the acquisition front-end. 
 However the fundamental prerequisite is to achieve a compact and reliable implementation of such algorithms, and in particular for the encoder-decoder networks that attain the latent embedding. This must embrace a clever selection on both the hardware and software component of the acquisition system. In this chapter a proposal for a new DAQ chain is presented, together with the early results for the new magnetic acquisition system in RFX-mod2. Then, in~\cref{section:quantum}, a method to embed the neural network in such devices is explained.
@@ -20,29 +21,31 @@ However the fundamental prerequisite is to achieve a compact and reliable implem
 \subsection{New "smart" devices in DAQ chain}
 \label{section:daq-chain}
 
-In the context of a concurrent interest on data analysis and control in plasma experiments, a good implementation for an acquisition device should provide a double result: on one side it should act as a transparent recorder on the raw data that comes from the sensor, on the other side it should prepare a compact useful signal that can be used for the control.
+In the context of a concurrent interest in plasma experiments on both data analysis and active control, a good implementation for an acquisition device should provide a double result: on one side it should act as a transparent recorder on the raw data that comes from the sensor, on the other side it should prepare a compact useful signal that can be used for the control.
 The first requirement is evidently motivated by an off-line investigation on the recorded physical quantity, where characteristic of the signal could be eventually modified a posteriori from external information ( a custom analysis algorithm, or a better definition of the sensor/signal characteristics ). 
 The real-time control on the other hand has completely different requirements, being the timing constraints the key factor to provide a proper feed-back action. It needs to provide a concrete elaborated output right in a given time.
 
-In addition a pre-processing of the signal in the embedded design should provide a way to tune its characteristics. This does not hold in general for a transient recording device, where we are interested in maintaining a coherency on the signal history, but it is a key factor for controlling experiment, where we needs to modify parameters in the seek for new operative states. This is also particularly true in the perspective of applying neural networks because the training on new acquired data and/or change the layers structure bust be accounted.
+In addition a pre-processing of the signal in the embedded design should provide a way to tune its characteristics. This does not hold in general for a transient recording device, where we are interested in maintaining a coherency on the signal history, but it is a key factor for controlling experiment, where we needs to modify parameters in the seek for new operative states. This is also particularly true in the perspective of applying neural networks because the training on new acquired data, and/or change the layers structure, must be accounted.
 
 A good candidate FPGA technology was recently proposed and gained lot of interest as a possible solution for integrating both flexibility and performance. It comes from the market of embedded systems and exploit the \ac{SoC} fabrication technique to host a standard processing unit with an FPGA logic in the same silicon device.
 An example is the \textit{Xilinx Zynq} system, integrating a \textit{Kintex-7} family FPGA together with \textit{ARM-A9} CPU cores. 
-We based our study on this kind of chips being one of the most widespread adopted soultions, and because it is relatively cheap.
+We based our study on this kind of chips being one of the most widespread adopted solutions, and because it is relatively cheap.
 
 The duality of the processing system (PS) and the logic unit (PL) in the same chip presents many advantages. Many common subsystems, such as memory controller and IO ports, are handled by dedicated hardware. The ARM processor is also able to run a full featured operative system (like GNU Linux) at full performance, handling a possible high-level communication with other devices, with the storage system, or for central experiment control. 
 
 \begin{figure}
     \centering
-    \includegraphics[height=6cm]{img/4_EmbeddedML/zynq_schema.png}
+    \includegraphics[height=10cm]{img/4_EmbeddedML/zynq_schema.png}
     \caption{A schematic diagram of all Zynq-7000 All programmable SoC components, with the available interconnection ports for PS/PL communication.}
     \label{fig:zinq-7000}
 \end{figure}
+%
+In \Figure{\ref{fig:zinq-7000}} a basic schema of the internal Zynq-7000 is proposed. The upper white portion represent the hardware defined function and ports that pertains to the Processor System (PS): they are further divided in a functions related to the central application processing (APU in pink box), and the peripheral devices oriented hardware, such as the memory communication channels or the input output handling. The lower portion (in blue) is the customizable area represented by the Programmable Logic (PL).
+The communication means between this two systems is offered by 3 different kinds of IO channels: 4 General Purpose (GP) ports 32-bit wide for input output communication to a hardware Central Interconnect system, 4 High Performance (HP) 64-bit ports for direct memory access, and an Accelerator Coherency Port (ACP) that make the direct access of the PS to the logic.
 
-It allows to set-up a self-contained acquisition board with a drastic simplification of the system, providing both the autonomous local storage for high throughput transient recording functions, as well as the ability to send real-time decimated and integrated data to the control servers through standard gigabit Ethernet interface. 
+All these components in a single embedded device allow to set-up a self-contained acquisition board with a drastic simplification of the system, providing both the autonomous local storage for high throughput transient recording functions, as well as the ability to send real-time decimated and integrated data to the control servers through standard gigabit Ethernet interface. 
 
-Among the possible realtime pre-processing that can be developed, the flexibility provided by a configurable on board FPGA allows also the inclusion of more sophisticated triggering mechanisms, and a deeper integration with the timing systems. Examples of triggering mechanism are given by the acquisition of fast transients requiring high speed sampling only in a given, dynamic Region of Interest (ROI). This feature has been implemented in the first proof-of-concept device described in a later section and already used in the NIO1 experiment\footnote{The NIO1 experiment is a compact and modular negative ion source built at Consorzio
-RFX, with the aim to investigate the optimal configuration for a negative ion source for \acs{NBI} systems} as reported in Appendix~\cref{section:NIO1}. Deeper integration with the timing systems imply the ability of getting the clock and the trigger signals not only from digital inputs, but also from the specifically coded signal carrying both clock and trigger information (timing highway)\cite{dio4}. Such signals were used in the RFX-mod timing systems to distribute a synchronous clock and asynchronous triggers and a timing device was required for every ADC rack to extract the clock and the trigger signals. The timing device is no more required for a rack hosting the new ADC devices because the ADC devices can directly extract timing information from the timing highway. This will at the same time reduce the board population on cubicles and make the possible stand-alone operation of such devices for small experiments or placing electronics in critical sites.
+Among the possible real-time pre-processing that can be developed, the flexibility provided by a configurable on board FPGA allows also the inclusion of more sophisticated triggering mechanisms, and a deeper integration with the timing systems. Examples of triggering mechanism are given by the acquisition of fast transients requiring high speed sampling only in a given, dynamic Region of Interest (ROI). This feature has been implemented in the first proof-of-concept device described in a later section and already used in the NIO1 experiment\footnote{The NIO1 experiment is a compact and modular negative ion source built at Consorzio-RFX, with the aim to investigate the optimal configuration for a negative ion source for \acs{NBI} systems} as reported in Appendix~\cref{section:NIO1}. Deeper integration with the timing systems imply the ability of getting the clock and the trigger signals not only from digital inputs, but also from the specifically coded signal carrying both clock and trigger information (timing highway)\cite{dio4}. Such signals were used in the RFX-mod timing systems to distribute a synchronous clock and asynchronous triggers and a timing device was required for every ADC rack to extract the clock and the trigger signals. The timing device is no more required for a rack hosting the new ADC devices because the ADC devices can directly extract timing information from the timing highway. This will at the same time reduce the board population on cubicles and make the possible stand-alone operation of such devices for small experiments or placing electronics in critical sites.
 %
 The cited Zynq architecture has been provided in this research by the Red Pitaya board~\cite{redpitaya}, currently used for the development and tests. A different solution is however foreseen for the production system where an external ADC section with the Zynq-based module will be integrated in a custom carrier board. 
 An ADC front end, already used in other applications of real-time plasma control~\cite{ATCA-MIMO-ISOL}, has been considered and it is presented in the next section. 
@@ -224,6 +227,11 @@ In \Figure{\ref{fig:noise_drift_b}} a set of integrated EM probe signals has bee
 The study on This module showed the feasibility of a completely digital approach for the electromagnetic probes acquisition in RFX-mod2. We exploited existent hardware from ATCA-MIMO-ISOL system from Jet interfaced to a flexible FPGA SoC Board to learn the communication interface. The noise spectrum revealed that this module is not actually adequate for the purpose of performing the digital integration of the EM signals, thus a further investigation will be required to improve the signal to noise ratio in such architecture. However the chain of acquisition has been successfully built for the system ADC module and FPGA host, proving that the technology is almost ready to provide such digital signal elaboration.
 This opened the way to explore other kinds of signal elaborations, such as the introduction of ML algorithms, and will make possible to use all electromagnetic channels to extract plasma state information for the control.
 
+
+
+
+
+
 \subsection*{Machine Learning for digital signal elaboration}
 
 In RFX-mod a fixed reduced set of signals from EM probes was used for the active plasma control, requiring a new set of ADC converters in respect to the transient recorders used for data acquisition. In RFX-mod2 it will be possible to re-use any ADC channel from EM probes for real-time control, and the actual number will be only limited by other factors, not related to the ADC devices, such as network bandwidth or control computation load. 
@@ -233,16 +241,17 @@ For example a properly trained autoencoder could perform a compression of the re
 In \cref{section:VAE}, for example, the representation of a complex 40 element features has been reduced to a representative latent variable of only size 2. 
 This could be thought as a method for compressing a spatial or time (or both) varying signal into an embedded representation through an encoder network on the sensor front-end, and then this could be re-expanded back to a representation of the original signal on the controller back-end.
 
-In addition, if a complete control based on a neural network will be applied, the embedded representation could be directly used, easing the computational load of the decoder function. This will discussed later talking about the Autoencoder composition.
+In addition, if a complete control based on a neural network will be applied, the embedded state representation could be used directly, easing the computational load of the decoder function. This will discussed later talking about the Autoencoder composition.
 It is nonetheless worth to mention the fact that, in such a situation, a possible communication of a latent space representation could be also thought to be in the opposite direction. Indeed, if we would succeed to have a complete characterization of the plasma status, a possible backward information could be fed to the sensors to better interpret the read data.
-For example in the case of EM probes this could ease the integration drift simply knowing, from all the other sensors, that such a shift of the magnetic field would be unlikely to happen.
+For example, in the case of EM probes, this could ease the integration drift simply knowing, from all the other sensors, that such a shift of the magnetic field would be unlikely to happen.
+
+Such a complex elaboration to a simple one-dimensional data acquisition could be an overkill, we don't have a real numerical foresight of the needed specifics because the complete RFX-mod2 control design has not been completed yet.
+Nevertheless this approach would be actually a real outstanding solution if more throughput critical devices would be embedded within the control. For instance this could be the case if we will add the plasma barrier interaction taken with high frame-rate cameras, or complex diagnostics such as Soft X-Ray or Thomson Scattering( a simple example of the integration of Soft X-Ray SXR3 diagnostic with magnetic sensors will be proposed in \cref{section:RFXhunch} ).
 
 This is a very good example of the possible data fusion scenario that neural networks could bring once integrated to the RFX-mod2 acquisition system.
 A small step has been initiated from the upgrades that could be applied to RFX-mod2, and the adoption of the discussed "smart" sensors devices.
 However this remains a bare intuition unless concrete implementations of a neural networks in FPGA are not demonstrated.
 This is the topic of the next section.
-
-
 
 
 
@@ -474,6 +483,7 @@ To improve the network performance in an aggressive quantization environment (th
 
 
 \subsection*{Binarized Thresholds in FPGA}
+\label{section:BNN thresholds}
 
 Many tools are currently supporting quantization aware training. \Tensorflow framework provides a dedicated tool in \texttt{tensorflow.contrib.quantize} that is a standard implementation of quantization-aware training with simlated quantized activations. Another emerging tool is the Xilinx Grafitist~\cite{tqt2019}. It has been specifically designed for FPGA oriented deployment and exploit all the main training optimization previously discussed.
 
@@ -578,7 +588,7 @@ This opens many possibilities and future improvements that could come on one sid
 % We choose a hard tanh over tanh (a.k.a. soft tanh) because it is cheaper to implement and works very well
 % in our experiments. 
 
-The implemented approach consist on exploiting the sign function as the neuron non-linearity, and for weights the following procedure is applied during training:
+The implemented approach consists on exploiting the sign function as the neuron non-linearity, and for weights the following procedure is applied during training:
 all real-valued weights ($w^r$) are constrained between -1 and 1, by clipping them after a batch normalization.
 The real-valued weights would otherwise grow very large without any impact on the binary weights.
 Then when using a weight $w^r$, it is quantizes using $w^b = {\rm Sign}(w^r)$.

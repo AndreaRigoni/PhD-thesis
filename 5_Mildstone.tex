@@ -7,9 +7,10 @@
 % MDSplus, MARTe
 % ...
 
-From the use of ML algorithms that have been explained so far reveals a quite chaotic organization of the many possible improvements that can be added. This is indeed one of the main difficulties that characterize the ML study and one of the reasons that discourage its use on the context of physics and control.
-One of the key component to apply this paradigm is thus to organize the use of algorithms in a way that all changes must be tracked and all tests can be compared.
-Moreover the statistical intimate basis of them forces the organization of the data organization to provide a fast and accurate access to experiment data. 
+During the study of ML algorithms for this research, a complex set of tools have been used revealing a difficult organization of the needed components.
+This is indeed one of the main difficulties that characterize the ML study nowadays, and one of the reasons that discourage its use on the context of physics and control.
+One of the key aspects to apply this paradigm is thus to organize the use of algorithms in a way that all changes must be tracked and all tests can be compared.
+Moreover the statistical intimate basis of them forces the organization of the data as well, to provide a fast and accurate access to experiment measures. 
 Last but not least, the heterogeneity of the host architecture where the network can be trained, tested, and deployed asks for a extreme flexibility of the algorithms implementation.
 
 These three factors suggested that, for the real application of such tools in the context of an experimental facility, a unique organization of the overall structure of the code repository, data storing, and architecture deployment become necessary.
@@ -32,7 +33,8 @@ The idea of a single definition for transferring data among distributed system i
 %Some publicly available like OpenORB D-BUS ~\cite{} some not DCE, COM, ZeroC
 This holds also for tools that are already been adopted by fusion community. For example the MDSplus data acquisition system uses a unified definition of exchanged types as well, called "descriptors", that is in turn inspired by the internal structures of the Digital-VMS system.
 
-The idea of embracing \Tensorflow comes on one side from the widespread utilization on the ML community
+%The idea of embracing \Tensorflow comes on one side from the widespread utilization on the ML community
+
 
 
 
@@ -64,7 +66,7 @@ The interface configuration, ie the number of shared registers, break lines and 
 
 Once Linux is created and the corresponding device tree, the final step is the development, starting from the generated model, of a Linux device driver that will allow user programs to interact with the FPGA application. In the simplest configuration, a buffer in user space is mapped to the sets of registers defined in the FPGA application so that information is exchanged by reading and writing that buffer.
 
-From the description above, it is clear that building a SoC system from scratch is not an easy task, despite the availability in the network of all the required tools. The presented framework integrates all the previous steps and greatly simplifies the overall process. In particular, the picture:
+From the description above, it is clear that building a SoC system from scratch is not an easy task, despite the availability in the network of all the required tools. The presented framework integrates all the previous steps and greatly simplifies the overall process. In particular, the framework:
 \begin{itemize}
     \item Supervises the compilation of the toolchain and the Linux kernel using the components taken from the XILINX repository;
     \item Manages the management of the VIVADO project and the IP components required for FPGA integration;
@@ -73,10 +75,36 @@ From the description above, it is clear that building a SoC system from scratch 
 \end{itemize}
 
 
+\begin{figure}
+    \centering
+    \includegraphics[height=5cm]{img/anacleto.jpg}
+    \caption{Anacleto steps in building a new system. }
+    \label{fig:anacleto_steps}
+\end{figure}
+Using this framework, a SoC FPGA application can be built from scratch by executing the general steps described in \Figure{\ref{fig:anacleto_steps}}:
+As shown in the schema, the overall workflow can be splitted in two main stages: the building of the board system comprising the operating system kernel and software, and the specific project building with the definition of the logic and the software drivers that compile against the built kernel. The same board system can be shared among different specific projects and many different projects can be also installed in the same board. The reported steps depict a possible procedure example through the development process a developer would follow, that is:
+
+\begin{itemize}
+    \item \textbf{boostrap} the repository that set-up the environment and download all the required components and tools;
+    then \textbf{configure} to set-up the system before building the toolchain and the Linux Kernel; this also compiles and shows a graphical user interface that eases the selection of the required options.
+
+    \item \textbf{make} to compile the toolchain and then the Linux Kernel;
+    
+    \item \textbf{make new-project} to start a new VIVADO project for the development of the specific FPGA components in VHDL or Verilog. All the IP components required for SoC interface are created and can now be configured using VIVADO graphical        interface;
+    
+    \item \textbf{make write-project} once the logic has been defined with external sources and VIVADO project block designs, the whole project definition can be stored in the repository in the form of a script able to regenerate the project from scratch, even using different versions of VIVADO.
+    
+    \item At this point the FPGA application can be developed. It is also necessary to write the Linux driver for communication and a skeleton Linux driver source file is generated by the framework, based on the current configuration of the interface IP components. Then make starts both the logic synthesis and the compilation of software components.
+    
+    \item \textbf{make deploy} to generate the device-tree, compile the Kernel module, download the kernel and the bitstream into the target device.
+    
+\end{itemize}
+
+The applicability of the SoC architecture has been further improved by the presented framework, hiding to the developer several intermediate steps and exposing only the necessary information for the proper system configuration. The presented framework however leaves to the developer the whole responsibility of the FPGA firmware development, a task that requires ingenuity and experience. 
+There are however several applications of interest in fusion that don’t require sophisticated FPGA firmware, as it has been the case of the presented timing board. This class of applications is likely to benefit from SoC architecture, especially when the set of required tools and configurations is transparently managed by a tool like the one presented here.
+
+
+
+
 % \section{Kinds of communication channel}
-
-
-
-
-
-\section{Mim - Mildstone approach for interface modelling}
+% \section{Mim - Mildstone approach for interface modelling}

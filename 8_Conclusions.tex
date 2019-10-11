@@ -2,7 +2,44 @@
 \label{section:8_conclusions}
 
 
+This study regarded the possible use of \textit{Machine Learning} algorithms for the diagnostic data integration in the complex scenario of the active control for fusion relevant plasmas.
+In this context novel set of generative unsupervised models has been studied.
+A remarkable performance reported in literature recently promoted a big advance in development of new software frameworks for the analysis as well as new methods for hardware deployment of such algorithms.
+
+Thanks of the rapidly increasing of this technology many new methodologies have competed to impose their ideas.
+In particular, two of them have been proved to be interesting for the real-time data integration.
+A new stochastic approach applied to deep neural networks provides a robust non-linear embedded representation called Variational Autoencoders.
+Then a further network optimization, and a deep study of lower precision neural networks, promise a new way to deploy such models in FPGA, opening in turn the possibility to apply even a complex topology to a real-time system.
+
+A general study of this models has been proposed and revealed that the learned latent variables of these VAE generated embedded manifolds are a concrete means of representing data in a compact yet accurate way. In addition they also provide a way to generate even unseen examples that can be generated from the latent space matching the most probable related input.
+This study has been focused on the simple case of representing a uni-dimensional mapping between two sets of variables.
+A simple \VAE{2} has been constructed using \Tensorflow framework and it has been used to create a set of examples. Although the limited reconstruction accuracy of the bi-dimensional case, this turned to be suitable for an easy representation in euclidean coordinates. 
+Thus exploiting this simple example, with a dummy generated class of signals as input, some plots have been presented showing the generator feature of the autoencoder. This was useful to see how the latent variables representations organize in clusters, and the effect of the proposed $\beta$ regularization.
+A further digression proposed a study of the topology of the created embedded manifolds that could depend on the chose dimensionality and on the structure of the data. A brief introduction to the disentangled factors has also been done related to the value of $\beta$.
+
+On the other hand the possibility to a concrete hardware implementation was discussed in relation with a new device that is under active development for the electromagnetic signals acquisition upgrade in RFX-mod2.
+The hardware implementation of neural network exploits a new quantized representation of the parameters and activation functions of the units. The accuracy issues posed by the reduced precision for them has been discussed, proposing a set of methodologies to overcome these limits. An example of binary convolutional neural network has been also tested on a real device quipped with a Zynq 7000 showing that the technology is almost ready to be used.
+
+In has been also discussed how this complex set of software tools and data organization that is required to study and operate such methodologies creates the need of a unified organization of software. 
+A new framework, called Mildstone, has been proposed containing several packages to operate such methods.
+In particular for the SoC devices hardware and software development the Anacleto tool has been created with the particular intent to accompany the developer from the hardware description on the FPGA to the Linux kernel driver design.
+
+A final test on a real case scenario based on the reconstruction the SXR3 temperature profiles has been performed.
+An initial test on the same \VAE{2} simple model has been proposed to look at the latent representation compared to plasma relevant parameters. Eventually a more accurate model of a \VAE{6} has been used as the ground truth to train an further inference network that succeeded to map electromagnetic measures into the temperature profile of the plasma with a good precision.
+
+\section{Proposals}
+
+This document aimed at showing a minimal closed example to show the feasibility of heterogeneous data integration among sensors for plasma control. However the actual control itself, that starts from the latent state representation, has not been touched.
+This is motivated by the fact that this introduce a further complexity detail that have to take into account the system dynamics and would require a proper discussion.
+A possible next step of this research would be oriented in this direction. A consolidated study on non-linear dynamic control systems has been proposed for the simple recurrent neural network in the Elman formulation. In this case analytical approach can be used to study the osservability and controllability of the such systems~\cite{albertini1995forward}~\cite{albertini1994state}~\cite{sontag1997complete}.
+
+More accurate non linear control based on LSTM networks is under active investigation and is one of the main challenge in the current ML research~\cite{Lesort_2018, an2019unsupervised}
+On one side the system could learn an already defined complex model for control within the latent space. In this case a simple composite autoencoder could be trained with the feedback signals among the input features, thus generating, for each of the latent states, a possible output for the them too.
+On the other side the real turning point will be when an on-line variational learning will be possible for a neural networks. 
+For example the stochastic approach for the binarized neurons that was discussed in~\cref{section:BNN thresholds} could represent a possible way to achieve that.
+
+A final exiting field of study is represented by disentangled factors analysis and the study of the relation of these with the minimal control in complex systems~\cite{Liu2011}.
+
+
 % This is not the lose of the physical representation though: where models are well defined they can add information on data, for example the mode decomposition or the 
 
-
-% \section{Easing the curse of dimensionality by disentangled factors}

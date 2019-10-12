@@ -32,10 +32,10 @@ Associated to this steep changes of the magnetic configuration high gradients of
 \section{Constructing the dataset} % SHAx
 \label{section:SXR_dataset}
 
-
-Once selected the set of signals that were thought to present all needed ingredient for reconstructing the plasma configuration a complete dataset able to comply with \Tensorflow input data of the fitting algorithms. Within the \acs{TF} framework a particular structure is devoted to represent such dataset; this structure is meant to provide a set of commodity routines that are used afterwards to handle the training process organization, such as: the split of training and validation data, the batching subdivision, the mapping for adapting to the particular model, applying data regularization algorithm (simple shuffling for example), and so forth.
-For this reason making out fusion data compatible with this structure is a key point to have a flexible input for all possible constructed network and ML models. 
-This structure is defined in a special \TF object class that can be simply included in python source directly reading a sequence array, a record array of structured data, or database structures such as \Pandas \textit{dataframe}~\cite{mckinney-proc-scipy-2010}.
+For correctly train the machine learning algorithm the complete set of all the desired data must be prepared in advance. We started by a careful selection of several temperature profiles that have been recorded by the SXR3 diagnostic, and a set of other parameters acquired during the same time. %CITARE GOBBIN (NON SO IL PAPER DI RIFERIMENTO)
+These represent a selection of parameter that were thought to relate with the plasma state configuration, and the temperature associated to the QSH in particular. A complete list of such dataset entries is reported in \ref{tab:database}. This dataset has been the adapted to comply with \Tensorflow input features for the fitting algorithms. Within the \acs{TF} framework API a particular object class is devoted to represent such dataset. This is meant to provide a set of commodity routines that can be used to handle all the training data preprocessing, such as: the split of training and validation sets, the mini-batch subdivision (i.e. a selection of chunks of samples that are processed in the same train step and for which a single average loss is computed), a mapping with a filter function to prepare data to the particular model, applying possible data regularization (the simple shuffling for example), and others.
+For this reason making the experimental outputs data compatible with this structure is a key point to have a flexible set of features for all possible constructed network and ML models. 
+This structure is defined in a special \TF object class. It can be included in the python source taking input from: an array sequence, a record array of structured data, or a structured database such as \Pandas \textit{dataframe}~\cite{mckinney-proc-scipy-2010}.
 
 \begin{figure}
     \centering
@@ -48,11 +48,11 @@ This structure is defined in a special \TF object class that can be simply inclu
 \end{figure}
 
 Although this is the actual structural output shape of our dataset we had to cope with the heterogeneity of our data sources: being part of the signal dataset coming from a \ac{IDL} data-structure array of a complex and accurate selection on relevant experiment pulses~\cite{Gobbin_QSH}, and part from raw or elaborated signals directly read from the global \MDSplus database of pulses.
-For this reason we chose to make a first collection of all signal in a separate database that could be thought as a signal common cache of all the used components in the presented ML recipes.
+For this reason we chose to make a first collection of all needed signals in a separate database that could be thought as a signal common cache of all the used components in the presented ML recipe.
 This dataset represents also a further useful mean of data handling, being provided with tools such as: ordered or normalized subsets generator, or interactively selection of the missing data representative symbol (i.e. NaN flavors, zero float, negative sign, etc.).
 Moreover an interactive collating signal selector has been implemented that can generate sets of arrays of signals data composed by sequence of inputs selected by name. In this way we could have a direct array of parameters by a simple query: for example with the string "\texttt{t\_Ip\_Vt\_Theta\_F}" the output would be a list of all times in all pulses made by arrays with [\textit{time}, \textit{plasma current}, \textit{toroidal loop voltage}, \textit{theta parameter}, \textit{reversal parameter}].
 
-After the definition of the data the target \TF dataset adaptation has been done using the dedicated \TF \verb|Dataset.dataset_from_generator()| function. This is particularly useful because it can dynamically adapt to the particular input, and will be the suitable tool for the future enhancement to any possible dynamic source selection (i.e. the direct \MDSplus query or any other).
+After the definition of the data the target \TF dataset adaptation has been done using the dedicated \TF \verb|Dataset.dataset_from_generator()| function. This is useful because it can dynamically adapt to the specific input, and will be the suitable tool for the future enhancement to any possible dynamic source selection (i.e. the direct \MDSplus query or any other).
 In the following a related code has been extrapolated from our dataset definition:
 %
 \begin{lstlisting}[language=Python, caption=Dataset from generator]
@@ -77,8 +77,8 @@ In the following a related code has been extrapolated from our dataset definitio
         return tf.data.Dataset.from_generator(gen, types, shape)
 \end{lstlisting}
 %
-here the generator function is the nested defined method called \verb|gen()| that yields the dataset components from a itertool object or simply return if we ran out of dataset bounds. The last is the defined identification of the sequence termination\footnote{this is not actually a mandatory behavior, we could have a function that generates new unseen data \textit{ad libitum} without haveing to cope with validation restrains or shuffling batches}.
-Afterwards the extracted datum is packed in a \TF input tensor specifying tuples of its type and shape.
+here the generator function is the nested defined method called \verb|gen()| that yields the dataset components from a itertool object or simply return if we ran out of dataset bounds. In that function any kind of operation can be performed, such as a call to a database, a MDSplus tree structure access, or even a function that create a new sample just in time. The void return serves as the identification of the sequence end\footnote{this is not actually a mandatory behavior, we could have a function that generates new unseen data \textit{ad libitum} without haveing to cope with validation restrains or shuffling batches}.
+Afterwards the extracted sample is packed in a \TF input tensor specifying tuples of its type and shape. A tensor is, in one word, the \TF version of the \textit{any} object: it can be composed by almost any kind of structured data once it is defined with its \textit{type} and organized in array or matrices with the given \textit{shape}.
 
 The final dataset was eventually composed by a list of arguments chosen from the list in~\Table{\ref{tab:database}}.
 In particular concerning the electron temperature we composed the \textbf{te} elements as the y-axis and either \textbf{prel} or \textbf{rho} for the x-axis of the profile. 
@@ -136,11 +136,12 @@ In particular concerning the electron temperature we composed the \textbf{te} el
     \caption{List of arguments for each element of the database where the input dataset is composed. }
     \label{tab:database}
 \end{table}
-From this point of view the generated signal can be seen just like the dummy example that has been used to investigate the properties of the variational autoencoder in section~\cref{section:VAE}; again we can see the variation on x-axis as an extension of the 1D signal to create a general function mapping in which the x-domain is the position on the direction of reconstructed measures and the y-domain is the related acquired temperature.
+From this point of view the generated signal can be seen just like the dummy example that has been used to investigate the properties of the variational autoencoder in section~\cref{section:VAE}; again we can see the variation on x-axis as an extension of the 1D signal to create a general function mapping, in which the x-domain is the position on the direction of reconstructed measures and the y-domain is the related acquired temperature.
 Beside the values of the actual y-axis temperature, the main difference from the previous generated dataset is that the related position, although being in the same way an ordered set, is not completely random, but the shift can be seen almost as an added structured noise.
-This is in fact a slight simplification of the problem and for the model itself that relax the need of reconstructing the previously discussed \textit{elastic fit} factors in the latent space.
-On the other hand what is reasonabe to expect from those profile is a continuous passage from a flat low-temperature configuration to a central peaked curve where eventually the "\textit{hunch}" can be either centered or shifted depending on whether we are looking at a QSH or a MH configuration and also, in the former case, the actual poloidal position of the \textit{island} that directly depends on the phase of the running dominant mode.
-It is nevertheless worth to be specified that both datasets, the dummy generated sum of gaussian envelops an the real temperature profiles, are formally identical in their public API. Therefore  any applied algorithm can be used with one or the other, with the same script structure; the main difference resides only in the supervised labelling: the real curves temperature profile does not provide the related associated label, that in the dummy case describes the generation class to which it belongs (previously named \textit{kind}).
+This is in fact a slight simplification of the problem as the training does not need to reconstruct the previously discussed \textit{elastic fit} factors in the latent space.
+
+On the other hand what is reasonable to expect from those profile is a continuous passage from a flat low-temperature configuration to a central peaked curve where eventually the "\textit{hunch}" can be either centered or shifted depending on whether we are looking at a QSH or a MH configuration and also, in the former case, the actual poloidal position of the \textit{island} that directly depends on the phase of the running dominant mode.
+It is nevertheless worth to be specified that both datasets, the dummy generated sum of gaussian envelope an the real temperature profiles, are formally identical in their public API. Therefore  any applied algorithm can be used with one or the other, with the same script structure; the main difference resides only in the supervised labelling: the real curves temperature profile does not provide the related associated label, that in the dummy case describes the generation class to which it belongs (previously named \textit{kind}).
 
 
 
@@ -155,15 +156,18 @@ It is nevertheless worth to be specified that both datasets, the dummy generated
 %% FD-NT-27
 \section{Handling missing data}
 
-Within the input dataset, if any of \textbf{prel} or \textbf{rho} has been selected to describe the x-axis position on the electron temperature profile, it is almost immediate to see that the majority of samples is actually missing in some of the acquired position. This means that the number of real values for the corresponding line of sight have not been recorded. 
-In the input dataset all arrays have been set to be left filled without spaces, from the minimum to the maximum x-position values, and a zero queue is left on the remaining. This is not acceptable to represent a valid network input as it would differently stimulate neurons with values that do not pertain to the same physical quantity, but are organized only by a favourable memory index.
+Within the input dataset, if any of \textbf{prel} or \textbf{rho} has been selected to describe the x-axis position on the electron temperature profile, it is almost immediate to see that the majority of samples is actually missing in some of the acquired position. This means that the number of real values for the corresponding line of sight have not been recorded because too noisy in that moment.
+In the input dataset all arrays have been set to be left filled without spaces, from the minimum to the maximum x-position values, and all zeros are left on the remainings. This is not acceptable to represent a valid network input as it would differently stimulate neurons with values that do not pertain to the same quantity.
 A first reorganization was thus needed to define a set of new array position that are indexed on a the actual contained value basis.
 
-The entire input array has been also defined over sized with respect to the complete acceptance of the actual positions. This means that the complete dataset could be reduced implementing a shrink of given set filling the gaps that have been left in these arrays. If all valid data - that account elements on the basis of a AND boolean operation between the non NULL data in x-position (either \textit{prel} or \textit{rho} arguments) and y-position (the Te temperature) - are reduced by sum along each element xy array, the overall distribution of the obtained sum values shows indeed a maximum of 18 counts, when the total size of each array is 20. Moreover, once the reordering of x-axis positions have been performed, and the zero populated elements removed, for some of the positions the NULL data persists again in almost the entire dataset (with very few exceptions). 
+Counting all valid data from arrays resulted in a range between 2 and 18.
+We ordered the x-data in the array with the respective position of the diagnostic line of sight, in this way the index of the array corresponds to the number of the line of sight, and in turn with the ordered impact parameter.
+Moreover, once the reordering of x-axis positions have been performed, and the zero populated elements removed, for some of the arrays indexes the NaN data persisted again in almost the entire dataset (with very few exceptions). 
+This again represents a problem for the training of the input nodes, indeed in this way some of the network units are fed with invalid data for most of the dataset input affecting the training result.
+We finally decided to apply a shrink of the dataset using a k-means approach. We defines $k=15$ centroids and the k-means was fitted on the basis of the x-values (i.e. the \textit{prel} position). This is actually a over constraint that loose some of the available information on the few input data that present more than k elements; however this allows to have a correctly distributed set of positions to correctly feed all neurons of the network.
 
-We finally decided to apply the reordering of the dataset x and y arrays using a k-means approach, defining the centroids on the basis of the x-value (i.e. the \textit{prel} position) on a total amount of $k=15$ clusters. This is actually a over constraint that loose some of the available information on the few input data that present more that 15 elements; however this allows to have a polluted set of positions to perform a useful training for all neurons that are facing the input features.
-Another possible approach would have been to conversely apply a complete random position to the couple x-y leaving the network to perform a reordering on the firs layers; the casual selection on position is again needed to have a uniform population of input feature per neuron otherwise the training would expose an under-fitted set of weights on its internal kernel that would lead in turn to an undetermined local output on the network.
-This refinement was not pursued at this first attempt though because we decided to maintain the overall needed network structure as simple as possible. In any event we leave it for a second stage of implementation to obtain a complete useful reconstruction of the profile.
+The possible opposite approach would have been to apply a uniform random position in the array leaving the network performing the reordering on the first layers; this random choice would work as well because fulfill the needed uniform population of input features per neuron. Otherwise the training would expose an under-fitted set of weights on its internal kernel that would lead in turn to an undetermined local output on the network.
+This refinement was not extensively tested though because we decided to maintain the overall needed network structure as simple as possible. In any event we leave it for a second stage of implementation if a complete reconstruction of the profile will be needed.
 
 That said, we are still facing a sparse input feature set where many values are NaN\footnote{NaN - litterally Not a Number - is a member of numeric data types to determine an undefined or unrepresentable value, especially in floating-point arithmetic. }. Unfortunately most generally available common implementations of neural network does not comply with NaN values. The common approach is to fill the empty gaps with a pre-computed value before the application to the neural network; this is commonly referred as \textit{data imputation} preconditioning. Many further approaches can be selected for this imputation algorithm, and a general accepted approach is a regression of some kind on the neighbour of missing data. This seemed a well documented and easy way to go at first glance; however in this dataset we are facing many adjacent missing data and a "simple" regression (polinomial or ridge) didn't produce a good fit for all the samples. 
 
@@ -183,7 +187,7 @@ This is applied for all (and sole) training data; we chose to apply the zero flo
     \centering
     \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example.png}}
     \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example2.png} \label{fig:missing data example_b}}
-    \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example3.png} \label{fig:missing data example_c}}
+    %\subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example3.png} \label{fig:missing data example_c}}
     \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaN-Mask layers, where only 5 valid element were present in the input profile (a)(b); a slight effect of VAE denoising is also visible in (b) with VAE intrinsic smoothing overimposed, while the overcomplete recovery from \cref{section:recovery} has been applied on (c). }
     \label{fig:missing data example}
 \end{figure}
@@ -200,7 +204,7 @@ Two examples of extreme missing data input have been proposed to a \VAE{2} model
 \subsection{Data recovery and signal denoising}
 \label{section:recovery}
 In~\Figure{\ref{fig:missing data example}} an example of missing data recovery has been presented where a simple \VAE{2} model was able to generate the missing portion of the curve. The beauty of this imputing data approach, as already anticipated, is that the network proposes a regression that is based on available input data, but also on the complete dataset because it proposes an instance of a reconstructed space that comes form a likelihood maximized over the entire dataset.
-However in~\Figure{\ref{fig:missing data example_b}} some points on the right side of the profile seem to be bad reconstructed, but this example was carefully selected to show on the contrary another concurrent effect of \acs{VAE} generative output: the data denoising.
+However in~\Figure{\ref{fig:missing recovery_a}} some points on the right side of the profile seem to be bad reconstructed, but this example was carefully selected to show on the contrary another concurrent effect of \acs{VAE} generative output: the data denoising.
 This exploit the same principle that the reconstruction is treated scholastically, the effect is well known and fall into the category of \textbf{denoising autoencoders}.
 
 To make autoencoder act as a denoiser~\cite{vincent_et_al_denoise2008} the input is usually deliberately corrupted by randomly turning some of the features to zero. In general, the percentage of input nodes which are being zeroed is around 50\% but a lower count, such as 30\%, works as well; the actual optimal value seems almost depending on the amount of data and input nodes you have~\cite{ae_denoise}. In our case what we see is that the NaN-Mask is already doing that; we omitted to train the error on the NaN values as it drives the learning algorithm to a wrong bias, but the zeroed value just after the mask layer is seen by connected nodes just as a dropout would have been added to the network~\cite{Srivastava:2014:DSW:2627435.2670313}. So in this case we can say that the missing distribution is actually performing slight denoising of the input data; unfortunately this is not the sole component of the observed smoothing. If the added dropout helps the network to be more robust on input variation (denoising effect) on one side, it is also well known that VAE approach tends to add a slight blurring on the generated output~\cite{ghosh2019variational}. 
@@ -216,8 +220,16 @@ As it can be seen from the schema the dual operation on masking NaN values is pe
 \end{figure}
 %
 Our version of the recovery model structure is also \textit{overcomplete}: this means that the size of the latent space has its dimension size that equals or exceeds the size of the features dimension. Even if this condition could be thought as a possible loose of embedding properties for VAE, the final result shows to not fall on overfitting condition thanks to intrinsic self regulatory behavior~\cite{dai2017hidden}. We exploited this condition in recovery by setting the latent space with the same feature dimension; this has been represented in the same schema picture of~\Figure{\ref{fig:VAE_recovery}} by the enlarged size of the variational components ($\sigma_z, \mu_z, z$). This shown to reduce the blur effect over denoise, helping to provide a good fit on output recovered data vs missing features.
-
-
+\begin{figure}
+    \centering
+    %\subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example.png}}
+    \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example2.png} \label{fig:missing recovery_a}}
+    \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example3.png} \label{fig:missing recovery_b}}
+    \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaN-Mask layers (a); 
+    data recovery has been applied with \VAE{30} on (b). }
+    \label{fig:missing recovery}
+\end{figure}
+An example of recovery is shown in \Figure{\ref{fig:missing recovery_b}} where the structure of the overcomplete \VAE{30} recovered the curve maintaining a good fit of all points.
 %   ___  ____  _   _ 
 %  / _ \/ ___|| | | |
 % | | | \___ \| |_| |

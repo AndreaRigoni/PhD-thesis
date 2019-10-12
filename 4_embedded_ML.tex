@@ -291,14 +291,14 @@ where: $s$ is the sign $m$ is the mantissa (absolute value), $p$ is the precisio
 % The flexibility introduced by floating point dynamic range is that the numbers can be represented not uniformly spaced; the difference between two consecutive numbers grows with a scale defined by the chosen exponent.
 
 However, because of this dynamic range mapping, the floating point may require a slight amount of computational resources.
-In many cases a specific hardware component is dedicated to the floating point computation. When a processing unit is executing an algorithm where a such operation is not directly supported, it tries to decompose it into a series of simpler \acs{FP} operations, either by basic internal routines or by means of specific libraries.
-In systems without \acs{FP} dedicated hardware, the CPU switch instead to a series of arithmetic operations that remain on the processor \ac{ALU} and keep it busy.
+In many cases a specific hardware component is dedicated to the floating point computation. When a processing unit is executing an algorithm where a such operation is not directly supported, it tries to decompose it into a series of simpler \ac{FP} operations, either by basic internal routines or by means of specific libraries.
+In systems without \ac{FP} dedicated hardware, the CPU switch instead to a series of arithmetic operations that remain on the processor \ac{ALU} and keep it busy.
 
 Complex operations are not generally required for neural networks, with the only exception of the activation function that can be in most of the cases simplified to a composition of linear sub-functions (i.e. ReLU ref.\cref{section:feedforward dense networks}). All internal NN layers are composed, on the other hand, by a huge amount of simple operations that are the linear combination of the trained weights, and in the \acs{CNN} case the convolution of the weighted kernel with input arrays.
 For example a current model of convolutional network for imaging, such as the VGG~\cite{Simonyan15} family, contain over
-$1.3\tilde1.4\times10^8$ internal parameters, and require over $15\times10^9$ \acs{FP} operations to classify a single image.
+$1.3\tilde1.4\times10^8$ internal parameters, and require over $15\times10^9$ \ac{FP} operations to classify a single image.
 
-While CPU and GPU clusters are the preferred platforms for \acs{CNN} and machine learning applications in general, customized hardware solutions based on \acs{FPGA} or even \acs{ASIC} can offer significant improvements in energy efficiency and power dissipation. 
+While CPU and GPU clusters are the preferred platforms for \acs{CNN} and machine learning applications in general, customized hardware solutions based on \ac{FPGA} or even \ac{ASIC} can offer significant improvements in energy efficiency and power dissipation. 
 These factors may represent a critical point for enabling the use of such networks in low-power and constrained resources embedded computing.
 
 \subsubsection*{hardware implementation issue}

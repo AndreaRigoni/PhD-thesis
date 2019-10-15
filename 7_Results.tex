@@ -2,7 +2,7 @@
 \label{section:7_Results}
 
 This chapter presents a more accurate description of the results obtained in~\cref{section:Parameters_to_SXR} as they represents an actual implementation of most of the ML methods presented so far.
-The structure that has been applied is the same reported in~\Figure{\ref{fig:SXR_from_param}} where a Variadic Autoencoder has been joined with a standard inference network to map the the magnetic configuration into the SXR latent space reconstruction, and than this latent configuration back to the SXR representation.
+The structure that has been applied is the same reported in~\Figure{\ref{fig:SXR_from_param}} where a Variational Autoencoder has been joined with a standard inference network to map the the magnetic configuration into the SXR latent space reconstruction, and than this latent configuration back to the SXR representation.
 
 \section{Relevance layer}
 
@@ -15,7 +15,7 @@ In the limit of a reasonable number of inputs we decided to be create a rich set
 
 However to define which are the most relevant parameters that play a role in the description of the plasma temperature we decided to turn the problem upside down. The idea indeed it to make the network itself yielding this from the training. Thus this layer is a simple dense perceptron where the linear pass through activation and an \textbf{identity matrix} for the weights. The point is that this is the former layer of the network, directly attached to the input features, and the weights are trainable. The layer definition needs also to constrain the initialization to set the identity and to fix all the other link to be kept to zero. 
 
-Then during training the backpropagation tends to create a selection automatically by suppressing the inputs that are not contributing to the reduction of the loss, i.e. that does not correlate with the temperature profile.
+Then during training the backpropagation tends to create a selection automatically by suppressing the inputs that are not contributing to the reduction of the loss, i.e. that do not correlate with the temperature profile.
 So along the training epochs the loss, and possibly all the further regularization added, gradually silence that signals. This provides, not only a further layer that masks the non relevant inputs, bus once the weights are eventually exposed a short of "relevance" meter that can tell what inputs the target is more sensible at.
 %
 \begin{figure}
@@ -30,7 +30,7 @@ Although the picture shows the case of an Autoencoder, the same layer can be app
 In the case of the Autoencoder the first relevance layer will provide the amount of mutual information that each particular input has with the others, while the second will give a hint on how much the encoder is providing a disentangled representation because the redundant dimension are kept out from the generative process.
 On the other hand the simple application on a standard regression network such the one that we used to pass from magnetics to the temperature profiles provides the actual significance of each input parameter to the task of building the guess.
 
-A sparsity promotion regularizer, such as the dropout, beside the effects on the network generalization, shown to improve the relevance too.
+A sparsity promotion regularizer, such as the dropout, beside the effects on the network generalization, appeared to improve the relevance too.
 %
 \begin{figure}
     \centering
@@ -40,7 +40,7 @@ A sparsity promotion regularizer, such as the dropout, beside the effects on the
     \subfigure{\includegraphics[height=3.3cm]{img/STEP12_7/STEP12_7_arg_Br_rm.png} \label{fig:step_12_7_arg_Brm}}
     \subfigure{\includegraphics[height=3.3cm]{img/STEP12_7/STEP12_7_abs_Br_rs.png} \label{fig:step_12_7_abs_Brs}}
     \subfigure{\includegraphics[height=3.3cm]{img/STEP12_7/STEP12_7_arg_Br_rs.png} \label{fig:step_12_7_arg_Brs}}
-    \caption{ Training 500 epochs - STEP 12.7 mse, slightly overfitted but validation not diverging }
+    \caption{ Relevance of plasma parameters after network learning. }
     \label{fig:step_12_7_relevance}
 \end{figure}
 %
@@ -50,14 +50,14 @@ To obtain a more informative result a better use of regularization will be neces
 
 \section{EM to SXR mapping results}
 
-The implementation of the network structure follow the example already discussed in~\cref{section:Parameters_to_SXR}.
+The implementation of the network structure follows the example already discussed in~\cref{section:Parameters_to_SXR}.
 For the initial latent representation of the SXR3 temperature signal a \bVAE{6} has been used with only dense layers. We started by a balanced 15 points dataset, composed of the impact position (x-axis) and temperature value (y-axis) of the measured $T_e$ along 45K acquisitions in random order. The input has been unfolded on a single feature array of 30 values similarly to what discussed in \cref{section:SXR_dataset}. The \bVAE{6} is composed by the following simple topology. For the encoder: NaN-Mask layer, Relevance layer with dropout, 4 ReLU dense layers with normalization and dropout, and 6 linear units for gaussian stochastic latent variables. For the decoder: 4 ReLU dense layers with the final one with linear activation output. The four layers of encoder and decoder have been constructed with the automatic shaping geometry of: \texttt{2 x [20,20,10,10]}. This yields symmetric structures with: $(1.2, 1.2, 0.6, 0.6) \times 10^3$ units and $(0.6, 0.6, 1.2, 1.2) \times 10^3$ for the two networks respectively.
 The dropout rate for training has been set to $10^{-1}$ while $\beta=10^{-3}$ has been set for the KL term of VAE.
 
 Once trained the \VAE{6} latent space has been used as a label for training a further inference network where the features were in order: the plasma current ($I_p$), the ratio of the dominant mode over secondaries ($NS$), the toroidal loop potential ($V_t$), the reversal factor ($F$), and the magnitude and phase of $B_r$ and $B_\varphi$ for $m=0, n=[-7 \tilde -15]$ modes extrapolated to the sensors position and cleaned of the toroidal side-bands with the procedure described in~\cite{Zanca_2004}.
 The resulting network is composed by 44 inputs and 6 outputs. We chose the same geometry of the VAE that resulted in 4 ReLU dense layers with $(1.76, 1.76, 0.88, 0.88) \times 10^3$ units. 
 
-The dataset has been divided in a 3K samples for validation and the remaining for the training. The training has been performed with 500 epochs with 446 minibatches of 100 samples each. The training has been performed on a standard workstation Intel(R) Core(TM) i7-4770 3.40GHz taking approximately 220ms per step and 98s per epoch. The network resulted to be slightly overfitted, but the validation error did not diverge though. This effect, visible in \Figure{\ref{fig:fig:step_12_7_p}} has been observed on all the tests executed so far so we decided to continue the training over the early stopping position until the plateau of the validation.
+The dataset has been divided in a 3K samples for validation and the remaining for the training. The training has been performed with 500 epochs with 446 minibatches of 100 samples each. The training has been performed on a standard workstation Intel(R) Core(TM) i7-4770 3.40GHz taking approximately 220ms per step and 98s per epoch. The network resulted to be slightly overfitted, but the validation error did not diverge though. This effect, visible in \Figure{\ref{fig:step_12_7_p}} has been observed on all the tests executed so far so we decided to continue the training over the early stopping position until the plateau of the validation.
 
 Some resulting reconstruction are reported in \Figure{\ref{fig:Step_12_val}} where 6 examples have been reported taking 6 samples from the validation dataset. The pictures are organized in rows: the first plot is a direct comparison of the real temperature and the reconstructions, the second is a 2D countour of the magnetic flux reconstruction made with SHEq code~\cite{Martines_2011}, the last is instead a histogram of some plasma parameters averaged over the corresponding pulse and time window that pertains to the acquired temperature profile.
 %

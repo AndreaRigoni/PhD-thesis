@@ -25,7 +25,7 @@ In the context of a concurrent interest in plasma experiments on both data analy
 The first requirement is evidently motivated by an off-line investigation on the recorded physical quantity, where characteristic of the signal could be eventually modified a posteriori from external information ( a custom analysis algorithm, or a better definition of the sensor/signal characteristics ). 
 The real-time control on the other hand has completely different requirements, being the timing constraints the key factor to provide a proper feed-back action. It needs to provide a concrete elaborated output right in a given time.
 
-In addition a pre-processing of the signal in the embedded design should provide a way to tune its characteristics. This does not hold in general for a transient recording device, where we are interested in maintaining a coherency on the signal history, but it is a key factor for controlling experiment, where we needs to modify parameters in the seek for new operative states. This is also particularly true in the perspective of applying neural networks because the training on new acquired data, and/or change the layers structure, must be accounted.
+In addition a pre-processing of the signal in the embedded design should provide a way to tune its characteristics. This does not hold in general for a transient recording device, where we are interested in maintaining a coherency on the signal history, but it is a key factor for controlling experiment, where we need to modify parameters in the seek for new operative states. This is also particularly true in the perspective of applying neural networks because the training on new acquired data, and/or change the layers structure, must be accounted.
 
 A good candidate FPGA technology was recently proposed and gained lot of interest as a possible solution for integrating both flexibility and performance. It comes from the market of embedded systems and exploit the \ac{SoC} fabrication technique to host a standard processing unit with an FPGA logic in the same silicon device.
 An example is the \textit{Xilinx Zynq} system, integrating a \textit{Kintex-7} family FPGA together with \textit{ARM-A9} CPU cores. 
@@ -98,9 +98,9 @@ The current pick-up coils acquisition chain comes from a long machine operation 
 %
 \begin{figure}
     \centering
-    \subfigure[]{\includegraphics[width=0.49\textwidth]{img/rfx/conditioning_circuit.png} \label{fig:pomaro_integrator}}
+    \includegraphics[width=0.49\textwidth]{img/rfx/conditioning_circuit.png}
     \caption{The RFX-mod signal conditioning and analog integrator for magnetic pick-up coils acquisition. }
-    \label{fig:my_label}
+    \label{fig:pomaro_integrator}
 \end{figure}
 %
 The field is obtained on each channel by direct analog integration~\cite{pomaro2005transducers}, the schema of such analog system is reported in~\Figure{\ref{fig:pomaro_integrator}}. As shown it can be conceptually divided three main groups: the magnetic sensor itself, the signal conditioning front-end, and the final analog integrator.
@@ -141,14 +141,14 @@ The goal is to check to what extent a directly acquired signal from the RFX-mod2
 
 The required dynamic range specifics ask for a careful evaluation of both the minimum detectable and the maximum expected signal, keeping in mind that the signal has to be integrated numerically.  
 The maximum level of the signal can be straightforwardly derived from experimental measurements that have been already carried out on RFX-mod operation, which can be used to estimate the level of the signal once the probe characteristics and its measurement chain are defined. 
-The probes used up to now on RFX-mod~\cite{pomaro}~\cite{pomaro2005transducers} present a typical sensing area of 0,025 m2 and proved to offer a good compromise between compactness, signal sensitivity and usable bandwidth. The new probes of RFX-mod 2 will maintain these basic geometric and electric features, while the materials and the manufacturing process will be modified to comply with the new vacuum installation~\cite{MARCHIORI2017892}. 
+The probes used up to now on RFX-mod~\cite{pomaro2005transducers} present a typical sensing area of 0,025 m2 and proved to offer a good compromise between compactness, signal sensitivity and usable bandwidth. The new probes of RFX-mod 2 will maintain these basic geometric and electric features, while the materials and the manufacturing process will be modified to comply with the new vacuum installation~\cite{MARCHIORI2017892}. 
 An example of the expected $dB/dt$ signal source plotted in time and frequency, obtained by wide-band in-vessel probes installed on RFX-mod, is shown in Fig.\ref{fig:em_signal_raw}.
 %
 \begin{figure}[ht]
 \centering
 \subfigure[]{\includegraphics[width=0.45\textwidth]{img/4_EmbeddedML/1.png} \label{fig:em_signal_raw_a}}
 \subfigure[]{\includegraphics[width=0.45\textwidth]{img/4_EmbeddedML/2.png} \label{fig:em_signal_raw_b}}
-\caption{example of dB/dt signal of the toroidal field component from an in-vessel wide bandwidth probe from a reversed field pinch pulse at 1.5 MA in RFXmod-2 (a), the frequency spectrum realted to the same signal (b).}
+\caption{example of dB/dt signal of the toroidal field component from an in-vessel wide bandwidth probe from a reversed field pinch pulse at 1.5 MA in RFXmod-2 (a), the frequency spectrum related to the same signal (b).}
 \label{fig:em_signal_raw}
 \end{figure}
 %
@@ -216,10 +216,10 @@ In \Figure{\ref{fig:noise_drift_b}} a set of integrated EM probe signals has bee
 %
 \begin{figure}
     \centering
-    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/18.png} \label{}}
-    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/22.png} \label{}}
-    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/20a.png} \label{}}
-    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/24a.png} \label{}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/18.png}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/22.png}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/20a.png}}
+    \subfigure[]{\includegraphics[width=6cm]{img/4_EmbeddedML/24a.png}}
     \caption{Noise integrated signals histograms after 10s of ACD acquisition, with and without the input amplifier (a)(b); and two samples of integrated signal compared to a reference without noise in the same situations (c)(d).}
     \label{fig:before_after_correction}
 \end{figure}
@@ -241,7 +241,7 @@ For example a properly trained autoencoder could perform a compression of the re
 In \cref{section:VAE}, for example, the representation of a complex 40 element features has been reduced to a representative latent variable of only size 2. 
 This could be thought as a method for compressing a spatial or time (or both) varying signal into an embedded representation through an encoder network on the sensor front-end, and then this could be re-expanded back to a representation of the original signal on the controller back-end.
 
-In addition, if a complete control based on a neural network will be applied, the embedded state representation could be used directly, easing the computational load of the decoder function. This will discussed later talking about the Autoencoder composition.
+In addition, if a complete control based on a neural network will be applied, the embedded state representation could be used directly, easing the computational load of the decoder function. This will be discussed later talking about the Autoencoder composition.
 It is nonetheless worth to mention the fact that, in such a situation, a possible communication of a latent space representation could be also thought to be in the opposite direction. Indeed, if we would succeed to have a complete characterization of the plasma status, a possible backward information could be fed to the sensors to better interpret the read data.
 For example, in the case of EM probes, this could ease the integration drift simply knowing, from all the other sensors, that such a shift of the magnetic field would be unlikely to happen.
 
@@ -402,8 +402,8 @@ The INT8 choice is considered a "\textit{conservative}" quantization, this is be
 For weights and biases this is easy, as they are set once training is complete. For the activations the range must be computed with respect to the possible input. It can be obtained "online" during inference, or "offline" with a calibration subset of data.
 
 The so called \textit{online} method calculates and retains the min/max values of each of tensors that pass thought the network in run-time. In this way the network autonomously adapts to the range of the input features. 
-But this represents a sever computational issue due to the fact that the actual scaling must be computed not in the range of the input, but on the output of the activation.
-On the other hand a small amount of training data can be kept to "calibrate" the scaling factor \textit{offline}. This happens once on this reduced set before the deployment of the network. The calibration batches are accompany the model and serve as a determination of the range of internal functions outputs.
+But this represents a severe computational issue due to the fact that the actual scaling must be computed not in the range of the input, but on the output of the activation.
+On the other hand a small amount of training data can be kept to "calibrate" the scaling factor \textit{offline}. This happens once on this reduced set before the deployment of the network. The calibration batches serve as a determination of the range of internal functions outputs.
 
 As any statistical analysis the estimation of the scaling factor can be dominated by few element that are statistically outliers. A moment estimation on the calibration dataset must thus be performed optimizing the scaling to provide a distribution of values with the highest possible information, eventually clipping some of the dataset values.
 A method for analytically computing such clipping values is proposed in~\cite{banner2018posttraining}.
@@ -422,7 +422,7 @@ The quantization on lower bit notations such as INT4, INT2 or even binary thresh
 This means that the simple translation of the offline trained network is not enough to obtain a good approximation and entails a significant accuracy degradation.
 
 % STE Straight through estimator~\cite{bengio2013estimating}
-One of the main mathematical concerns about the description of network quantization is the process of back-propagating the loss through the quantized activation functions. The activation is indeed hardly approximated and the output jumps through discrete results providing a non differentiable function. In the perspective of a stochastic representation of neurons the quntization can be modeled as an opportunely shaped additive noise. A good description is provided in~\cite{bengio2013estimating} as a new kind of network units named \textit{Non-Smooth Stochastic Neurons} in which the output of activation is modeled as:
+One of the main mathematical concerns about the description of network quantization is the process of back-propagating the loss through the quantized activation functions. The activation is indeed hardly approximated and the output jumps through discrete results providing a non differentiable function. In the perspective of a stochastic representation of neurons the quantization can be modeled as an opportunely shaped additive noise. A good description is provided in~\cite{bengio2013estimating} as a new kind of network units named \textit{Non-Smooth Stochastic Neurons} in which the output of activation is modeled as:
 \begin{equation}
     g_i = f(a_i, z_{Qi})  \hspace{3cm}  a_i = \transpose{\bm{w_i}}\bm{x_i}
     \label{eq:qnn_noise}
@@ -433,10 +433,10 @@ The intuition tells us that if the noise $z_{Qi}$ is added or multiplied in the 
 For example if a binomial shaped noise is applied just after the neuron non-linearity, acting as a binary threshold on activation output, it behaves like a \textit{dropout} noise~\cref{section:training_regularization}~\cite{Srivastava:2014:DSW:2627435.2670313} or, if the training is applied in an autoencoder, it can be seen as a \textit{masking} noise~\cite{vincent_et_al_denoise2008} (as in denoise autoencoders \cref{section:RFXhunch}).
 
 However, form a mathematical perspective, if we want for example $g_i$ to be binary then $f$ will have derivative that is 0 almost everywhere (and become infinite at the threshold), so that gradients can not be analytically obtained.
-A possible solution in closed form that provide the loss for the single i-th unit in such a case is provided in~\cite{bengio2013estimating}. This is completely avoiding the backpropagation process and it exploit the noise as a way to obtain an estimate of the local loss directly. This is actually very promising because it could become in the future a way to overcome the need of a separate training phase having networks that learn from the small perturbations, and automatically adapt to the internal nodes precision. However there is still any available implementation for that.
+A possible solution in closed form that provide the loss for the single i-th unit in such a case is provided in~\cite{bengio2013estimating}. This is completely avoiding the backpropagation process and it exploit the noise as a way to obtain an estimate of the local loss directly. This is actually very promising because it could become in the future a way to overcome the need of a separate training phase having networks that learn from the small perturbations, and automatically adapt to the internal nodes precision. However there is no available implementation yet for that.
 
 Conversely, in the same work, the greedy approach of simply back-propagating the function directly as if it had been a sample from the \textbf{identity function} proved to provide significant results. Indeed the fact that during training the average is performed over the batch set guarantees a good estimate of the gradient once a sufficient number of cases are collected.
-This approach actually take inspiration on the original binary activation perceptron algorithm~\cite{Rosenblatt58theperceptron} where the gradient was calculated through the standard chain sure, but insted through a modified chain in which the derivative of the identity function served as a proxy for the original derivative of the binary output $1_{\{x>0\}}$.
+This approach actually take inspiration on the original binary activation perceptron algorithm~\cite{Rosenblatt58theperceptron} where the gradient was calculated through the standard chain rule, but instead through a modified chain in which the derivative of the identity function served as a proxy for the original derivative of the binary output $1_{\{x>0\}}$.
 This is called Straight-Through Estimator (STE) and represents a simple approach widely used to approximate quantized functions gradient~\cite{yin2019understanding}.
 
 

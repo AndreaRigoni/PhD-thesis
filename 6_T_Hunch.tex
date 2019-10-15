@@ -16,7 +16,7 @@ In addition the acquired profile represents a local information of the internal 
     \caption{ Several plots from high-current RFX-mod shot, in order: plasma density $n_e$, mean electron temerature $T_e$, radial field $b_r$ m=1 modes amplitude in figure (a); and plasma current $I_p$, revesal parameter $F$, and Theta $\Theta$ in figure (b). }
     \label{fig:rfx_shot_22069}
 \end{figure}
-This holds for the Thomson scattering too, indeed: the SXR invese-transformed profile of the plasma bremsstrahlung radiation, and the intensity of the scattered light from TS, provide the same kind of measure being both of them related to electrons velocity.
+This holds for the Thomson scattering too, indeed: the SXR inverse-transformed profile of the plasma bremsstrahlung radiation, and the intensity of the scattered light from TS, provide the same kind of measure being both of them related to electrons velocity.
 However, as already discussed, the two diagnostics are not interchangeable as they present different characteristics. In particular the TS is known to provide a more accurate measure both in spatial resolution and in the the acquired quantity. On the other hand the SXR measure results quite noisy, easily biased by plasma-wall interaction debris of carbon and other materials, and usually presenting a set of reconstructed points that vary in position and in number. But it has a very fine grained resolution in the time domain.
 In RFX we have the SXR3 time resolution of about $500 \mu s$.
 In \Figure{\ref{fig:rfx_shot_22069}} several plots of the plasma observed characteristic quantities are plotted for a high-current pulse. From the plot it can be seen that with an almost exact matching on the value of the plasma current, the dominant mode starts to fluctuate with a continuous switching between a QSH state and a MH, i.e. from a single dominant mode to several exited modes and viceversa. Those phenomena of internal magnetic recombination of modes, and how to control them, are the main target of RFP studies. 
@@ -164,9 +164,9 @@ Counting all valid data from arrays resulted in a range between 2 and 18.
 We ordered the x-data in the array with the respective position of the diagnostic line of sight, in this way the index of the array corresponds to the number of the line of sight, and in turn with the ordered impact parameter.
 Moreover, once the reordering of x-axis positions have been performed, and the zero populated elements removed, for some of the arrays indexes the NaN data persisted again in almost the entire dataset (with very few exceptions). 
 This again represents a problem for the training of the input nodes, indeed in this way some of the network units are fed with invalid data for most of the dataset input affecting the training result.
-We finally decided to apply a shrink of the dataset using a k-means approach. We defines $k=15$ centroids and the k-means was fitted on the basis of the x-values (i.e. the \textit{prel} position). This is actually a over constraint that loose some of the available information on the few input data that present more than k elements; however this allows to have a correctly distributed set of positions to correctly feed all neurons of the network.
+We finally decided to apply a shrink of the dataset using a k-means approach. We defined $k=15$ centroids and the k-means was fitted on the basis of the x-values (i.e. the \textit{prel} position). This is actually a over constraint that loose some of the available information on the few input data that present more than k elements; however this allows to have a correctly distributed set of positions to correctly feed all neurons of the network.
 
-The possible opposite approach would have been to apply a uniform random position in the array leaving the network performing the reordering on the first layers; this random choice would work as well because fulfill the needed uniform population of input features per neuron. Otherwise the training would expose an under-fitted set of weights on its internal kernel that would lead in turn to an undetermined local output on the network.
+The possible opposite approach would have been to apply a uniform random position in the array leaving the network performing the reordering on the first layers; this random choice would work as well because it fulfills the needed uniform population of input features per neuron. Otherwise the training would expose an under-fitted set of weights on its internal kernel that would lead in turn to an undetermined local output on the network.
 This refinement was not extensively tested though because we decided to maintain the overall needed network structure as simple as possible. In any event we leave it for a second stage of implementation if a complete reconstruction of the profile will be needed.
 
 That said, we are still facing a sparse input feature set where many values are NaN\footnote{NaN - litterally Not a Number - is a member of numeric data types to determine an undefined or unrepresentable value, especially in floating-point arithmetic. }. Unfortunately most generally available common implementations of neural network does not comply with NaN values. The common approach is to fill the empty gaps with a pre-computed value before the application to the neural network; this is commonly referred as \textit{data imputation} preconditioning. Many further approaches can be selected for this imputation algorithm, and a general accepted approach is a regression of some kind on the neighbour of missing data. This seemed a well documented and easy way to go at first glance; however in this dataset we are facing many adjacent missing data and a "simple" regression (polinomial or ridge) didn't produce a good fit for all the samples. 
@@ -188,7 +188,7 @@ This is applied for all (and sole) training data; we chose to apply the zero flo
     \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example.png}}
     \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example2.png} \label{fig:missing data example_b}}
     %\subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example3.png} \label{fig:missing data example_c}}
-    \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaN-Mask layers, where only 5 valid element were present in the input profile (a)(b); a slight effect of VAE denoising is also visible in (b) with VAE intrinsic smoothing overimposed, while the overcomplete recovery from \cref{section:recovery} has been applied on (c). }
+    \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaN-Mask layers, where only 5 valid element were present in the input profile (a)(b); a slight effect of VAE denoising is also visible in (b) with VAE intrinsic smoothing overimposed. }
     \label{fig:missing data example}
 \end{figure}
 Two examples of extreme missing data input have been proposed to a \VAE{2} model pre-trained with our NaN-Mask layers and are shown in~\Figure{\ref{fig:missing data example}}; on blue dots ($\bullet$) the input profile with missing points, and on red cross (+) the output of the network where the output mask layer is disabled guessing the profile form the reconstructed point in latent space.
@@ -204,12 +204,12 @@ Two examples of extreme missing data input have been proposed to a \VAE{2} model
 \subsection{Data recovery and signal denoising}
 \label{section:recovery}
 In~\Figure{\ref{fig:missing data example}} an example of missing data recovery has been presented where a simple \VAE{2} model was able to generate the missing portion of the curve. The beauty of this imputing data approach, as already anticipated, is that the network proposes a regression that is based on available input data, but also on the complete dataset because it proposes an instance of a reconstructed space that comes form a likelihood maximized over the entire dataset.
-However in~\Figure{\ref{fig:missing recovery_a}} some points on the right side of the profile seem to be bad reconstructed, but this example was carefully selected to show on the contrary another concurrent effect of \acs{VAE} generative output: the data denoising.
-This exploit the same principle that the reconstruction is treated scholastically, the effect is well known and fall into the category of \textbf{denoising autoencoders}.
+However in~\Figure{\ref{fig:missing recovery_a}} some points on the right side of the profile seem to be badly reconstructed, but this example was carefully selected to show on the contrary another concurrent effect of \acs{VAE} generative output: the data denoising.
+This exploits the same principle that the reconstruction is treated scholastically, the effect is well known and fall into the category of \textbf{denoising autoencoders}.
 
 To make autoencoder act as a denoiser~\cite{vincent_et_al_denoise2008} the input is usually deliberately corrupted by randomly turning some of the features to zero. In general, the percentage of input nodes which are being zeroed is around 50\% but a lower count, such as 30\%, works as well; the actual optimal value seems almost depending on the amount of data and input nodes you have~\cite{ae_denoise}. In our case what we see is that the NaN-Mask is already doing that; we omitted to train the error on the NaN values as it drives the learning algorithm to a wrong bias, but the zeroed value just after the mask layer is seen by connected nodes just as a dropout would have been added to the network~\cite{Srivastava:2014:DSW:2627435.2670313}. So in this case we can say that the missing distribution is actually performing slight denoising of the input data; unfortunately this is not the sole component of the observed smoothing. If the added dropout helps the network to be more robust on input variation (denoising effect) on one side, it is also well known that VAE approach tends to add a slight blurring on the generated output~\cite{ghosh2019variational}. 
 
-With the purpose of creating a network tailored for the electron temperature profile recovering we the \textit{recovery} method has been added to the VAE structure that follow the simple modification shown in~\Figure{\ref{fig:VAE_recovery}}.
+With the purpose of creating a network tailored for the electron temperature profile recovering the \textit{recovery} method has been added to the VAE structure that follows the simple modification shown in~\Figure{\ref{fig:VAE_recovery}}.
 As it can be seen from the schema the dual operation on masking NaN values is performed, where the mask remains active during training and than it is set to be always \textit{True} during recovery; it is also quite obvious that the generation network of the recovery operation takes its input from the mean values of the latent space, without performing the reparametrization (i.e. without applying any variational) because the space has been already shaped at this point.
 %
 \begin{figure}
@@ -226,10 +226,10 @@ Our version of the recovery model structure is also \textit{overcomplete}: this 
     \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example2.png} \label{fig:missing recovery_a}}
     \subfigure[]{\includegraphics[width=4.8cm]{img/STEP7_CLEAN/missing_data_example3.png} \label{fig:missing recovery_b}}
     \caption{Missing data example as seen by a simple generated output of \VAE{2} trained with NaN-Mask layers (a); 
-    data recovery has been applied with \VAE{30} on (b). }
+    data recovery has been applied with \VAE{3} on (b). }
     \label{fig:missing recovery}
 \end{figure}
-An example of recovery is shown in \Figure{\ref{fig:missing recovery_b}} where the structure of the overcomplete \VAE{30} recovered the curve maintaining a good fit of all points.
+An example of recovery is shown in \Figure{\ref{fig:missing recovery_b}} where the structure of the overcomplete \VAE{3} recovered the curve maintaining a good fit of all points (recall that the subscript in VAE name refers to the dimension of the latent space).
 %   ___  ____  _   _ 
 %  / _ \/ ___|| | | |
 % | | | \___ \| |_| |
@@ -242,7 +242,7 @@ An example of recovery is shown in \Figure{\ref{fig:missing recovery_b}} where t
 As a very first attempt the data form the SXR, without recovery cleaning, has been fed into a \VAE{2} network to create a easy browsable latent space, hoping to see a clusterization over the QSH states.
 With this purpose a \VAE{2} model has been set with the following parameters: \\
 \verb| latent_dim=2, feature_dim=30, dprate=0, scale=1, geometry=[20,20,10,10]|. \\
-All input have been normalized and the dataset has been cleaned from profiles with less that 5 valid points.
+All inputs have been normalized and the dataset has been cleaned from profiles with less that 5 valid points.
 The reconstructed latent space has been plotted in~\Figure{\ref{fig:VAE2_qsh_ls}} by means of 1000 samples randomly selected from dataset that were passed through the inference net (aka. the encoder step of VAE).
 \begin{figure}
     \centering
@@ -295,7 +295,7 @@ From the generative point of view the final profile behavior can be obtained for
     \label{fig:VAE2_qsh_gen_prec}
 \end{figure}
 The third profile has no trivial interpretation, even if the current and the reversal seems to be flat in that domain the temperature varies with a steep gradient along the minor dimension of the stripe, and proceeding along the rising temperature (from $z_6$ to $z_7$) the passage from a flat profile to a QSH on top of the chamber is generated.
-Although a direct relation to a physical phenomenon would be quite a long shot, it is at least trivial to see an analogy with classical \RFXmod shot parameters envelopes, as the ones shown in~\Figure{\ref{fig:rfx_shot_22069}}. When the plasma current reach a stable high profile, and we have a stable reversal that fit around its median - the same situation that seems to characterize our stripe - the system configuration switch rapidly between a SQH states and a MH states due to creation and degradation of internal transport barriers that are only possible when the current is high. We could speculate that the adaptation made by \VAE{2} of such rapidly changing conditions could be represented by this steep variation along the stripe in x-axis (i.e. from $z_6$ to $Z_7$), and almost the same behavior is also repeated for all the phases in the dominant mode, extending the stripe along the y-axis.
+Although a direct relation to a physical phenomenon would be quite a long shot, it is at least trivial to see an analogy with classical \RFXmod shot parameters envelopes, as the ones shown in~\Figure{\ref{fig:rfx_shot_22069}}. When the plasma current reaches a stable high profile, and we have a stable reversal that fit around its median - the same situation that seems to characterize our stripe - the system configuration switch rapidly between a SQH states and a MH states due to creation and degradation of internal transport barriers that are only possible when the current is high. We could speculate that the adaptation made by \VAE{2} of such rapidly changing conditions could be represented by this steep variation along the stripe in x-axis (i.e. from $z_6$ to $Z_7$), and almost the same behavior is also repeated for all the phases in the dominant mode, extending the stripe along the y-axis.
 Finally we could also push our speculation even further saying that the y-axis alignment of the reconstructed stripe could be a hint of disentangling that high current profiles.
 
 
@@ -312,7 +312,7 @@ Finally we could also push our speculation even further saying that the y-axis a
 In the previous section the simple determination of latent space from temperature has been proposed, and the structure of reconstructed space has been shown with respect to external plasma parameters trying to speculate a possible relation.
 Another possible target of learning would be to see if such parameters are a complete information to reach a good guess of that temperature, exploiting the latent configuration as our new set of parameters.
 The principle on the basis of this would be to let the network make the parameter relation itself instead of guessing a possible affinity with one parameter or the other.
-The schema will not really more complex as it has been so far: the previously autoencoder generate a latent space from where we take values of for a new generated dataset that can be fed into a standard supervised network. 
+The schema will not be much more complex as it has been so far: the previously autoencoder generate a latent space from where we take values of for a new generated dataset that can be fed into a standard supervised network. 
 A sketch of such implementation design is reported in~\Figure{\ref{fig:SXR_from_param}}
 \begin{figure}
     \centering
@@ -330,7 +330,7 @@ The corresponding python lines that define the model are instead the following: 
 \verb|vae = models.AEFIT5.AEFIT5(latent_dim=6, feature_dim=30, dprate=0.1,|\\
 \verb|                           beta=0., scale=2, geometry=[20,20,10,10])|\\
 
-Some example of generated profiles have been shown in~\Figure{\ref{fig:step_12_7_rec}}; where the three curves represents the related profiles from the generator output. The dashed curve in blue is a plot of the real acquired temperature data that have been cleaned up with a preliminary passage through a recovery autoencoder. The orange cross markers (+) represent the decoded output of the latent space point that corresponds to the input feature (i.e. the blue curve), and it will become the label of the supervised training. Finally the output of the second encoder - the supervised trained network - is passed through the same decoder, generating the output profile with green markers ($\times$), of the guessed temperature.
+Some example of generated profiles are shown in~\Figure{\ref{fig:step_12_7_rec}}; where the three curves represents the related profiles from the generator output. The dashed curve in blue is a plot of the real acquired temperature data that have been cleaned up with a preliminary passage through a recovery autoencoder. The orange cross markers (+) represent the decoded output of the latent space point that corresponds to the input feature (i.e. the blue curve), and it will become the label of the supervised training. Finally the output of the second encoder - the supervised trained network - is passed through the same decoder, generating the output profile with green markers ($\times$), of the guessed temperature.
 \begin{figure}
     \centering
     \subfigure{\includegraphics[height=4.8cm]{img/STEP12_7/Te_rec_215.png} }

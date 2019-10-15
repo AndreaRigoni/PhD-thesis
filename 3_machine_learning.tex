@@ -213,41 +213,38 @@ For each neuron $j$, its output $y_j$ is defined as
 \begin{equation}
     y_j = \varphi\left(\sum_{k=1}^n w_{kj}y_k\right),
 \end{equation}
-
-If we chose the activation function to be the logistic:
-\begin{equation}
-    \varphi(z) = \frac 1 {1+e^{-z}}
-\end{equation}
-the derivative is trivial:
-\begin{equation}
-    \frac {d \varphi(z)}{d z} = \varphi(z)(1-\varphi(z)) 
-\end{equation}
-
-
-Calculating the partial derivative of the error with respect to a weight $w_{ij}$ is done using the chain rule twice:
-
+%
+The partial derivative of the error with respect to a weight $w_{ij}$ can be calculated as:
 \begin{equation}
     \pdv{E}{w_{ij}} = \pdv{E}{y_j}\pdv{y_j}{w_{ij}} = \pdv{E}{y_j}\pdv{y_j}{\mu_j}\pdv{\mu_j}{w_{ij}}
 \end{equation}
-
+%
 In the last factor of the right-hand side of the above, only one term in the sum, $\mu_j$, depends on $w_{ij}$, so that
-
+%
 \begin{equation}
     \pdv{\mu_j}{w_{ij}} = \pdv{}{w_{ij}}\left( \sum_{k=1}^n w_{ij}\mu_k \right) = \pdv{}{w_{ij}}w_{ij}\mu_i = \mu_i
 \end{equation}
-
+%
 If the neuron is in the first layer after the input layer, $y_i$ is just $x_i$.
 The derivative of the output of neuron $j$ with respect to its input is simply the partial derivative of the activation function:
-
+%
 \begin{equation}
     \pdv{y_j}{\mu_j} = \pdv{\varphi(\mu_j)}{\mu_j}
 \end{equation}
-
-which for the logistic activation function case is:
+%
+which for instance for the logistic activation function case is:
 \begin{equation}
     \pdv{y_j}{\mu_j} = \pdv{}{\mu_j} \varphi(\mu_j) = \varphi(\mu_j)(1 - \varphi(\mu_j))
 \end{equation}
-
+where the logistic activation is defined as:
+\begin{equation}
+    \varphi(z) = \frac 1 {1+e^{-z}}
+\end{equation}
+and its derivative is trivial:
+\begin{equation}
+    \frac {d \varphi(z)}{d z} = \varphi(z)(1-\varphi(z)) 
+\end{equation}
+%
 This is the reason why backpropagation requires the activation function to be differentiable.
 A recursive expression for the derivative can be obtained:
 \begin{equation}
@@ -255,26 +252,29 @@ A recursive expression for the derivative can be obtained:
     = \sum_{l \in L} \left( \pdv{E}{y_l} \pdv{y_l}{\mu_l} \pdv{\mu_l}{y_j} \right)
     = \sum_{l \in L} \left( \pdv{E}{y_l} \pdv{y_l}{\mu_l} w_{jl} \right)
 \end{equation}
-
+%
 Therefore, the derivative with respect to $y_j$ can be calculated if all the derivatives with respect to the outputs $y_l$ of the next layer are known.
-So:
-
 \begin{equation}
     \pdv{E}{w_{ij}} = \pdv{E}{y_y} \pdv{y_j}{\mu_j} \pdv{\mu_j}{w_{ij}} = \pdv{E}{y_j} \pdv{y_j}{\mu_j} y_j = y_i \delta_j
 \end{equation}
-with:
+defining $\delta_j$ as:
 \begin{equation}
     \delta_j = \pdv{E}{y_j} \pdv{y_j}{\mu_j}
 \end{equation}
-
-for an output neuron:
+%
+Hence for an output neuron:
 \begin{equation}
     \pdv{L(y_j,t)}{y_j} \frac{d\varphi(\mu_j)}{d \mu_j}
 \end{equation}
-
-for a inner neuron:
+%
+and for a inner neuron:
 \begin{equation}
     \left( \sum_{l \in L}w_jl \delta_l \right)  \frac{d\varphi(\mu_j)}{d \mu_j}
+\end{equation}
+%
+and all updates can be made proportional to $\delta_j$ like:
+\begin{equation}
+    \Delta w_{ij} = -\alpha \pdv{E}{w_{ij}} = -\alpha y_i \delta_j
 \end{equation}
 
 
@@ -637,10 +637,10 @@ So we replace $q(z)$ with a $q(z|x)$ in the divergence. The usual choice for $q$
 where $\mu$ and $\Sigma$ are arbitrary deterministic functions with parameters $\vartheta$ that can be learnt from data.
 In practice $\mu$ and $\Sigma$ are implemented via neural networks and $\Sigma$ is constrained to be a diagonal matrix.
 Out target assumes that the desired distribution $p(z)$ is a normal gaussian $\mathcal{N}(\bm{0},I)$ where $I$ is the identity matrix and $\bm{0}$ is a vector of zeroes. Under the above assumptions the divergence $$ \KLD{q(z|x)}{p(x)} $$ can be computed in a closed form, being the KL divergence of two gaussian distributions.
-The evaluation of the remaining term of equation \eqref{} $ \expectation{[log p(x|z)]}_{q(z)} $
+The evaluation of the remaining term of the above equation  $ \expectation{log p(x|z)}_{q(z)} $
 would require using sampling to estimate the expectation, but getting a good estimate would require passing many samples of $z$ through the decoder function which would be expensive. 
 As standard in sthocastic gradient descent, just one sample of $z$ is taken, and $p(x|z)$ for that $z$ is taken as an approximation of 
-$\expectation{[log p(x|z)]}_{q(z)}$.
+$\expectation{log p(x|z)}_{q(z)}$.
 The full equation we want to optimize is the ELBO minimization over the given data D, that is:
 \begin{equation}
     \mathbb{E}_{X \cap D} \left[ \log p(x|z) - \KLD{q(z|x)}{p(z|x)} \right]

@@ -3,7 +3,7 @@
 \label{section:4_embedded_ML}
 
 %It has been shown in the introductory chapter the diversification of fusion relevant signals within their heterogeneous nature, however a particular discussion should be also addressed to the possible domain of the data itself beyond the particular origin.
-In order to provide high quality descriptions of the plasma properties during a the pulse in a fusion experiment session, a wide amount of sensors are usually required, producing a large set of data both in time and in spatial domains.
+In order to provide high quality descriptions of the plasma properties during a pulse in a fusion experiment session, a wide amount of sensors are usually required, producing a large set of data both in time and in spatial domains.
 However it is not generally true that the control of the system strictly depends on all that amount of inputs; the overall description of a complex system, indeed, is usually led by few driving signals~\cite{Liu2011}. 
 This definition agrees with the intuitive notion of control that, for a properly structured system, the appropriate manipulation of few variables are a sufficient information to drive the whole behavior; like in the bike riding example where the actual only two control variable are the steering of the handlebar and the torque on the pedals. 
 
@@ -14,15 +14,15 @@ This is actually a long shot scenario that is currently difficult to foresee in 
 A new setup of the magnetic probes is under study for the experiment, combining the structural upgrade of the conductive shell with the redesign of the magnetic sensor system, to gain a more detailed access at the Magneto Hydro Dynamic (MHD) processes that take place into the plasma~\cite{zuin2009current}~\cite{innocente2014tearing}.
 Part of the study that has been carried out during this research regarded the possible adoption of a fully digital solution, using a configurable FPGA to handle ADC conversion and providing a set of on-line functions that include the real-time numeric integration and signals recording.
 
-This fits well with the possibility of eventually apply also more sophisticated algorithms that are not handled by the central CODAS only but also in the peripheral devices that compose the acquisition front-end. 
+This fits well with the possibility of eventually applying also more sophisticated algorithms that are not handled by the central CODAS only but also in the peripheral devices that compose the acquisition front-end. 
 However the fundamental prerequisite is to achieve a compact and reliable implementation of such algorithms, and in particular for the encoder-decoder networks that attain the latent embedding. This must embrace a clever selection on both the hardware and software component of the acquisition system. In this chapter a proposal for a new DAQ chain is presented, together with the early results for the new magnetic acquisition system in RFX-mod2. Then, in~\cref{section:quantum}, a method to embed the neural network in such devices is explained.
 
 
-\subsection{New "smart" devices in DAQ chain}
+\section{New "smart" devices in DAQ chain}
 \label{section:daq-chain}
 
 In the context of a concurrent interest in plasma experiments on both data analysis and active control, a good implementation for an acquisition device should provide a double result: on one side it should act as a transparent recorder on the raw data that comes from the sensor, on the other side it should prepare a compact useful signal that can be used for the control.
-The first requirement is evidently motivated by an off-line investigation on the recorded physical quantity, where characteristic of the signal could be eventually modified a posteriori from external information ( a custom analysis algorithm, or a better definition of the sensor/signal characteristics ). 
+The first requirement is evidently motivated by an off-line investigation on the recorded physical quantity, where characteristic of the signal could be eventually modified a posteriori from external information (a custom analysis algorithm, or a better definition of the sensor/signal characteristics). 
 The real-time control on the other hand has completely different requirements, being the timing constraints the key factor to provide a proper feed-back action. It needs to provide a concrete elaborated output right in a given time.
 
 In addition a pre-processing of the signal in the embedded design should provide a way to tune its characteristics. This does not hold in general for a transient recording device, where we are interested in maintaining a coherency on the signal history, but it is a key factor for controlling experiment, where we need to modify parameters in the seek for new operative states. This is also particularly true in the perspective of applying neural networks because the training on new acquired data, and/or change the layers structure, must be accounted.
@@ -58,7 +58,6 @@ Examples of time critical functions that are carried out by the FPGA in this con
 \begin{itemize}
 \item The management of a circular data buffer and the DMA transfer in RAM of pre-trigger and post-trigger samples in transient recording;
 \item anti-aliasing filtering and subsequent sub-sampling of the samples to be streamed in real-time. The resulting samples are enqueued in a FIFO accessed by the processor;
-\item any digital filtering and preconditioning of the signal, for instance the required digital integration for deriving magnetic field measurements from EM probe signals;
 \item ROI detection in case ADC triggers are derived from the signal itself (e.g. over a given signal level threshold);
 \item Clock and trigger extraction in case a highway signal is provided by the timing system, encoding both clock an triggers.
 \end{itemize}
@@ -71,8 +70,8 @@ The less critical functions addressed to the processor unit are:
 \end{itemize}
 
 This subdivision is also schematically represented in \Figure{\ref{fig:daq}} where an example of this digital acquisition is inserted in a representation of the magnetic acquisition chain and closed control loop from sensors to actuators. 
-The schema reports on the left an array of input channels represented by the sensor coils connected to the analog to digital frontend. The digital signal is digitized and subsequently serialized in a high speed \ac{LVDS} line that is connected to FPGA. The serialization is needed to reduce the number on ports occupation on the FPGA input, but specially to also add a line galvanic insulation that, being on the digital side, does not affect the frequency response of the port.
-All serialized inputs are subsequently entering in the FPGA logic, where a interface circuit is responsible to handle the serial communication and to convert the stream of data in a AXI4 Stream protocol\footnote{AXI stands for } \cite{AXI4}. Internally the AXI bus connects the interface to a custom logic that is the site of the internal elaboration, and the target of a possible ML implementation. This component is the able to access to io ports or to talk to the system via \ac{DMA} access to memory or register FIFO buffers.
+The schema reports on the left an array of input channels represented by the sensor coils connected to the analog to digital frontend. The digital signal is digitized and subsequently serialized in a ``high rate'' \ac{LVDS} line that is connected to FPGA. The serialization is needed to reduce the number on ports occupation on the FPGA input, but specially to also add a line galvanic insulation that, being on the digital side, does not affect the frequency response of the port.
+All serialized inputs are subsequently entering in the FPGA logic, where a interface circuit is responsible to handle the serial communication and to convert the stream of data in a AXI4 Stream protocol\footnote{AXI stands for } \cite{AXI4}. Internally the AXI bus connects the interface to a custom logic that is the site of the internal elaboration, and the target of a possible ML implementation. This component is then able to access to IO ports or to talk to the system via \ac{DMA} access to memory or register FIFO buffers.
 %
 Data buffering, DMA engine, I/O FIFO and registers are generally held by standard codes provided by Xilinx and tailored on the specific hardware access we are using. In the custom component three VHDL sub-blocks carry out the underlying logic. The first block provides the management of clock and triggers that may be either directly derived from digital inputs or rebuild by properly decoding the timing highway input signal. The second block provides programmable input signal elaboration such as low pass filtering for subsampling and integration. The third block will handle the triggering logic and the circular buffer holding pre and post trigger samples. In particular, the trigger may be derived from external signals (via the first block) or derived from the input signal (e.g. when the input level is greater than a given threshold).    
 
@@ -104,7 +103,7 @@ The current pick-up coils acquisition chain comes from a long machine operation 
 \end{figure}
 %
 The field is obtained on each channel by direct analog integration~\cite{pomaro2005transducers}, the schema of such analog system is reported in~\Figure{\ref{fig:pomaro_integrator}}. As shown it can be conceptually divided three main groups: the magnetic sensor itself, the signal conditioning front-end, and the final analog integrator.
-The front-end acts as a differential amplifier that removes the common mode noise on the signal ( it can very severe in the RFX experiment due to the large magnetizing flux variation ) and adds a filter to remove aliasing and to compensate the signal transmission line response.
+The front-end acts as a differential amplifier that removes the common mode noise on the signal (it can very severe in the RFX experiment due to the large magnetizing flux variation) and adds a filter to remove aliasing and to compensate the signal transmission line response.
 The analog integrator solution was selected at that time because of the fast variation of the signal with respect to the available sampling frequency. 
 
 Among the RFX-mod2 experiment upgrades~\cite{Peruzzo2018} a substantial improvement of the magnetic measurement system is foreseen. The total number of the new magnetic pick-up coil sensors will be much higher with the aim of an improved spatial resolution~\cite{marchiori2017upgraded}. 
@@ -176,16 +175,16 @@ As a reference the performance of noise level and integrator drift of the actual
 
 The analog to digital conversion inside each of the ATCA-MIMO-ISOL board ADC modules is delegated to an Analog Devices AD7641, a 18-bit SAR converter that acquires signals from a fully differential input in the range $\pm 10$V at the maximum rate of 2~MSamples/s. A block scheme of the module is shown in Fig.~\ref{fig:portoghese_schema}. The initial preconditioning of the signal is quite similar with the current RFX-mod version, the analog input is filtered by a 1 pole, 100 kHz passive component connected to a differential amplifier THS4520 used as input range adapter.
 The signal is the fed into a high precision ADC: the Analog Devices AD7641 that provides a serialized output to the galvanic insulator.
-At the end the digital stream is opportunely converted to LVDS to be properly sent to the FPGA ports. Both the power supply and the digital output are insulated: the former with a DC/DC converter, which is synchronized with the ADC conversion start command in order to minimize the noise spikes generated during power switching phase, the latter with an high speed GMR component\footnote{A galvanic insulator that exploits the Giant Magneto Resistence effect, ref.\cite{Hirota2002}}.
+At the end the digital stream is opportunely converted to LVDS to be properly sent to the FPGA ports. Both the power supply and the digital output are insulated: the former with a DC/DC converter, which is synchronized with the ADC conversion start command in order to minimize the noise spikes generated during power switching phase, the latter with an high speed GMR component\footnote{A galvanic insulator that exploits the Giant Magneto Resistance effect, see.~\cite{Hirota2002}}.
 
 The module has been subsequently interfaced with the Zynq FPGA board, developing a custom HDL code with the purpose of streaming data output to a proper embedded GNU Linux driver. Fig. \ref{fig:em_channel_hdl} shows the schematic design of the bus connections of the FPGA logic.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.7\textwidth]{img/4_EmbeddedML/7.png}
-\caption{block scheme of the implemented Zynq Xilinx AXI driver}
+\caption{block scheme of the implemented Zynq Xilinx AXI driver.}
 \label{fig:em_channel_hdl}
 \end{figure}
-Each picured box, commonly refferred as IP block (Intellectual Property block), represents an HDL code ( usually it can be written either in Verilog or VHDL ) where the links are the connection among the input registers and output ports of all the involved components.
+Each picured box, commonly refferred as IP block (Intellectual Property block), represents an HDL code (usually it can be written either in Verilog or VHDL) where the links are the connection among the input registers and output ports of all the involved components.
 Two main IP symbolic components are visible: the first one from the left of the sketch represents the processor entity, the second is related to the module digital acquisition. The processor unit presents two bus connections, externally linked to the DRR and fixed I/O hardware components, and one internally connected by the AXI\_GP0 general purpose bus to the other custom logics. Here all the IRQ and clock connections have been hidden to improve the schema readability but all the components are clocked by 125MHz Zynq internal multiplier and the FIFO drives an interrupt of the PS to inform the driver of the status changes. The custom logic named scc52460\_fifo encloses all the implemented design exploiting a 32-bit Xilinx AXI-Stream FIFO core with the input connected to a chain of custom cores performing in sequential order: the acquisition from module LVDS serial port, a configurable decimation of acquired data, and a configurable length packetization of the output stream. The communication protocol selected in the schematic hardware design of ADC module is the AD7641 serial master WARP mode connection with a further external flip-flop connected to the clock output that makes the signal transaction dual edge synchronized (rising and falling). This aims at achieving, likewise the DDR protocol specification, the same throughput with half of the frequency that in this way matches the one of the signal data.  The read implementation approach is then a double buffers with two process that have the sensibility to the respectively rising and falling edge of the SCLK\_in clock input port. On the other side a proper kernel module has been developed implementing the Xilinx FIFO core communication protocol~\cite{axi4_stream_fifo_2016}, in this way the kernel spools data from the FIFO buffer to the user allocated memory. Other solutions could be certainly applied to read data from the device, for example the Zynq is equipped with two high speed embedded DMA channels that are able to write data directly into DDR relieving the CPU of the mem-copy load. The proper transfer architecture should be always chosen in relation with the overall project complexity and goals. The system has been then tested for long lasting acquisition pulses at full speed 2 MSPS output and it resulted to be able to work properly in continuous mode. 
 
 Once built the interface to the FPGA we could gather signals directly in the system internal storage, here operated as a MDSplus device.
@@ -234,7 +233,7 @@ This opened the way to explore other kinds of signal elaborations, such as the i
 
 \subsection*{Machine Learning for digital signal elaboration}
 
-In RFX-mod a fixed reduced set of signals from EM probes was used for the active plasma control, requiring a new set of ADC converters in respect to the transient recorders used for data acquisition. In RFX-mod2 it will be possible to re-use any ADC channel from EM probes for real-time control, and the actual number will be only limited by other factors, not related to the ADC devices, such as network bandwidth or control computation load. 
+In RFX-mod a selected set of signals from EM probes was used for the active plasma control, requiring a duplicated set of ADC converters for them, with respect to the standard transient recorders that are used for data acquisition. In RFX-mod2 it will be possible to re-use any ADC channel from EM probes for real-time control, and the actual number will be only limited by other factors, not related to the ADC devices, such as network bandwidth or control computation load. 
 
 However being the new acquisition based on a flexible FPGA architecture a possible future integration with machine learning algorithm could be speculated.
 For example a properly trained autoencoder could perform a compression of the required throughput \cite{Zebang:2019:DCA:3313950.3313965}, making it possible to effectively pass all the needed information though the network to the central control system.
@@ -246,11 +245,11 @@ It is nonetheless worth to mention the fact that, in such a situation, a possibl
 For example, in the case of EM probes, this could ease the integration drift simply knowing, from all the other sensors, that such a shift of the magnetic field would be unlikely to happen.
 
 Such a complex elaboration to a simple one-dimensional data acquisition could be an overkill, we don't have a real numerical foresight of the needed specifics because the complete RFX-mod2 control design has not been completed yet.
-Nevertheless this approach would be actually a real outstanding solution if more throughput critical devices would be embedded within the control. For instance this could be the case if we will add the plasma barrier interaction taken with high frame-rate cameras, or complex diagnostics such as Soft X-Ray or Thomson Scattering( a simple example of the integration of Soft X-Ray SXR3 diagnostic with magnetic sensors will be proposed in \cref{section:RFXhunch} ).
+Nevertheless this approach would be actually a real outstanding solution if more throughput critical devices would be embedded within the control. For instance this could be the case if we will add the plasma barrier interaction taken with high frame-rate cameras, or complex diagnostics such as Soft X-Ray or Thomson Scattering (a simple example of the integration of Soft X-Ray SXR3 diagnostic with magnetic sensors will be proposed in \cref{section:RFXhunch}).
 
 This is a very good example of the possible data fusion scenario that neural networks could bring once integrated to the RFX-mod2 acquisition system.
 A small step has been initiated from the upgrades that could be applied to RFX-mod2, and the adoption of the discussed "smart" sensors devices.
-However this remains a bare intuition unless concrete implementations of a neural networks in FPGA are not demonstrated.
+However this remains a bare intuition until concrete implementations of a neural networks in FPGA will not be provided.
 This is the topic of the next section.
 
 
@@ -301,9 +300,9 @@ $1.3\tilde1.4\times10^8$ internal parameters, and require over $15\times10^9$ \a
 While CPU and GPU clusters are the preferred platforms for \acs{CNN} and machine learning applications in general, customized hardware solutions based on \ac{FPGA} or even \ac{ASIC} can offer significant improvements in energy efficiency and power dissipation. 
 These factors may represent a critical point for enabling the use of such networks in low-power and constrained resources embedded computing.
 
-\subsubsection*{hardware implementation issue}
+\subsubsection*{Hardware implementation issue}
 
-The standard IEEE-754~\cite{1985--ieee754} is the widely adopted notation for floating points numerical computation, it is defined with base 2 and uses a mantissa with radix point at first digit. In this case both exponent and mantissa are binary numbers, and mantissa has always the first digit equal 1 ( with the sole exception of the representation of the real number 0.0 ). 
+The standard IEEE-754~\cite{1985--ieee754} is the widely adopted notation for floating points numerical computation, it is defined with base 2 and uses a mantissa with radix point at first digit. In this case both exponent and mantissa are binary numbers, and mantissa has always the first digit equal 1 (with the sole exception of the representation of the real number 0.0). 
 Two further operations have been also added in the standard. In a binary number with the radix point fixed after the first digit, the first digit results always 1 (it is always a number like 1.xxxxx with the sole exception of 0.0). For this reason this \textit{hidden bit} is removed from the actual mantissa and hardware eventually adds it during operation if the number is not zero.
 In addition the exponent two's complement notation can represent a problem in comparing two number: for instance $2^1$ results smaller than $2^{-1}$ being their single precision exponents respectively $0000\,0001$ and $1111\,1111$. For this reason in this case a \textit{bias} equals to 127 is added to exponent (in single precision exponent is 8 bit sized) making it centered on its range.
 
@@ -330,7 +329,7 @@ A possible hardware accelerator solution for such kinds of operations can be als
 This component implement in hardware most of the common operation that are performed during signal processing and floating point too.
 
 However, if the target is the FPGA implementation, the full IEEE 754 floating point standard shows to be quite hardware resources demanding in terms of LUT (Look Up Tables for logic operations), FF (flip flops), and \acs{DSP} counts~\cite{1227254}. 
-An accurate foresight of resource allocation is a difficult task because the actual amount of resources strictly depend on the implementation version and on the overall optimization of the logic during synthesis\footnote{ synthesis, in FPGA logic design, is the process of adapting a RTL (register transfer level) design in to a new logic configuration that fits into the selected hardware target. The implementation follows a customizable optimization policy that prefers speed, latency or resource utilization.}.
+An accurate foresight of resource allocation is a difficult task because the actual amount of resources strictly depend on the implementation version and on the overall optimization of the logic during synthesis\footnote{Synthesis, in FPGA logic design, is the process of adapting a RTL (register transfer level) design in to a new logic configuration that fits into the selected hardware target. The implementation follows a customizable optimization policy that prefers speed, latency or resource utilization.}.
 
 An example of single-precision (32-bit) resource utilization per FP operation is presented in~table~\ref{tab:kintex_fp_resources} for a generic Xilinx Kintex-7 FPGA starting form Vivado 2019.1 syntesis of the single Floating Point IP unit~\cite{ xilinx_FP_v7.1}.
 %

@@ -1,8 +1,30 @@
+
+\clearpage
+\chapter*{Acknowledgements}
+\thispagestyle{empty}
+This document, and the related project that has been started, would never have been
+posssible without the kind and attentive support from Dr. Roberto Cavazzana. In terms of the choice of the research path, many ideas, help on data provisioning, and personal encouragement. I'm truly thankful to him for believing in my commitment and having attempted to make me specifically involved in something important for the experiment.
+I also must acknowledge Dr. Marco Gobbin and Dr. David Terranova for providing all the experimental QSH dataset and the related magnetic field reconstructions.
+I would also like to express my gratitude to: Dr. Rita DeLogu for the support in machine learning theoretical aspects, Dr. Elena Masutti for the careful proof reading, Dr. Gabriele Manduchi for the final revision of the document, and all the staff of the RFX consortium. \\
+The FPGA development has been supported by the Xilinx academic program 2018 in the person of Dr. Parimal Patel.
+\clearpage
+
+% \clearpage
+% \begin{center}
+%     \thispagestyle{empty}
+%     \vspace*{\fill}
+%     To Elena \\
+%     thanks for letting me do this.
+%     \vspace*{\fill}
+% \end{center}
+% \clearpage
+
+
 \selectlanguage{english} 
 \begin{abstract}
 The recent technological advances in acquisition equipment provided experiments with growing amounts of precise yet affordable sensors; at the same time also a rise of computational power, coming from heterogeneous hardware (GPU, FPGA, TPU), has been made available at relatively low costs. This led us to explore the possibility of completely renewing the chain of acquisition for a fusion experiment, where many high-rate sources of data, coming from different diagnostics, can be combined in a wide framework of computational algorithms performing operations such as feature extraction, compression, denoising, corrupted or missing data recovery and even diagnostic to diagnostic mapping.
-Still, if on one side many different diagnostics can be applied, adding new data sources and enriching our knowledge about the physical aspects, on the other hand, the dimensions of the overall model grow making relations among variables more and more difficult. This leads to a statistical challenge called “the curse of dimensionality”. A new approach for the integration of such heterogeneous diagnostics, based on machine learning techniques, could ease this problem. 
-The present study aims at proposing the application of the unsupervised approach that recently gained lot of attention thanks to the remarkable results of the so called “generative algorithms” ( such as the Variational Autoencoders ) in latent space representation and disentanglement factors analysis.
+Still, if on one side many different diagnostics can be applied, adding new data sources and enriching our knowledge about the physical aspects, on the other hand, the dimensions of the overall model grow making relations among variables more and more difficult. This leads to a statistical challenge called "the curse of dimensionality". A new approach for the integration of such heterogeneous diagnostics, based on machine learning techniques, could ease this problem. 
+The present study aims at proposing the application of the unsupervised approach that recently gained lot of attention thanks to the remarkable results of the so called "generative algorithms" ( such as the Variational Autoencoders ) in latent space representation and disentanglement factors analysis.
 
 The intuitive idea of a non linear control system, made by means of deep generative networks, is inspired on how the brain applies the same sensory integration to perform complex tasks in an "automatic" manner. For example, a complex physical model subtends the simple task of bike riding, however no one apply any model for that. Learning to ride a bike is more related to fusing sensors data and shaping a space of equilibrium by means of small movements around the stability.
 The application case has been devoted to the new RFX-mod2 experiment changes where a new set of FPGA devices will be added to the acquisition chain to provide the experiment with new flexible channels, able to adapt to a wider set of machine configurations. These tools of analysis could be eventually considered both to manage the new increased amount of data, and to possibly apply more information to the control system loop. 

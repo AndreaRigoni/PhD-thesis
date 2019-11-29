@@ -20,14 +20,16 @@ So along the training epochs the loss, and possibly all the further regularizati
 %
 \begin{figure}
     \centering
-    \includegraphics[height=6cm]{img/STEP12_7/VAE_RELEVANCE.eps}
-    \caption{Relevance layer}
+    \subfigure[]{\includegraphics[height=4cm]{img/STEP12_7/VAE_RELEVANCE.eps} \label{fig:relevance_schema}}
+    \subfigure[]{\includegraphics[height=4cm]{img/STEP12_7/R_drop_45epochs_beta1e6.png} \label{fig:relevance_drop}}
+    \caption{Relevance layers added network schema (a), and an example of pure random number forced as input for one \VAE{3} latent variable showing the related relevance drop measured over epochs (b). }
     \label{fig:relevance}
 \end{figure}
 %
-The implemented idea is shown schematically in \Figure{\ref{fig:relevance}}, where the basic schema of a VAE with missing input is presented. The new relevance layers, shown with the (R) mark on the picture, can be placed after the input feature layer (just after the NaN-Mask layer) and/or at the latent space layer (the first layer of the decoder).
-Although the picture shows the case of an Autoencoder, the same layer can be applied to a simple inference too.
-In the case of the Autoencoder the first relevance layer will provide the amount of mutual information that each particular input has with the others, while the second will give a hint on how much the encoder is providing a disentangled representation because the redundant dimension are kept out from the generative process.
+The implemented idea is shown schematically in \Figure{\ref{fig:relevance_schema}}, where the basic schema of a VAE with missing input is presented. The new relevance layers, shown with the (R) mark on the picture, can be placed after the input feature layer (just after the NaN-Mask layer) and/or at the latent space layer (the first layer of the decoder).
+In \Figure{\ref{fig:relevance_drop}} a simple \VAE{3} has been trained with the given SXR input, but one of the three internal variable has been forced to be sampled from a uniform random distribution. As shown in the plot the lack of mutual information between data and the variable output value makes the relevance drop in 40 epochs.
+Although both pictures show the relevance application to Autoencoders, a same kind of layer can be applied to the simple inference case too.
+In the Autoencoders the first relevance layer will provide the amount of mutual information that each particular input has with the others, while the second will give a hint on how much the encoder is providing a disentangled representation because the redundant dimension are kept out from the generative process.
 On the other hand the simple application on a standard regression network such the one that we used to pass from magnetics to the temperature profiles provides the actual significance of each input parameter to the task of building the guess.
 
 A sparsity promotion regularizer, such as the dropout, beside the effects on the network generalization, appeared to improve the relevance too.

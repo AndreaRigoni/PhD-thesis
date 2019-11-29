@@ -8,8 +8,8 @@ we have considered the temperature profiles that are coming from the Soft X-Ray 
 A plasma is composed by a mixture of species characterized by their own mass and electric charge. As first approximation, the plasma may be considered as consisting of two fluids mixed together: the first composed by the electrons and the second by the ions, or more specifically by all the other heavy species: ions, neutral atoms, and other compound molecules.
 
 What matters for a fusion machine is actually the ions temperature because electrons are not directly involved on fusion process.
-Nevertheless electrons acquire energy from the electric field, which energizes the plasma, and lose part of it through elastic or inelastic collisions; in this way the plasma can move energy from one fluid to the other. For this reason in \textit{Tokamaks} this represents a direct handle for plasma heating through \acs{ECRH} plants. In RFX we don't have such input and the electron temperature are almost directly related to the plasma current and the magnetic pressure (\textit{pinch} effect).
-In addition the acquired profile represents a local information of the internal state of plasma giving a chance to see it beyond the simple external configuration.
+Nevertheless electrons acquire energy from the electric field, which energizes the plasma, and lose part of it through elastic or inelastic collisions; in this way the plasma can move energy from one fluid to the other. In \textit{Tokamaks} a mechanism to heat the plasma consists in the injection of electromagnetic waves at the resonant frequency of electrons (\ac{ECRH}). In RFX we don't have such input and the electron temperature are almost directly related to the plasma current and the magnetic pressure (\textit{pinch} effect).
+In addition the acquired profile represents a local information of the internal state of plasma giving a chance to look beyond the simple external configuration.
 \begin{figure}
     \centering
     \includegraphics[height=5cm]{img/rfx/shot_example.png}
@@ -32,7 +32,7 @@ Associated to this steep changes of the magnetic configuration high gradients of
 \section{Constructing the dataset} % SHAx
 \label{section:SXR_dataset}
 
-For correctly train the machine learning algorithm the complete set of all the desired data must be prepared in advance. We started by a careful selection of several temperature profiles that have been recorded by the SXR3 diagnostic, and a set of other parameters acquired during the same time. %CITARE GOBBIN (NON SO IL PAPER DI RIFERIMENTO)
+For correctly training the machine learning algorithm the complete set of all the desired data must be prepared in advance. We started by a careful selection of several temperature profiles that have been recorded by the SXR3 diagnostic, and a set of other parameters acquired during the same time. %CITARE GOBBIN (NON SO IL PAPER DI RIFERIMENTO)
 These represent a selection of parameter that were thought to relate with the plasma state configuration, and the temperature associated to the QSH in particular. A complete list of such dataset entries is reported in \ref{tab:database}. This dataset has been the adapted to comply with \Tensorflow input features for the fitting algorithms. Within the \acs{TF} framework API a particular object class is devoted to represent such dataset. This is meant to provide a set of commodity routines that can be used to handle all the training data preprocessing, such as: the split of training and validation sets, the mini-batch subdivision (i.e. a selection of chunks of samples that are processed in the same train step and for which a single average loss is computed), a mapping with a filter function to prepare data to the particular model, applying possible data regularization (the simple shuffling for example), and others.
 For this reason making the experimental outputs data compatible with this structure is a key point to have a flexible set of features for all possible constructed network and ML models. 
 This structure is defined in a special \TF object class. It can be included in the python source taking input from: an array sequence, a record array of structured data, or a structured database such as \Pandas \textit{dataframe}~\cite{mckinney-proc-scipy-2010}.
@@ -55,7 +55,7 @@ Moreover an interactive collating signal selector has been implemented that can 
 After the definition of the data the target \TF dataset adaptation has been done using the dedicated \TF \verb|Dataset.dataset_from_generator()| function. This is useful because it can dynamically adapt to the specific input, and will be the suitable tool for the future enhancement to any possible dynamic source selection (i.e. the direct \MDSplus query or any other).
 In the following a related code has been extrapolated from our dataset definition:
 %
-\begin{lstlisting}[language=Python, caption=Dataset from generator]
+\begin{lstlisting}[language=Python, caption=Dataset from generator.]
     def tf_tuple_compose(self, fields=[]):
         def clip(x):
             try: 
@@ -320,7 +320,7 @@ A sketch of such implementation design is reported in~\Figure{\ref{fig:SXR_from_
     \caption{Schematic diagram of the unsupervised generative model and subsequent supervised regression that are chained to create a model able to guess the SXR profile from the sole magnetic configuration and standard plasma parameters ($Ip$,$F$,$\Theta$,$Ns$). }
     \label{fig:SXR_from_param}
 \end{figure}
-where a standard \acs{VAE} model is trained in advance connecting an inference network to a generative network and comparing inputs with results ( dashed path marked as step 1 ), then once the training is finished the same model is used to produce labels of a supervised neural network that learns to match external parameters to latent space determinations ( dotted path marked as step 2 ). Finally the last trained network is used to feed the \acs{VAE} decoder to complete the chain passing from parameters to profile smoothly (step 3).
+where a standard \acs{VAE} model is trained in advance connecting an inference network to a generative network and comparing inputs with results (dashed path marked as step 1), then once the training is finished the same model is used to produce labels of a supervised neural network that learns to match external parameters to latent space determinations (dotted path marked as step 2). Finally the last trained network is used to feed the \acs{VAE} decoder to complete the chain passing from parameters to profile smoothly (step 3).
 
 The beauty of the \TF framework come again to ease the syntax: once we have a vae model trained the dataset map function can be used to generate labels online given the feature taken from dataset; in this way a couple (feature, label) can be created to be used for the supervised training.
 An example of this use of network to preconditioning dataset could be the following: \\
@@ -359,7 +359,7 @@ However, aiming at finding a comprehensive representation of the system, a more 
 The actual idea that follows the intuition of a hierarchical subdivision of the complete data inputs in sub domains, each represented by means of a embedded manifold, has been realized as a chain of nested autoencoders. This is actually as simple as a new class method that created a nested internal structure from a input list of further autoencoders; this has been named \textit{composing}, and a schema of the built topology is proposed in~\Figure{\ref{fig:VAE_compose}}.
 The simple code, reported in~\Code{\ref{code:VAE_compose}}, provides the \TF implementation.
 %
-\begin{lstlisting}[language=Python, caption=Internal VAE method to create the composed network topology, label=code:VAE_compose]
+\begin{lstlisting}[language=Python, caption=Internal VAE method to create the composed network topology., label=code:VAE_compose]
 def compose(self, autoencoders):
     from itertools import chain 
     vaes = autoencoders

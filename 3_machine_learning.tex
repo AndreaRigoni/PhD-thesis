@@ -6,7 +6,7 @@
 %
 As previously described in the introductory chapter, in this decade we are spectators of an impressive advance in the computation technology that opened the era of \textit{big data} for data-science. There are millions of autonomous software components that continuously crawl the internet network decoding HTML from 60 billion of pages collected and indexed in a single database. Each time we capture a picture this file is automatically classified and stored in a cloud space that is claimed to receive 1.2 billion of pictures per day. 
 %
-We can define \acf{ML} as the available set of tools that, analyzing such big amount of information, are automatically providing a possible uncovered pattern to eventually be able to predict a future output of the system and operate any other kind of decision based on data uncertainty. The intimate meaning of \textit{machine learning} in this context is referred to the fact that the human intervention remains on the very base of the algorithm structural definition, while it is the model itself that stitches to the input data to represent them.
+We can define \acf{ML} as the available set of tools that, analyzing such big amount of information, are automatically providing a possible uncovered pattern to eventually be able to predict a future output of the system and operate any other kind of decision based on data uncertainty. The intimate meaning of \textit{machine learning} in this context is referred to the fact that the human intervention remains on the very base of the algorithm structural definition, while it is the model itself that stitches to the input data to represent them~\cite{murphy2013machine}.
 
 In science, there are essentially two modelling approaches: the \textbf{process based models} and \textbf{data driven models}.
 %The physical modeling is commonly ascribed to the first category, usually providing an input-output explanation in terms of the
@@ -16,11 +16,11 @@ In some other cases an hybrid version of combined physical and statistical model
 
 \section{Introduction to DNN}
 
-As already anticipated, in order to gather the wide range of all the possible concurring physical causes that drive the measures, we decided to make use of the latest novel approach of Deep Neural Networks. %This section represents a preliminary step back, as a general description that bases its approach on a statistical oriented view is provided.
+As already anticipated, in order to gather the wide range of all the possible concurring physical causes that drive the measures, we decided to make use of the latest novel approach of Deep Neural Networks~\cite{Goodfellow-et-al-2016}. %This section represents a preliminary step back, as a general description that bases its approach on a statistical oriented view is provided.
 
-The collated set of all measures along the consecutive experimental repetitions is often referred as the model \textit{dataset}, while a single instance of this dataset with a proper selection of the quantities under analysis is commonly called \textit{features} or \textit{covariates}%\footnote{The most precise definition seems to be the term covariate, used in Analysis of Covariance, a type of General Linear Model in which the independent variables of interest are categorical, but you also need to adjust for the effect of an observed, continuous variable–the covariate}.
+The collated set of all measures along the consecutive experimental repetitions is often referred as the model \textit{dataset}, while a single instance of this dataset with a proper selection of the quantities under analysis is commonly called \textit{features} or \textit{covariates}. %\footnote{The most precise definition seems to be the term covariate, used in Analysis of Covariance, a type of General Linear Model in which the independent variables of interest are categorical, but you also need to adjust for the effect of an observed, continuous variable–the covariate}.
 %
-If we consider our dataset in the observable of a physical model we can refer as the single input feature of the ML model as a stochastic vector $\bm{x} = [x_1,x_2, ... ,x_N]$ that is characterized by its probability density distribution $p(\bm{x})$. The very general macroscopic description of any machine learning application consists in feeding a statistical model with this input feature, eventually providing as output the \textit{p.d.f} of another related measure $p(y|\bm{x})$ or a description of $p(\bm{x})$ itself. These two kinds of results are respectively representative of the so called  \textbf{supervised} and \textbf{unsupervised} learning: in the former the model is confronted with a known relation between variables, while no information is provided for the latter and the model simply looks at the distribution of the variables in their own manifold (or in a subspace as it will described in the next sections).
+If we consider our dataset in the observable of a physical model we can refer to the single input feature of the ML model as a stochastic vector $\bm{x} = [x_1,x_2, ... ,x_N]$ that is characterized by its probability density distribution $p(\bm{x})$. The very general macroscopic description of any machine learning application consists in feeding a statistical model with this input feature, eventually providing as output the \textit{p.d.f} (probability density distribution) of another related measure $p(y|\bm{x})$ or a description of $p(\bm{x})$ itself. These two kinds of results are respectively representative of the so called  \textbf{supervised} and \textbf{unsupervised} learning: in the former the model is confronted with a known relation between variables, while no information is provided for the latter and the model simply looks at the distribution of the variables in their own manifold (or in a subspace as it will described in the next sections).
 
 The structural element that composes both the standard \textit{Neural Network} structure and the \textit{Deep Neural Network} is the so called \acl{MLP}. A brief description of how it can be implemented follows this paragraph; then a formal stochastic definition will be presented in \cref{section:feedforward dense networks}. 
 Neural network as a whole is defined by a hierarchical sequence of fully connected layers composed by \textit{neurons}. In this context a "neuron", with an evident likeness with the biological counterpart, is defined as a mathematical structure made by a linear composition of the input signals followed by a \textbf{non-linear} function named \textit{activation}.
@@ -60,7 +60,7 @@ Because we chose the noise to be Gaussian, the model can be rewritten as:
     p(y|\bm{x},\bm{w}) = \mathcal{N}(\mu(x), \sigma^2)
 \end{equation}
 This predictor represents a model (i.e. the N-dimensional line) that we want to center in such a way that the distance between data and the model output is minimal.
-This can be done looking at $\bm{w}$ as the model parameters and imposing a \textit{likelihood} on the joint probability of the outputs of all the dataset samples:
+This can be done looking at $\bm{w}$ as the model parameters and imposing a \textit{likelihood} on the joint probability of the outputs of all the dataset samples. If the data set under analysis has cardinality $D$, the likelihood can be defined as:
 \begin{align}
     \mathcal{L}(\bm{w}, y) &= \prod_i^D p(\bm{y}|\bm{w}) = \prod_i^D \mathcal{N}(\mu(x),\sigma^2) \\
     &= \frac{1}{(2\pi \sigma^2)^{\frac{D}{2}}} \exp \left[  -\frac{\sum_{i=1}^D (y_i-\mu(x)^2}{2\sigma^2} \right]
@@ -113,7 +113,7 @@ Substituting $p_1$ and $p_0$ in equation~\eqref{eq:logistic_likelihood} reduces 
 In the previous section two instances of regression operation have been presented. It has been also shown that the loss function used to optimize the network weights comes from maximizing the likelihood over the training data.
 A further generalization of such regression operators can be provided making all posterior distributions to be in exponential family. The description of this unified representation, called \ac{GLM}, is proposed in appendix.
 
-A feed forward neural network, also known as \textbf{multiplayer perceptron}, is a composition of possibly non linear regression operations. For example if we set all activations to the sigmoid function, as in~\Figure{\ref{fig:mlp_b}}, \acs{MLP} can be seen as a chain of logistic regression stacked on top of each other. But the actual leading operation is the final layer that is again a regression for which a direct output error can be obtained, hence a loss can be chosen. For example it can be either a logistic or a linear regression depending whether we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
+A feed forward neural network, also known as \ac{MLP}, is a composition of possibly non linear regression operations. For example if we set all activations to the sigmoid function, as in~\Figure{\ref{fig:mlp_b}}, \acs{MLP} can be seen as a chain of logistic regression stacked on top of each other. But the actual leading operation is the final layer that is again a regression for which a direct output error can be obtained, hence a loss can be chosen. For example it can be either a logistic or a linear regression depending whether we are looking for a general classification output (i.e. a probability function output for each of the classes in the classifier domain) or a regression output. 
 For instance, looking at the simple two layers generic schema in~\Figure{\ref{fig:generic_mlp_a}}, and considering a linear regression for output, the model would be written like:
 \begin{equation}
     p(y|\bm{x},\bm{\vartheta}) = \mathcal{N}\left(\transpose{\bm{w}}\bm{z(\bm{x}}), \sigma^2 \right)
@@ -158,6 +158,13 @@ The proper extension to multiple output can be done by using a matrix compositio
     p(\bm{y}|\bm{x}, \bm{w}) = \mathcal{N}\left( \bm{y}|\bm{W},\phi \right)
 \end{equation}
 where the probability has been shaped with the weights matrix $\bm{W}$ taking into account the possible MIMO configuration of the perceptron.
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[height=3cm]{img/3_ML/Logistic-curve.eps} \label{fig:activations_logistic}}
+    \subfigure[]{\includegraphics[height=3cm]{img/3_ML/Activation_rectified_linear.eps} \label{fig:activations_relu}}
+    \caption{Two examples of activation functions: the logistic function, plotted in (a), defined as $y=\frac{1}{1+e^{-x}}$, and the rectified linear units (ReLU), shown in plot (b), defined as ${y = \text{max}: (0,x)}$. }
+    \label{fig:activations}
+\end{figure}
 It is worth stressing the fact that a key factor for the activation function $g(\bm{x},\bm{v})$ is to be a non-linear operator, because the overall network would collapse into a large linear regression otherwise. Usually the activation is the logistic function $g(u) = \text{sigm}(u)$ or the recently much common flavors of the \textbf{rectified linear units} (ReLU) that provide a non linear activation with a minimal computational effort. The ReLU has the benefit of being scale invariant: $\textrm{max}(0,ax) = a\textrm{max}(0,x)$ for $ a \geq 0 $.
 % FINIRE !!!!
 % SHOW A FIGURE OF THE POSSIBLE ACTIVATION FUNCTIONS
@@ -167,7 +174,7 @@ Feedforward neural networks early became a popular tool for non-linear regressio
 %
 For this reason from a Bayesian perspective, the choice of neural network models can be viewed as the definition of a \textbf{prior over non-linear function}, while the learning process can be seen in terms of finding a posterior over those unknown function \cite{Polson_2017}. 
 % SISTEMARE
-As a bayes posterior the network can be then trained using a probabilistic approach, such as searching for the function parameters with maximum posterior probability ( i.e. the Variadic Approach ), or using Monte Carlo to sample directly from posterior. In particular this stochastic approach turns to provide a more robust representation in the case of generative networks, as it will be discussed in~\cref{section:VAE}.
+As a bayes posterior the network can be then trained using a probabilistic approach, such as searching for the function parameters with maximum posterior probability (i.e. the Variadic Approach), or using Monte Carlo to sample directly from posterior. In particular this stochastic approach turns to provide a more robust representation in the case of generative networks, as it will be discussed in~\cref{section:VAE}.
 %
 %In the limit of standard networks with substantial scaling, Neal (1996) proved that the prior distribution over non-linear functions implied by the Bayesian neural network falls in a class of probability distributions known as Gaussian processes. 
 
@@ -395,18 +402,16 @@ Being a stochastic process, the NN training is also prone to find different solu
 By dropping a unit out, we mean temporarily removing it from the network, along with all its incoming and outgoing connections.
 So, during the training, some number of layer outputs are randomly ignored or, as the name says, they are “dropped out”. This has the effect that in each attempt the actual layer that plays in optimization looks like a layer with a different number of nodes and connectivity with respect to the previous one. In last effect, each update to a layer during training is performed with a different “view” of the configuration as the overall network was a different one.
 
-\begin{lstlisting}[language=Python, caption=Dropout layer code example (from Tensorflow 2.0)]
-@tf_export("nn.dropout", v1=[])
-def dropout_v2(x, rate, noise_shape=None, seed=None, name=None):
-    [...]
-    random_tensor = random_ops.random_uniform( noise_shape, 
-                                               seed=seed, 
-                                               dtype=x.dtype )
-    keep_prob = 1 - rate
-    scale = 1 / keep_prob
-    keep_mask = random_tensor >= rate
-    return = x * scale * math_ops.cast(keep_mask, x.dtype)
-\end{lstlisting}
+% \begin{lstlisting}[language=Python, caption=Dropout layer code example (from Tensorflow 2.0)]
+% @tf_export("nn.dropout", v1=[])
+% def dropout_v2(x, rate, noise_shape=None, seed=None, name=None):
+%     [...]
+%     random_tensor = random_ops.random_uniform( noise_shape, seed=seed, dtype=x.dtype ) 
+%     keep_prob = 1 - rate 
+%     scale = 1 / keep_prob
+%     keep_mask = random_tensor >= rate
+%     return = x * scale * math_ops.cast(keep_mask, x.dtype)
+% \end{lstlisting}
 
 \subsubsection{Batch normalization}
 A further method to increase the stability (read generalization) of a neural network is the \textit{batch normalization}~\cite{ioffe2015batch} layer. It normalizes the output of the previous activation by subtracting the mean and dividing by the standard deviation computed on the mini-batch (mini batches represent subsets sets of the training set, usually randomly picked).  However, after this shift and scale of the activation output - that are operated by some randomly initialized parameters - the weights in the next layer may be no longer optimal. The optimization process so tends to destroy this normalization if it move the output away from the loss function minimum.
@@ -692,7 +697,7 @@ This is called "reparametrization trick" and makes the overall function differen
 
 \section{A simulated case study for latent space derivation}
 
-To provide a good playground for the tests that we initially foresaw for this study, we built a simple algorithm to simulate possible dataset of one-dimensional signals. This may seem quite naive with respect to the complex \acs{DNN} inputs that characterize the latest works presented in this field, however it turns to worth for our purposes. Indeed it is very simple to manage, and it matches the simple case of the feature extraction applied to the acquisition device that we plan to add to experiment \acs{DAQ} system. Moreover it presents a quite widespread application in the area of signal conditioning all-over the experiment diagnostics: both in the temporal and in the spatial domain. For example the \acs{SXR} - that is our main case of study - provides as outputs a one-dimensional signal representing the spatial distribution of the electronic temperatures $T_e$ at time $t$. All measures in this case are computed by measures of the integrated signal along the cords, and inverted to find the actual point temperature that is finally projected on the central axis in the equatorial plane crossing the center of the machine and the center of the chamber. The final output is a set of ordered points that can vary in: number (missing points for non working chords), position along projection axis, and temperature value.
+To provide a good playground for the tests that we initially foresaw for this study, we built a simple algorithm to simulate possible dataset of one-dimensional signals. This may seem quite naive with respect to the complex \acs{DNN} inputs that characterize the latest works presented in this field, however it turns out to be worth for our purposes. Indeed it is very simple to manage, and it matches the simple case of the feature extraction applied to the acquisition device that we plan to add to experiment \acs{DAQ} system. Moreover it presents a quite widespread application in the area of signal conditioning all-over the experiment diagnostics: both in the temporal and in the spatial domain. For example the \acs{SXR} - that is our main case of study - provides as outputs a one-dimensional signal representing the spatial distribution of the electronic temperatures $T_e$ at time $t$. All data in this case are computed by measures of the integrated signal along the cords, and inverted to find the actual point temperature that is finally projected on the central axis in the equatorial plane crossing the center of the machine and the center of the chamber. The final output is a set of ordered points that can vary in: number (missing points for non working chords), position along projection axis, and temperature value.
 
 \subsection{Gaussian sum generator}
 \label{section: gaussian sum generator}
@@ -733,7 +738,7 @@ In \Figure{\ref{fig:sum_of_gaussians}} an example of five \textit{kinds} setup (
     \begin{minipage}[b]{0.42\textwidth}
      \includegraphics[height=5cm]{img/STEP1/dummy_kinds.png}
     \end{minipage}
-    \caption{A generation setup example for five \textit{kinds} of sum of gaussians: on the left the dictionary taht fills the parameters of the generator for each of the five classes; on the right a plot shows the five kind representations where colours helps to distinguish among them. }
+    \caption{A generation setup example for five \textit{kinds} of sum of gaussians: on the left the dictionary that fills the parameters of the generator for each of the five classes; on the right a plot shows the five kind representations where colours helps to distinguish among them. }
     \label{fig:sum_of_gaussians}
 \end{figure}
 %
